@@ -97,7 +97,8 @@
           Happening now
         </div>
         <div onClick="{{ goIntroTab }}" style="display:flex; align-items:center; gap:6px; font-family:'JetBrains Mono',monospace; font-size:clamp(9px,1vh,11px); letter-spacing:0.08em; text-transform:uppercase; color:{{ introTabColor }}; background:{{ introTabBg }}; padding:6px 12px; border-radius:100px; cursor:pointer; transition:background 0.2s ease, color 0.2s ease; white-space:nowrap; animation:{{ introTabAnim }}; box-shadow:{{ introTabGlow }};">
-          New here?
+          <svg width="8" height="9" viewBox="0 0 22 24" style="flex-shrink:0;"><path d="M0 0 L22 12 L0 24 Z" fill="{{ introTabColor }}"></path></svg>
+          New here? Watch intro
         </div>
       </div>
       <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; opacity:{{ liveLayerOpacity }}; pointer-events:{{ liveLayerPE }}; transition:opacity 0.3s ease;">
