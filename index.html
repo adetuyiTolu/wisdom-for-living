@@ -222,14 +222,41 @@
         <span></span>
       </div>
 
+      <!-- Tab 4: The Builders -->
+      <div onClick="{{ pillars.4.onClick }}" data-active="{{ pillars.4.isActive }}" style="flex:{{ pillars.4.flexValue }}; background:#141610; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:2vh 1vw; cursor:pointer; transition:flex 0.35s ease, background 0.2s ease; gap:1.4vh; min-width:0; overflow:hidden;" style-hover="background:#181b12;">
+        <span style="width:7px; height:7px; border-radius:50%; background:{{ pillars.4.dotBg }}; flex-shrink:0; transition:background 0.3s ease;"></span>
+        <sc-if value="{{ pillars.4.isActive }}" hint-placeholder-val="{{ false }}">
+          <div style="flex:1; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.4vh;">
+            <div style="width:clamp(40px,9vh,64px); height:clamp(40px,9vh,64px); border-radius:14px; background:#1c1f16; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
+              <svg width="46%" height="46%" viewBox="0 0 24 24"><rect x="2" y="14" width="5" height="8" fill="{{ accentColor }}"></rect><rect x="9.5" y="9" width="5" height="13" fill="{{ accentColor }}"></rect><rect x="17" y="4" width="5" height="18" fill="{{ accentColor }}"></rect></svg>
+            </div>
+            <div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(16px,2.6vh,26px); text-align:center; line-height:1.15;">The Builders</div>
+            <div style="font-size:clamp(11px,1.3vh,14px); line-height:1.5; color:#9a9d8d; text-align:center; max-width:36ch;">A flagship reality series challenging entrepreneurs and innovators to solve real economic problems through teamwork, strategy, and execution.</div>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:clamp(9px,1vh,11px); letter-spacing:0.08em; text-transform:uppercase; color:#101209; background:{{ accentColor }}; padding:3px 10px; border-radius:20px;">Coming soon</span>
+          </div>
+        </sc-if>
+        <sc-if value="{{ pillars.4.isInactive }}" hint-placeholder-val="{{ true }}">
+          <div style="flex:1; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh;">
+            <div style="width:20px; height:20px; border-radius:6px; background:#1c1f16; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
+              <svg width="46%" height="46%" viewBox="0 0 24 24"><rect x="2" y="14" width="5" height="8" fill="{{ accentColor }}"></rect><rect x="9.5" y="9" width="5" height="13" fill="{{ accentColor }}"></rect><rect x="17" y="4" width="5" height="18" fill="{{ accentColor }}"></rect></svg>
+            </div>
+            <div style="font-family:'JetBrains Mono',monospace; font-size:clamp(10px,1.2vh,13px); letter-spacing:0.06em; color:#5f6254; writing-mode:vertical-rl; text-orientation:mixed;">TB</div>
+          </div>
+        </sc-if>
+        <span></span>
+      </div>
+
     </div>
 
     <!-- PILLAR LIST -->
     <div data-screen-label="Pillar list" style="grid-column:2; grid-row:2; position:relative; display:flex; flex-direction:column; min-height:0; min-width:0; border-top:1px solid rgba(243,241,232,0.1); padding-left:16px;">
-      <div style="position:absolute; left:0; top:0; width:2px; height:25%; background:{{ accentColor }}; transform:translateY({{ activeIndicatorOffset }}%); transition:transform 0.4s cubic-bezier(0.4,0,0.2,1);"></div>
-      <sc-for list="{{ pillars }}" as="p" hint-placeholder-count="4">
-        <div onClick="{{ p.onClick }}" style="flex:1; display:flex; align-items:center; border-bottom:1px solid rgba(243,241,232,0.1); cursor:pointer; color:{{ p.listColor }}; transition:color 0.25s ease, padding-left 0.25s ease;" style-hover="color:#f3f1e8; padding-left:6px;">
+      <div style="position:absolute; left:0; top:0; width:2px; height:20%; background:{{ accentColor }}; transform:translateY({{ activeIndicatorOffset }}%); transition:transform 0.4s cubic-bezier(0.4,0,0.2,1);"></div>
+      <sc-for list="{{ pillars }}" as="p" hint-placeholder-count="5">
+        <div onClick="{{ p.onClick }}" style="flex:1; display:flex; align-items:center; gap:8px; border-bottom:1px solid rgba(243,241,232,0.1); cursor:pointer; color:{{ p.listColor }}; transition:color 0.25s ease, padding-left 0.25s ease;" style-hover="color:#f3f1e8; padding-left:6px;">
           <span style="font-size:clamp(13px,1.7vh,17px); font-weight:{{ p.listWeight }};">{{ p.name }}</span>
+          <sc-if value="{{ p.isComingSoon }}" hint-placeholder-val="{{ false }}">
+            <span style="font-family:'JetBrains Mono',monospace; font-size:clamp(8px,0.9vh,10px); letter-spacing:0.06em; text-transform:uppercase; color:#8a8d7d; border:1px solid rgba(243,241,232,0.2); padding:1px 6px; border-radius:20px;">Soon</span>
+          </sc-if>
         </div>
       </sc-for>
     </div>
@@ -269,7 +296,8 @@ class Component extends DCLogic {
     { name: 'Chronicles of Innovation', abbr: 'COI', href: 'https://chroniclesofinnovation.com', domain: 'chroniclesofinnovation.com', tagline: 'Documentaries drawn from history, so people can learn from it.', logo: './logos/chronicles-of-innovation.png' },
     { name: 'Raw Writings', abbr: 'RW', href: 'https://adetuyi.com/writing', domain: 'adetuyi.com/writing', tagline: 'Writing on wisdom, work, and building, drawn from the journey of building systems that run economies.', logo: './logos/adetuyi.png', logoRound: true },
     { name: 'ZeroToAct', abbr: 'Z2A', href: 'https://zerotoact.com', domain: 'zerotoact.com', tagline: 'Frameworks battle-tested building systems that run economies, validated by history, now open to everyone.', logo: './logos/zerotoact.png', logoChip: true },
-    { name: 'The Summit', abbr: 'SUM', href: 'https://www.zerotoact.com/#summit-section', domain: 'annual · virtual', tagline: 'An annual virtual gathering to explore what\'s coming, and the wisdom to prepare and build for it.', logo: '' }
+    { name: 'The Summit', abbr: 'SUM', href: 'https://www.zerotoact.com/#summit-section', domain: 'annual · virtual', tagline: 'An annual virtual gathering to explore what\'s coming, and the wisdom to prepare and build for it.', logo: '' },
+    { name: 'The Builders', abbr: 'TB', href: '', domain: '', tagline: 'A flagship reality series challenging entrepreneurs and innovators to solve real economic problems through teamwork, strategy, and execution.', logo: '', comingSoon: true }
   ];
 
   componentDidMount() {
@@ -326,6 +354,7 @@ class Component extends DCLogic {
         flexValue: i === active ? 5 : 1,
         listColor: i === active ? '#f3f1e8' : '#8a8d7d',
         listWeight: i === active ? 600 : 400,
+        isComingSoon: !!p.comingSoon,
         onClick: () => this.setActive(i),
       })),
     };
