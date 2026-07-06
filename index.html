@@ -302,9 +302,9 @@ class Component extends DCLogic {
       onLiveTab: this.state.videoTab === 'live',
       onIntroTab: this.state.videoTab === 'intro',
       liveTabColor: this.state.videoTab === 'live' ? '#101209' : '#f3f1e8',
-      liveTabBg: this.state.videoTab === 'live' ? accentColor : 'rgba(20,22,16,0.55)',
+      liveTabBg: this.state.videoTab === 'live' ? accentColor : '#141610',
       introTabColor: this.state.videoTab === 'intro' ? '#101209' : '#f3f1e8',
-      introTabBg: this.state.videoTab === 'intro' ? accentColor : 'rgba(20,22,16,0.55)',
+      introTabBg: this.state.videoTab === 'intro' ? accentColor : '#141610',
       goLiveTab: () => this.setVideoTab('live'),
       goIntroTab: () => this.setVideoTab('intro'),
       pillars: this.pillarsData.map((p, i) => ({
