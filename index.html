@@ -94,7 +94,7 @@
       <div style="position:absolute; top:10px; left:10px; z-index:2; display:flex; gap:4px; background:rgba(0,0,0,0.4); padding:4px; border-radius:100px;">
         <div onClick="{{ goLiveTab }}" style="display:flex; align-items:center; gap:6px; font-family:'JetBrains Mono',monospace; font-size:clamp(9px,1vh,11px); letter-spacing:0.08em; text-transform:uppercase; color:{{ liveTabColor }}; background:{{ liveTabBg }}; padding:6px 12px; border-radius:100px; cursor:pointer; transition:background 0.2s ease, color 0.2s ease;">
           <span style="width:6px; height:6px; border-radius:50%; background:#e0503c; flex-shrink:0;"></span>
-          Live now
+          Happening now
         </div>
         <div onClick="{{ goIntroTab }}" style="display:flex; align-items:center; gap:6px; font-family:'JetBrains Mono',monospace; font-size:clamp(9px,1vh,11px); letter-spacing:0.08em; text-transform:uppercase; color:{{ introTabColor }}; background:{{ introTabBg }}; padding:6px 12px; border-radius:100px; cursor:pointer; transition:background 0.2s ease, color 0.2s ease; white-space:nowrap;">
           New here?
@@ -301,10 +301,10 @@ class Component extends DCLogic {
       activeIndicatorOffset: active * 100,
       onLiveTab: this.state.videoTab === 'live',
       onIntroTab: this.state.videoTab === 'intro',
-      liveTabColor: this.state.videoTab === 'live' ? '#101209' : '#c7c9bb',
-      liveTabBg: this.state.videoTab === 'live' ? accentColor : 'transparent',
-      introTabColor: this.state.videoTab === 'intro' ? '#101209' : '#c7c9bb',
-      introTabBg: this.state.videoTab === 'intro' ? accentColor : 'transparent',
+      liveTabColor: this.state.videoTab === 'live' ? '#101209' : '#f3f1e8',
+      liveTabBg: this.state.videoTab === 'live' ? accentColor : 'rgba(20,22,16,0.55)',
+      introTabColor: this.state.videoTab === 'intro' ? '#101209' : '#f3f1e8',
+      introTabBg: this.state.videoTab === 'intro' ? accentColor : 'rgba(20,22,16,0.55)',
       goLiveTab: () => this.setVideoTab('live'),
       goIntroTab: () => this.setVideoTab('intro'),
       pillars: this.pillarsData.map((p, i) => ({
