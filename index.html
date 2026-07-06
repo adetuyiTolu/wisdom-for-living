@@ -64,7 +64,7 @@
       <span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:15px; letter-spacing:0.01em;">Wisdom for Living Media</span>
     </div>
     <sc-if value="{{ showNav }}" hint-placeholder-val="{{ true }}">
-      <a href="mailto:hello@wisdomforliving.tv" style="display:flex; align-items:center; gap:8px; color:#f3f1e8; text-decoration:none; font-size:13px; padding:9px 16px; border:1px solid rgba(243,241,232,0.22); border-radius:100px;">
+      <a href="mailto:tolu@adetuyi.com" style="display:flex; align-items:center; gap:8px; color:#f3f1e8; text-decoration:none; font-size:13px; padding:9px 16px; border:1px solid rgba(243,241,232,0.22); border-radius:100px;">
         Get in touch <span aria-hidden="true">↗</span>
       </a>
     </sc-if>
@@ -90,7 +90,7 @@
     </div>
 
     <!-- VIDEO -->
-    <div data-screen-label="Narration" style="grid-column:2; grid-row:1; position:relative; border-radius:12px; overflow:hidden; background-color:#0c0e08; min-height:0; min-width:0; animation:wfl-rise 0.8s ease-out 0.1s both;">
+    <div data-screen-label="Narration" style="grid-column:2; grid-row:1; position:relative; border-radius:12px; overflow:hidden; background-color:#0c0e08; min-height:0; min-width:0; animation:wfl-rise 0.8s ease-out 0.1s both; container-type:size;">
       <div style="position:absolute; top:10px; left:10px; z-index:2; display:flex; gap:4px; background:rgba(0,0,0,0.4); padding:4px; border-radius:100px;">
         <div onClick="{{ goLiveTab }}" style="display:flex; align-items:center; gap:6px; font-family:'JetBrains Mono',monospace; font-size:clamp(9px,1vh,11px); letter-spacing:0.08em; text-transform:uppercase; color:{{ liveTabColor }}; background:{{ liveTabBg }}; padding:6px 12px; border-radius:100px; cursor:pointer; transition:background 0.2s ease, color 0.2s ease;">
           <span style="width:6px; height:6px; border-radius:50%; background:#e0503c; flex-shrink:0;"></span>
@@ -100,8 +100,10 @@
           New here?
         </div>
       </div>
-      <div style="position:absolute; inset:0; opacity:{{ liveLayerOpacity }}; pointer-events:{{ liveLayerPE }}; transition:opacity 0.3s ease;">
-        <iframe data-wfl-video="true" src="https://www.youtube.com/embed/otqgociwb3o?rel=0&autoplay=1&mute=1&playsinline=1&enablejsapi=1" title="Happening now on Wisdom for Living" style="position:absolute; inset:0; width:100%; height:100%; border:0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; opacity:{{ liveLayerOpacity }}; pointer-events:{{ liveLayerPE }}; transition:opacity 0.3s ease;">
+        <div style="aspect-ratio:16/9; width:min(100%, calc(100cqh * 16 / 9)); height:min(100%, calc(100cqw * 9 / 16));">
+          <iframe data-wfl-video="true" src="https://www.youtube.com/embed/otqgociwb3o?rel=0&autoplay=1&mute=1&playsinline=1&enablejsapi=1" title="Happening now on Wisdom for Living" style="width:100%; height:100%; border:0; display:block;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
       </div>
       <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.2vh; opacity:{{ introLayerOpacity }}; pointer-events:{{ introLayerPE }}; transition:opacity 0.3s ease;">
         <div style="width:clamp(36px,7vh,60px); height:clamp(36px,7vh,60px); border-radius:50%; border:1.5px solid rgba(243,241,232,0.35); display:flex; align-items:center; justify-content:center; animation:wfl-pulse 2.6s ease-in-out infinite;">
@@ -202,7 +204,7 @@
             </div>
             <div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(16px,2.6vh,26px); text-align:center; line-height:1.15;">The Summit</div>
             <div style="font-size:clamp(11px,1.3vh,14px); line-height:1.5; color:#9a9d8d; text-align:center; max-width:36ch;">An annual virtual gathering to explore what's coming, and the wisdom to prepare and build for it.</div>
-            <a href="#" style="font-family:'JetBrains Mono',monospace; font-size:clamp(10px,1.1vh,12px); color:#8a8d7d; text-decoration:none;">annual · virtual ↗</a>
+            <a href="https://www.zerotoact.com/#summit-section" target="_blank" rel="noopener" style="font-family:'JetBrains Mono',monospace; font-size:clamp(10px,1.1vh,12px); color:#8a8d7d; text-decoration:none;">annual · virtual ↗</a>
           </div>
         </sc-if>
         <sc-if value="{{ pillars.3.isInactive }}" hint-placeholder-val="{{ true }}">
@@ -268,7 +270,7 @@ class Component extends DCLogic {
     { name: 'Historical Innovations', abbr: 'HI', href: 'https://chroniclesofinnovation.com', domain: 'chroniclesofinnovation.com', tagline: 'Documentaries drawn from history, so people can learn from it.', logo: './logos/chronicles-of-innovation.png' },
     { name: 'Raw Writings', abbr: 'RW', href: 'https://adetuyi.com/writing', domain: 'adetuyi.com/writing', tagline: 'Writing on wisdom, work, and building, drawn from the journey of building systems that run economies.', logo: './logos/adetuyi.png', logoRound: true },
     { name: 'ZeroToAct', abbr: 'Z2A', href: 'https://zerotoact.com', domain: 'zerotoact.com', tagline: 'Frameworks battle-tested building systems that run economies, validated by history, now open to everyone.', logo: './logos/zerotoact.png', logoChip: true },
-    { name: 'The Summit', abbr: 'SUM', href: '#', domain: 'annual · virtual', tagline: 'An annual virtual gathering to explore what\'s coming, and the wisdom to prepare and build for it.', logo: '' }
+    { name: 'The Summit', abbr: 'SUM', href: 'https://www.zerotoact.com/#summit-section', domain: 'annual · virtual', tagline: 'An annual virtual gathering to explore what\'s coming, and the wisdom to prepare and build for it.', logo: '' }
   ];
 
   componentDidMount() {
