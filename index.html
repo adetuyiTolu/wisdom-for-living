@@ -116,15 +116,15 @@
     <!-- PILLARS RAIL -->
     <div data-screen-label="Pillars" style="grid-column:1; grid-row:2; display:flex; gap:2px; background:rgba(243,241,232,0.08); border:1px solid rgba(243,241,232,0.08); border-radius:12px; overflow:hidden; min-height:0; min-width:0;">
 
-      <!-- Tab 0: Historical Innovations -->
+      <!-- Tab 0: Chronicles of Innovation -->
       <div onClick="{{ pillars.0.onClick }}" data-active="{{ pillars.0.isActive }}" style="flex:{{ pillars.0.flexValue }}; background:#141610; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:2vh 1vw; cursor:pointer; transition:flex 0.35s ease, background 0.2s ease; gap:1.4vh; min-width:0; overflow:hidden;" style-hover="background:#181b12;">
         <span style="width:7px; height:7px; border-radius:50%; background:{{ pillars.0.dotBg }}; flex-shrink:0; transition:background 0.3s ease;"></span>
         <sc-if value="{{ pillars.0.isActive }}" hint-placeholder-val="{{ true }}">
           <div style="flex:1; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.4vh;">
             <div style="width:clamp(40px,9vh,64px); height:clamp(40px,9vh,64px); border-radius:14px; overflow:hidden; flex-shrink:0;">
-              <img src="./logos/chronicles-of-innovation.png" alt="Historical Innovations" style="width:82%; height:82%; object-fit:contain; margin:9%;">
+              <img src="./logos/chronicles-of-innovation.png" alt="Chronicles of Innovation" style="width:82%; height:82%; object-fit:contain; margin:9%;">
             </div>
-            <div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(16px,2.6vh,26px); text-align:center; line-height:1.15;">Historical Innovations</div>
+            <div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(16px,2.6vh,26px); text-align:center; line-height:1.15;">Chronicles of Innovation</div>
             <div style="font-size:clamp(11px,1.3vh,14px); line-height:1.5; color:#9a9d8d; text-align:center; max-width:36ch;">Documentaries drawn from history, so people can learn from it.</div>
             <a href="https://chroniclesofinnovation.com" target="_blank" rel="noopener" style="font-family:'JetBrains Mono',monospace; font-size:clamp(10px,1.1vh,12px); color:#8a8d7d; text-decoration:none;">chroniclesofinnovation.com ↗︎</a>
           </div>
@@ -132,9 +132,9 @@
         <sc-if value="{{ pillars.0.isInactive }}" hint-placeholder-val="{{ false }}">
           <div style="flex:1; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh;">
             <div style="width:20px; height:20px; border-radius:6px; overflow:hidden; flex-shrink:0;">
-              <img src="./logos/chronicles-of-innovation.png" alt="Historical Innovations" style="width:80%; height:80%; object-fit:contain; margin:10%;">
+              <img src="./logos/chronicles-of-innovation.png" alt="Chronicles of Innovation" style="width:80%; height:80%; object-fit:contain; margin:10%;">
             </div>
-            <div style="font-family:'JetBrains Mono',monospace; font-size:clamp(10px,1.2vh,13px); letter-spacing:0.06em; color:#5f6254; writing-mode:vertical-rl; text-orientation:mixed;">HI</div>
+            <div style="font-family:'JetBrains Mono',monospace; font-size:clamp(10px,1.2vh,13px); letter-spacing:0.06em; color:#5f6254; writing-mode:vertical-rl; text-orientation:mixed;">COI</div>
           </div>
         </sc-if>
         <span></span>
@@ -266,7 +266,7 @@ class Component extends DCLogic {
   };
 
   pillarsData = [
-    { name: 'Historical Innovations', abbr: 'HI', href: 'https://chroniclesofinnovation.com', domain: 'chroniclesofinnovation.com', tagline: 'Documentaries drawn from history, so people can learn from it.', logo: './logos/chronicles-of-innovation.png' },
+    { name: 'Chronicles of Innovation', abbr: 'COI', href: 'https://chroniclesofinnovation.com', domain: 'chroniclesofinnovation.com', tagline: 'Documentaries drawn from history, so people can learn from it.', logo: './logos/chronicles-of-innovation.png' },
     { name: 'Raw Writings', abbr: 'RW', href: 'https://adetuyi.com/writing', domain: 'adetuyi.com/writing', tagline: 'Writing on wisdom, work, and building, drawn from the journey of building systems that run economies.', logo: './logos/adetuyi.png', logoRound: true },
     { name: 'ZeroToAct', abbr: 'Z2A', href: 'https://zerotoact.com', domain: 'zerotoact.com', tagline: 'Frameworks battle-tested building systems that run economies, validated by history, now open to everyone.', logo: './logos/zerotoact.png', logoChip: true },
     { name: 'The Summit', abbr: 'SUM', href: 'https://www.zerotoact.com/#summit-section', domain: 'annual · virtual', tagline: 'An annual virtual gathering to explore what\'s coming, and the wisdom to prepare and build for it.', logo: '' }
