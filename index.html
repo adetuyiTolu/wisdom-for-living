@@ -100,18 +100,16 @@
           New here?
         </div>
       </div>
-      <sc-if value="{{ onLiveTab }}" hint-placeholder-val="{{ true }}">
-        <iframe src="https://www.youtube.com/embed/otqgociwb3o?rel=0&autoplay=1&mute=1&playsinline=1" title="Happening now on Wisdom for Living" style="position:absolute; inset:0; width:100%; height:100%; border:0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-      </sc-if>
-      <sc-if value="{{ onIntroTab }}" hint-placeholder-val="{{ false }}">
-        <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.2vh;">
-          <div style="width:clamp(36px,7vh,60px); height:clamp(36px,7vh,60px); border-radius:50%; border:1.5px solid rgba(243,241,232,0.35); display:flex; align-items:center; justify-content:center; animation:wfl-pulse 2.6s ease-in-out infinite;">
-            <svg width="30%" height="34%" viewBox="0 0 22 24"><path d="M0 0 L22 12 L0 24 Z" fill="#f3f1e8"></path></svg>
-          </div>
-          <div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(13px,1.7vh,18px); color:#f3f1e8; text-align:center; padding:0 12px;">Founder's Intro</div>
-          <div style="font-family:'JetBrains Mono',monospace; font-size:clamp(9px,1vh,11px); letter-spacing:0.06em; color:#8a8d7d; text-align:center; padding:0 12px;">drop the founder's intro video here</div>
+      <div style="position:absolute; inset:0; opacity:{{ liveLayerOpacity }}; pointer-events:{{ liveLayerPE }}; transition:opacity 0.3s ease;">
+        <iframe data-wfl-video="true" src="https://www.youtube.com/embed/otqgociwb3o?rel=0&autoplay=1&mute=1&playsinline=1&enablejsapi=1" title="Happening now on Wisdom for Living" style="position:absolute; inset:0; width:100%; height:100%; border:0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.2vh; opacity:{{ introLayerOpacity }}; pointer-events:{{ introLayerPE }}; transition:opacity 0.3s ease;">
+        <div style="width:clamp(36px,7vh,60px); height:clamp(36px,7vh,60px); border-radius:50%; border:1.5px solid rgba(243,241,232,0.35); display:flex; align-items:center; justify-content:center; animation:wfl-pulse 2.6s ease-in-out infinite;">
+          <svg width="30%" height="34%" viewBox="0 0 22 24"><path d="M0 0 L22 12 L0 24 Z" fill="#f3f1e8"></path></svg>
         </div>
-      </sc-if>
+        <div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(13px,1.7vh,18px); color:#f3f1e8; text-align:center; padding:0 12px;">Founder's Intro</div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:clamp(9px,1vh,11px); letter-spacing:0.06em; color:#8a8d7d; text-align:center; padding:0 12px;">drop the founder's intro video here</div>
+      </div>
     </div>
 
     <!-- PILLARS RAIL -->
@@ -255,6 +253,14 @@ class Component extends DCLogic {
   state = { active: 0, videoTab: 'live', videoTabTouched: false };
 
   setVideoTab = (tab) => {
+    if (tab !== this.state.videoTab) {
+      const iframe = document.querySelector('[data-wfl-video]');
+      const win = iframe && iframe.contentWindow;
+      if (win) {
+        const func = tab === 'live' ? 'playVideo' : 'pauseVideo';
+        win.postMessage(JSON.stringify({ event: 'command', func, args: [] }), '*');
+      }
+    }
     this.setState({ videoTab: tab, videoTabTouched: true });
   };
 
@@ -299,8 +305,10 @@ class Component extends DCLogic {
       accentColor,
       showNav: this.props.showNav ?? true,
       activeIndicatorOffset: active * 100,
-      onLiveTab: this.state.videoTab === 'live',
-      onIntroTab: this.state.videoTab === 'intro',
+      liveLayerOpacity: this.state.videoTab === 'live' ? 1 : 0,
+      liveLayerPE: this.state.videoTab === 'live' ? 'auto' : 'none',
+      introLayerOpacity: this.state.videoTab === 'intro' ? 1 : 0,
+      introLayerPE: this.state.videoTab === 'intro' ? 'auto' : 'none',
       liveTabColor: this.state.videoTab === 'live' ? '#101209' : '#f3f1e8',
       liveTabBg: this.state.videoTab === 'live' ? accentColor : '#141610',
       introTabColor: this.state.videoTab === 'intro' ? '#101209' : '#f3f1e8',
