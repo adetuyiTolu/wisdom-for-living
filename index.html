@@ -96,12 +96,12 @@
           <span style="width:6px; height:6px; border-radius:50%; background:#e0503c; flex-shrink:0;"></span>
           Happening now
         </div>
-        <div onClick="{{ goIntroTab }}" style="display:flex; align-items:center; gap:6px; font-family:'JetBrains Mono',monospace; font-size:clamp(9px,1vh,11px); letter-spacing:0.08em; text-transform:uppercase; color:{{ introTabColor }}; background:{{ introTabBg }}; padding:6px 12px; border-radius:100px; cursor:pointer; transition:background 0.2s ease, color 0.2s ease; white-space:nowrap;">
+        <div onClick="{{ goIntroTab }}" style="display:flex; align-items:center; gap:6px; font-family:'JetBrains Mono',monospace; font-size:clamp(9px,1vh,11px); letter-spacing:0.08em; text-transform:uppercase; color:{{ introTabColor }}; background:{{ introTabBg }}; padding:6px 12px; border-radius:100px; cursor:pointer; transition:background 0.2s ease, color 0.2s ease; white-space:nowrap; animation:{{ introTabAnim }}; box-shadow:{{ introTabGlow }};">
           New here?
         </div>
       </div>
       <sc-if value="{{ onLiveTab }}" hint-placeholder-val="{{ true }}">
-        <iframe src="https://www.youtube.com/embed/otqgociwb3o?rel=0" title="Happening now on Wisdom for Living" style="position:absolute; inset:0; width:100%; height:100%; border:0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <iframe src="https://www.youtube.com/embed/otqgociwb3o?rel=0&autoplay=1&mute=1&playsinline=1" title="Happening now on Wisdom for Living" style="position:absolute; inset:0; width:100%; height:100%; border:0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </sc-if>
       <sc-if value="{{ onIntroTab }}" hint-placeholder-val="{{ false }}">
         <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.2vh;">
@@ -252,10 +252,10 @@
   &quot;autoRotate&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: false, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Behavior&quot;}
 }">
 class Component extends DCLogic {
-  state = { active: 0, videoTab: 'live' };
+  state = { active: 0, videoTab: 'live', videoTabTouched: false };
 
   setVideoTab = (tab) => {
-    this.setState({ videoTab: tab });
+    this.setState({ videoTab: tab, videoTabTouched: true });
   };
 
   pillarsData = [
@@ -305,6 +305,8 @@ class Component extends DCLogic {
       liveTabBg: this.state.videoTab === 'live' ? accentColor : '#141610',
       introTabColor: this.state.videoTab === 'intro' ? '#101209' : '#f3f1e8',
       introTabBg: this.state.videoTab === 'intro' ? accentColor : '#141610',
+      introTabAnim: this.state.videoTabTouched ? 'none' : 'wfl-pulse 1.8s ease-in-out infinite',
+      introTabGlow: this.state.videoTabTouched ? 'none' : `0 0 0 2px ${accentColor}`,
       goLiveTab: () => this.setVideoTab('live'),
       goIntroTab: () => this.setVideoTab('intro'),
       pillars: this.pillarsData.map((p, i) => ({
