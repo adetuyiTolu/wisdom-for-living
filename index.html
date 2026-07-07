@@ -132,8 +132,8 @@
       <!-- Tab 0: Chronicles of Innovation -->
       <div onClick="{{ pillars.0.onClick }}" data-active="{{ pillars.0.isActive }}" style="flex:{{ pillars.0.flexValue }}; background:#141610; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:2vh 1vw; cursor:pointer; transition:flex 0.35s ease, background 0.2s ease; gap:1.4vh; min-width:0; overflow:hidden;" style-hover="background:#181b12;">
         <span style="width:7px; height:7px; border-radius:50%; background:{{ pillars.0.dotBg }}; flex-shrink:0; transition:background 0.3s ease;"></span>
-        <sc-if value="{{ pillars.0.isActive }}" hint-placeholder-val="{{ true }}">
-          <div style="flex:1; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.4vh;">
+        <div style="position:relative; flex:1; min-height:0; width:100%;">
+          <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.4vh; opacity:{{ pillars.0.activeOpacity }}; pointer-events:{{ pillars.0.activePE }}; transition:opacity 0.3s ease;">
             <div style="width:clamp(40px,9vh,64px); height:clamp(40px,9vh,64px); border-radius:14px; overflow:hidden; flex-shrink:0;">
               <img src="./logos/chronicles-of-innovation.png" alt="Chronicles of Innovation" style="width:82%; height:82%; object-fit:contain; margin:9%;">
             </div>
@@ -141,23 +141,21 @@
             <div style="font-size:clamp(11px,1.3vh,14px); line-height:1.5; color:#9a9d8d; text-align:center; max-width:36ch;">Documentaries drawn from history, so people can learn from it.</div>
             <a href="https://chroniclesofinnovation.com" target="_blank" rel="noopener" style="font-family:'JetBrains Mono',monospace; font-size:clamp(10px,1.1vh,12px); color:#8a8d7d; text-decoration:none;">chroniclesofinnovation.com ↗︎</a>
           </div>
-        </sc-if>
-        <sc-if value="{{ pillars.0.isInactive }}" hint-placeholder-val="{{ false }}">
-          <div style="flex:1; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh;">
+          <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.0.inactiveOpacity }}; pointer-events:{{ pillars.0.inactivePE }}; transition:opacity 0.3s ease;">
             <div style="width:20px; height:20px; border-radius:6px; overflow:hidden; flex-shrink:0;">
               <img src="./logos/chronicles-of-innovation.png" alt="Chronicles of Innovation" style="width:80%; height:80%; object-fit:contain; margin:10%;">
             </div>
             <div style="font-family:'JetBrains Mono',monospace; font-size:clamp(10px,1.2vh,13px); letter-spacing:0.06em; color:#5f6254; writing-mode:vertical-rl; text-orientation:mixed;">COI</div>
           </div>
-        </sc-if>
+        </div>
         <span></span>
       </div>
 
       <!-- Tab 1: Raw Writings -->
       <div onClick="{{ pillars.1.onClick }}" data-active="{{ pillars.1.isActive }}" style="flex:{{ pillars.1.flexValue }}; background:#141610; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:2vh 1vw; cursor:pointer; transition:flex 0.35s ease, background 0.2s ease; gap:1.4vh; min-width:0; overflow:hidden;" style-hover="background:#181b12;">
         <span style="width:7px; height:7px; border-radius:50%; background:{{ pillars.1.dotBg }}; flex-shrink:0; transition:background 0.3s ease;"></span>
-        <sc-if value="{{ pillars.1.isActive }}" hint-placeholder-val="{{ false }}">
-          <div style="flex:1; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.4vh;">
+        <div style="position:relative; flex:1; min-height:0; width:100%;">
+          <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.4vh; opacity:{{ pillars.1.activeOpacity }}; pointer-events:{{ pillars.1.activePE }}; transition:opacity 0.3s ease;">
             <div style="width:clamp(40px,9vh,64px); height:clamp(40px,9vh,64px); border-radius:50%; overflow:hidden; flex-shrink:0;">
               <img src="./logos/adetuyi.png" alt="Raw Writings" style="width:100%; height:100%; object-fit:cover;">
             </div>
@@ -165,23 +163,21 @@
             <div style="font-size:clamp(11px,1.3vh,14px); line-height:1.5; color:#9a9d8d; text-align:center; max-width:36ch;">Writing on wisdom, work, and building, drawn from the journey of building systems that run economies.</div>
             <a href="https://adetuyi.com/writing" target="_blank" rel="noopener" style="font-family:'JetBrains Mono',monospace; font-size:clamp(10px,1.1vh,12px); color:#8a8d7d; text-decoration:none;">adetuyi.com/writing ↗︎</a>
           </div>
-        </sc-if>
-        <sc-if value="{{ pillars.1.isInactive }}" hint-placeholder-val="{{ true }}">
-          <div style="flex:1; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh;">
+          <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.1.inactiveOpacity }}; pointer-events:{{ pillars.1.inactivePE }}; transition:opacity 0.3s ease;">
             <div style="width:20px; height:20px; border-radius:50%; overflow:hidden; flex-shrink:0;">
               <img src="./logos/adetuyi.png" alt="Raw Writings" style="width:100%; height:100%; object-fit:cover;">
             </div>
             <div style="font-family:'JetBrains Mono',monospace; font-size:clamp(10px,1.2vh,13px); letter-spacing:0.06em; color:#5f6254; writing-mode:vertical-rl; text-orientation:mixed;">RW</div>
           </div>
-        </sc-if>
+        </div>
         <span></span>
       </div>
 
       <!-- Tab 2: ZeroToAct -->
       <div onClick="{{ pillars.2.onClick }}" data-active="{{ pillars.2.isActive }}" style="flex:{{ pillars.2.flexValue }}; background:#141610; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:2vh 1vw; cursor:pointer; transition:flex 0.35s ease, background 0.2s ease; gap:1.4vh; min-width:0; overflow:hidden;" style-hover="background:#181b12;">
         <span style="width:7px; height:7px; border-radius:50%; background:{{ pillars.2.dotBg }}; flex-shrink:0; transition:background 0.3s ease;"></span>
-        <sc-if value="{{ pillars.2.isActive }}" hint-placeholder-val="{{ false }}">
-          <div style="flex:1; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.4vh;">
+        <div style="position:relative; flex:1; min-height:0; width:100%;">
+          <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.4vh; opacity:{{ pillars.2.activeOpacity }}; pointer-events:{{ pillars.2.activePE }}; transition:opacity 0.3s ease;">
             <div style="width:clamp(40px,9vh,64px); height:clamp(40px,9vh,64px); border-radius:14px; background:#f3f1e8; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
               <img src="./logos/zerotoact.png" alt="ZeroToAct" style="width:68%; height:68%; object-fit:contain;">
             </div>
@@ -189,23 +185,21 @@
             <div style="font-size:clamp(11px,1.3vh,14px); line-height:1.5; color:#9a9d8d; text-align:center; max-width:36ch;">Frameworks battle-tested building systems that run economies, validated by history, now open to everyone.</div>
             <a href="https://zerotoact.com" target="_blank" rel="noopener" style="font-family:'JetBrains Mono',monospace; font-size:clamp(10px,1.1vh,12px); color:#8a8d7d; text-decoration:none;">zerotoact.com ↗︎</a>
           </div>
-        </sc-if>
-        <sc-if value="{{ pillars.2.isInactive }}" hint-placeholder-val="{{ true }}">
-          <div style="flex:1; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh;">
+          <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.2.inactiveOpacity }}; pointer-events:{{ pillars.2.inactivePE }}; transition:opacity 0.3s ease;">
             <div style="width:20px; height:20px; border-radius:6px; background:#f3f1e8; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
               <img src="./logos/zerotoact.png" alt="ZeroToAct" style="width:65%; height:65%; object-fit:contain;">
             </div>
             <div style="font-family:'JetBrains Mono',monospace; font-size:clamp(10px,1.2vh,13px); letter-spacing:0.06em; color:#5f6254; writing-mode:vertical-rl; text-orientation:mixed;">Z2A</div>
           </div>
-        </sc-if>
+        </div>
         <span></span>
       </div>
 
       <!-- Tab 3: The Summit -->
       <div onClick="{{ pillars.3.onClick }}" data-active="{{ pillars.3.isActive }}" style="flex:{{ pillars.3.flexValue }}; background:#141610; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:2vh 1vw; cursor:pointer; transition:flex 0.35s ease, background 0.2s ease; gap:1.4vh; min-width:0; overflow:hidden;" style-hover="background:#181b12;">
         <span style="width:7px; height:7px; border-radius:50%; background:{{ pillars.3.dotBg }}; flex-shrink:0; transition:background 0.3s ease;"></span>
-        <sc-if value="{{ pillars.3.isActive }}" hint-placeholder-val="{{ false }}">
-          <div style="flex:1; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.4vh;">
+        <div style="position:relative; flex:1; min-height:0; width:100%;">
+          <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.4vh; opacity:{{ pillars.3.activeOpacity }}; pointer-events:{{ pillars.3.activePE }}; transition:opacity 0.3s ease;">
             <div style="display:flex; align-items:center;">
               <div style="width:clamp(30px,6vh,44px); height:clamp(30px,6vh,44px); border-radius:50%; border:2px solid #141610; overflow:hidden; background:#0c0e08;"><img src="./logos/chronicles-of-innovation.png" style="width:100%; height:100%; object-fit:cover;"></div>
               <div style="width:clamp(30px,6vh,44px); height:clamp(30px,6vh,44px); border-radius:50%; border:2px solid #141610; overflow:hidden; margin-left:-14px;"><img src="./logos/adetuyi.png" style="width:100%; height:100%; object-fit:cover;"></div>
@@ -218,9 +212,7 @@
             <div style="font-size:clamp(11px,1.3vh,14px); line-height:1.5; color:#9a9d8d; text-align:center; max-width:36ch;">An annual virtual gathering to explore what's coming, and the wisdom to prepare and build for it.</div>
             <a href="https://www.zerotoact.com/#summit-section" target="_blank" rel="noopener" style="font-family:'JetBrains Mono',monospace; font-size:clamp(10px,1.1vh,12px); color:#8a8d7d; text-decoration:none;">annual · virtual ↗︎</a>
           </div>
-        </sc-if>
-        <sc-if value="{{ pillars.3.isInactive }}" hint-placeholder-val="{{ true }}">
-          <div style="flex:1; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh;">
+          <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.3.inactiveOpacity }}; pointer-events:{{ pillars.3.inactivePE }}; transition:opacity 0.3s ease;">
             <div style="display:flex; flex-direction:column; align-items:center;">
               <div style="width:16px; height:16px; border-radius:50%; border:1.5px solid #141610; overflow:hidden; background:#0c0e08;"><img src="./logos/chronicles-of-innovation.png" style="width:100%; height:100%; object-fit:cover;"></div>
               <div style="width:16px; height:16px; border-radius:50%; border:1.5px solid #141610; overflow:hidden; margin-top:-6px;"><img src="./logos/adetuyi.png" style="width:100%; height:100%; object-fit:cover;"></div>
@@ -231,15 +223,15 @@
             </div>
             <div style="font-family:'JetBrains Mono',monospace; font-size:clamp(10px,1.2vh,13px); letter-spacing:0.06em; color:#5f6254; writing-mode:vertical-rl; text-orientation:mixed;">SUM</div>
           </div>
-        </sc-if>
+        </div>
         <span></span>
       </div>
 
       <!-- Tab 4: The Builders -->
       <div onClick="{{ pillars.4.onClick }}" data-active="{{ pillars.4.isActive }}" style="flex:{{ pillars.4.flexValue }}; background:#141610; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:2vh 1vw; cursor:pointer; transition:flex 0.35s ease, background 0.2s ease; gap:1.4vh; min-width:0; overflow:hidden;" style-hover="background:#181b12;">
         <span style="width:7px; height:7px; border-radius:50%; background:{{ pillars.4.dotBg }}; flex-shrink:0; transition:background 0.3s ease;"></span>
-        <sc-if value="{{ pillars.4.isActive }}" hint-placeholder-val="{{ false }}">
-          <div style="flex:1; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.4vh;">
+        <div style="position:relative; flex:1; min-height:0; width:100%;">
+          <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.4vh; opacity:{{ pillars.4.activeOpacity }}; pointer-events:{{ pillars.4.activePE }}; transition:opacity 0.3s ease;">
             <div style="width:clamp(40px,9vh,64px); height:clamp(40px,9vh,64px); border-radius:14px; background:#1c1f16; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
               <svg width="46%" height="46%" viewBox="0 0 24 24"><rect x="2" y="14" width="5" height="8" fill="{{ accentColor }}"></rect><rect x="9.5" y="9" width="5" height="13" fill="{{ accentColor }}"></rect><rect x="17" y="4" width="5" height="18" fill="{{ accentColor }}"></rect></svg>
             </div>
@@ -247,15 +239,13 @@
             <div style="font-size:clamp(11px,1.3vh,14px); line-height:1.5; color:#9a9d8d; text-align:center; max-width:36ch;">A flagship reality series challenging entrepreneurs and innovators to solve real economic problems through teamwork, strategy, and execution.</div>
             <span style="font-family:'JetBrains Mono',monospace; font-size:clamp(9px,1vh,11px); letter-spacing:0.08em; text-transform:uppercase; color:#101209; background:{{ accentColor }}; padding:3px 10px; border-radius:20px;">Coming soon</span>
           </div>
-        </sc-if>
-        <sc-if value="{{ pillars.4.isInactive }}" hint-placeholder-val="{{ true }}">
-          <div style="flex:1; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh;">
+          <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.4.inactiveOpacity }}; pointer-events:{{ pillars.4.inactivePE }}; transition:opacity 0.3s ease;">
             <div style="width:20px; height:20px; border-radius:6px; background:#1c1f16; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
               <svg width="46%" height="46%" viewBox="0 0 24 24"><rect x="2" y="14" width="5" height="8" fill="{{ accentColor }}"></rect><rect x="9.5" y="9" width="5" height="13" fill="{{ accentColor }}"></rect><rect x="17" y="4" width="5" height="18" fill="{{ accentColor }}"></rect></svg>
             </div>
             <div style="font-family:'JetBrains Mono',monospace; font-size:clamp(10px,1.2vh,13px); letter-spacing:0.06em; color:#5f6254; writing-mode:vertical-rl; text-orientation:mixed;">TB</div>
           </div>
-        </sc-if>
+        </div>
         <span></span>
       </div>
 
@@ -306,11 +296,11 @@ class Component extends DCLogic {
   };
 
   pillarsData = [
-    { name: 'Chronicles of Innovation', abbr: 'COI', href: 'https://chroniclesofinnovation.com', domain: 'chroniclesofinnovation.com', tagline: 'Documentaries drawn from history, so people can learn from it.', logo: './logos/chronicles-of-innovation.png' },
-    { name: 'Raw Writings', abbr: 'RW', href: 'https://adetuyi.com/writing', domain: 'adetuyi.com/writing', tagline: 'Writing on wisdom, work, and building, drawn from the journey of building systems that run economies.', logo: './logos/adetuyi.png', logoRound: true },
-    { name: 'ZeroToAct', abbr: 'Z2A', href: 'https://zerotoact.com', domain: 'zerotoact.com', tagline: 'Frameworks battle-tested building systems that run economies, validated by history, now open to everyone.', logo: './logos/zerotoact.png', logoChip: true },
-    { name: 'The Summit', abbr: 'SUM', href: 'https://www.zerotoact.com/#summit-section', domain: 'annual · virtual', tagline: 'An annual virtual gathering to explore what\'s coming, and the wisdom to prepare and build for it.', logo: '' },
-    { name: 'The Builders', abbr: 'TB', href: '', domain: '', tagline: 'A flagship reality series challenging entrepreneurs and innovators to solve real economic problems through teamwork, strategy, and execution.', logo: '', comingSoon: true }
+    { name: 'Chronicles of Innovation', abbr: 'COI', href: 'https://chroniclesofinnovation.com', domain: 'chroniclesofinnovation.com', tagline: 'Documentaries drawn from history, so people can learn from it.', logo: './logos/chronicles-of-innovation.png', dwell: 4400 },
+    { name: 'Raw Writings', abbr: 'RW', href: 'https://adetuyi.com/writing', domain: 'adetuyi.com/writing', tagline: 'Writing on wisdom, work, and building, drawn from the journey of building systems that run economies.', logo: './logos/adetuyi.png', logoRound: true, dwell: 5600 },
+    { name: 'ZeroToAct', abbr: 'Z2A', href: 'https://zerotoact.com', domain: 'zerotoact.com', tagline: 'Frameworks battle-tested building systems that run economies, validated by history, now open to everyone.', logo: './logos/zerotoact.png', logoChip: true, dwell: 5200 },
+    { name: 'The Summit', abbr: 'SUM', href: 'https://www.zerotoact.com/#summit-section', domain: 'annual · virtual', tagline: 'An annual virtual gathering to explore what\'s coming, and the wisdom to prepare and build for it.', logo: '', dwell: 5600 },
+    { name: 'The Builders', abbr: 'TB', href: '', domain: '', tagline: 'A flagship reality series challenging entrepreneurs and innovators to solve real economic problems through teamwork, strategy, and execution.', logo: '', comingSoon: true, dwell: 6000 }
   ];
 
   componentDidMount() {
@@ -322,27 +312,27 @@ class Component extends DCLogic {
   }
 
   componentWillUnmount() {
-    clearInterval(this._timer);
+    clearTimeout(this._timer);
   }
 
   maybeStartRotation() {
-    clearInterval(this._timer);
+    clearTimeout(this._timer);
     if (this.props.autoRotate && !this._rotationPaused) {
-      this._timer = setInterval(() => {
-        this.setState(s => ({ active: (s.active + 1) % this.pillarsData.length }));
-      }, 4200);
+      const dwell = this.pillarsData[this.state.active].dwell ?? 4800;
+      this._timer = setTimeout(() => {
+        this.setState(s => ({ active: (s.active + 1) % this.pillarsData.length }), () => this.maybeStartRotation());
+      }, dwell);
     }
   }
 
   setActive(i) {
-    clearInterval(this._timer);
-    this.setState({ active: i });
-    this.maybeStartRotation();
+    clearTimeout(this._timer);
+    this.setState({ active: i }, () => this.maybeStartRotation());
   }
 
   pauseRotation = () => {
     this._rotationPaused = true;
-    clearInterval(this._timer);
+    clearTimeout(this._timer);
   };
 
   resumeRotation = () => {
@@ -375,6 +365,10 @@ class Component extends DCLogic {
         name: p.name,
         isActive: i === active,
         isInactive: i !== active,
+        activeOpacity: i === active ? 1 : 0,
+        activePE: i === active ? 'auto' : 'none',
+        inactiveOpacity: i === active ? 0 : 1,
+        inactivePE: i === active ? 'none' : 'auto',
         dotBg: i === active ? accentColor : 'rgba(243,241,232,0.28)',
         flexValue: i === active ? 5 : 1,
         listColor: i === active ? '#f3f1e8' : '#8a8d7d',
