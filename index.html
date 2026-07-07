@@ -127,7 +127,7 @@
     </div>
 
     <!-- PILLARS RAIL -->
-    <div data-screen-label="Pillars" style="grid-column:1; grid-row:2; display:flex; gap:2px; background:rgba(243,241,232,0.08); border:1px solid rgba(243,241,232,0.08); border-radius:12px; overflow:hidden; min-height:0; min-width:0;">
+    <div data-screen-label="Pillars" onMouseEnter="{{ pauseRotation }}" onMouseLeave="{{ resumeRotation }}" style="grid-column:1; grid-row:2; display:flex; gap:2px; background:rgba(243,241,232,0.08); border:1px solid rgba(243,241,232,0.08); border-radius:12px; overflow:hidden; min-height:0; min-width:0;">
 
       <!-- Tab 0: Chronicles of Innovation -->
       <div onClick="{{ pillars.0.onClick }}" data-active="{{ pillars.0.isActive }}" style="flex:{{ pillars.0.flexValue }}; background:#141610; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:2vh 1vw; cursor:pointer; transition:flex 0.35s ease, background 0.2s ease; gap:1.4vh; min-width:0; overflow:hidden;" style-hover="background:#181b12;">
@@ -262,7 +262,7 @@
     </div>
 
     <!-- PILLAR LIST -->
-    <div data-screen-label="Pillar list" style="grid-column:2; grid-row:2; position:relative; display:flex; flex-direction:column; min-height:0; min-width:0; border-top:1px solid rgba(243,241,232,0.1); padding-left:16px;">
+    <div data-screen-label="Pillar list" onMouseEnter="{{ pauseRotation }}" onMouseLeave="{{ resumeRotation }}" style="grid-column:2; grid-row:2; position:relative; display:flex; flex-direction:column; min-height:0; min-width:0; border-top:1px solid rgba(243,241,232,0.1); padding-left:16px;">
       <div style="position:absolute; left:0; top:0; width:2px; height:20%; background:{{ accentColor }}; transform:translateY({{ activeIndicatorOffset }}%); transition:transform 0.4s cubic-bezier(0.4,0,0.2,1);"></div>
       <sc-for list="{{ pillars }}" as="p" hint-placeholder-count="5">
         <div onClick="{{ p.onClick }}" style="flex:1; display:flex; align-items:center; gap:8px; border-bottom:1px solid rgba(243,241,232,0.1); cursor:pointer; color:{{ p.listColor }}; transition:color 0.25s ease, padding-left 0.25s ease;" style-hover="color:#f3f1e8; padding-left:6px;">
@@ -288,7 +288,7 @@
 <script type="text/x-dc" data-dc-script data-props="{
   &quot;accentColor&quot;: {&quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#7fae5c&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;options&quot;: [&quot;#7fae5c&quot;, &quot;#c9a15a&quot;, &quot;#5c9aad&quot;], &quot;section&quot;: &quot;Theme&quot;},
   &quot;showNav&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Layout&quot;},
-  &quot;autoRotate&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: false, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Behavior&quot;}
+  &quot;autoRotate&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Behavior&quot;}
 }">
 class Component extends DCLogic {
   state = { active: 0, videoTab: 'live', videoTabTouched: false };
@@ -327,10 +327,10 @@ class Component extends DCLogic {
 
   maybeStartRotation() {
     clearInterval(this._timer);
-    if (this.props.autoRotate) {
+    if (this.props.autoRotate && !this._rotationPaused) {
       this._timer = setInterval(() => {
         this.setState(s => ({ active: (s.active + 1) % this.pillarsData.length }));
-      }, 3600);
+      }, 4200);
     }
   }
 
@@ -339,6 +339,16 @@ class Component extends DCLogic {
     this.setState({ active: i });
     this.maybeStartRotation();
   }
+
+  pauseRotation = () => {
+    this._rotationPaused = true;
+    clearInterval(this._timer);
+  };
+
+  resumeRotation = () => {
+    this._rotationPaused = false;
+    this.maybeStartRotation();
+  };
 
   renderVals() {
     const active = this.state.active;
@@ -359,6 +369,8 @@ class Component extends DCLogic {
       introTabGlow: this.state.videoTabTouched ? 'none' : `0 0 0 2px ${accentColor}`,
       goLiveTab: () => this.setVideoTab('live'),
       goIntroTab: () => this.setVideoTab('intro'),
+      pauseRotation: this.pauseRotation,
+      resumeRotation: this.resumeRotation,
       pillars: this.pillarsData.map((p, i) => ({
         name: p.name,
         isActive: i === active,
