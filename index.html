@@ -103,12 +103,23 @@
 
     <!-- VIDEO -->
     <div data-screen-label="Narration" style="grid-column:2; grid-row:1; position:relative; border-radius:12px; overflow:hidden; background-color:#0c0e08; min-height:0; min-width:0; animation:wfl-rise 0.8s ease-out 0.1s both; container-type:size;">
-      <div onClick="{{ watchFullscreen }}" style="position:absolute; top:10px; left:10px; z-index:2; display:flex; align-items:center; gap:6px; font-family:'JetBrains Mono',monospace; font-size:clamp(9px,1vh,11px); letter-spacing:0.08em; text-transform:uppercase; color:#f3f1e8; background:rgba(0,0,0,0.45); padding:6px 12px; border-radius:100px; cursor:pointer; transition:background 0.2s ease;" style-hover="background:rgba(0,0,0,0.65);">
+      <div onClick="{{ watchFullscreen }}" style="position:absolute; top:10px; left:10px; z-index:2; display:flex; align-items:center; gap:6px; font-family:'JetBrains Mono',monospace; font-size:clamp(9px,1vh,11px); letter-spacing:0.08em; text-transform:uppercase; color:#f3f1e8; background:#141610; padding:6px 12px; border-radius:100px; cursor:pointer; transition:background 0.2s ease;" style-hover="background:#1c1f16;">
         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#f3f1e8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M8 3H5a2 2 0 0 0-2 2v3"></path><path d="M16 3h3a2 2 0 0 1 2 2v3"></path><path d="M21 16v3a2 2 0 0 1-2 2h-3"></path><path d="M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
         Watch in full screen
       </div>
+      <div style="position:absolute; bottom:10px; left:10px; z-index:2; display:flex; align-items:center; gap:2px; background:#141610; padding:4px; border-radius:100px;">
+        <div onClick="{{ playPrevious }}" style="display:flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:50%; cursor:pointer; color:#f3f1e8; transition:background 0.2s ease;" style-hover="background:#1c1f16;" aria-label="Previous video">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zM20 6L9 12l11 6V6z"></path></svg>
+        </div>
+        <div onClick="{{ playNext }}" style="display:flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:50%; cursor:pointer; color:#f3f1e8; transition:background 0.2s ease;" style-hover="background:#1c1f16;" aria-label="Next video">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M16 6h2v12h-2zM4 6l11 6-11 6V6z"></path></svg>
+        </div>
+        <a href="{{ videoPlaylistUrl }}" target="_blank" rel="noopener" style="display:flex; align-items:center; font-family:'JetBrains Mono',monospace; font-size:clamp(9px,1vh,11px); letter-spacing:0.06em; text-transform:uppercase; color:#f3f1e8; text-decoration:none; padding:0 10px 0 4px; white-space:nowrap;">
+          View playlist <span aria-hidden="true">↗︎</span>
+        </a>
+      </div>
       <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;">
-        <div style="aspect-ratio:16/9; width:min(100%, calc(100cqh * 16 / 9)); height:min(100%, calc(100cqw * 9 / 16));">
+        <div style="aspect-ratio:{{ videoAspectRatio }}; width:{{ videoWidth }}; height:{{ videoHeight }};">
           <iframe data-wfl-video="true" src="{{ videoSrc }}" title="{{ videoTitle }}" style="width:100%; height:100%; border:0; display:block;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe>
         </div>
       </div>
@@ -249,21 +260,27 @@ class Component extends DCLogic {
     return `${base}?list=${p.playlist}&rel=0&autoplay=1&mute=1&playsinline=1&enablejsapi=1`;
   }
 
+  sendPlayerCommand(func) {
+    const iframe = document.querySelector('[data-wfl-video]');
+    const win = iframe && iframe.contentWindow;
+    if (win) win.postMessage(JSON.stringify({ event: 'command', func, args: [] }), '*');
+  }
+
   watchFullscreen = () => {
     const iframe = document.querySelector('[data-wfl-video]');
     if (!iframe) return;
     const request = iframe.requestFullscreen || iframe.webkitRequestFullscreen || iframe.mozRequestFullScreen;
     if (request) request.call(iframe);
-    const win = iframe.contentWindow;
-    if (win) {
-      win.postMessage(JSON.stringify({ event: 'command', func: 'unMute', args: [] }), '*');
-      win.postMessage(JSON.stringify({ event: 'command', func: 'playVideo', args: [] }), '*');
-    }
+    this.sendPlayerCommand('unMute');
+    this.sendPlayerCommand('playVideo');
   };
+
+  playPrevious = () => this.sendPlayerCommand('previousVideo');
+  playNext = () => this.sendPlayerCommand('nextVideo');
 
   pillarsData = [
     { name: 'Chronicles of Innovation', abbr: 'COI', href: 'https://chroniclesofinnovation.com', domain: 'chroniclesofinnovation.com', tagline: 'Documentaries drawn from history, so people can learn from it.', logo: './logos/chronicles-of-innovation.png', dwell: 4400, playlist: 'PLX-5gsq5-pTg' },
-    { name: 'ZeroToAct', abbr: 'Z2A', href: 'https://zerotoact.com', domain: 'zerotoact.com', tagline: 'Insights into the global economy through video, text, and more, frameworks to apply them, a community of builders, and an annual gathering for the year\'s outlook.', logo: './logos/zerotoact.png', logoChip: true, dwell: 5200, playlist: 'PLX_mgoh4inS4', startVideo: 'V0gEUW2dQAU' },
+    { name: 'ZeroToAct', abbr: 'Z2A', href: 'https://zerotoact.com', domain: 'zerotoact.com', tagline: 'Insights into the global economy through video, text, and more, frameworks to apply them, a community of builders, and an annual gathering for the year\'s outlook.', logo: './logos/zerotoact.png', logoChip: true, dwell: 5200, playlist: 'PLX_mgoh4inS4', startVideo: 'V0gEUW2dQAU', portrait: true },
     { name: 'Books', abbr: 'BKS', href: '', domain: '', tagline: 'The Prosperity Engine and The Oversized Mind of a Visionary, two forthcoming titles by Tolu Adetuyi.', logo: '', comingSoon: true, dwell: 5600 },
     { name: 'The Builders', abbr: 'TB', href: '', domain: '', tagline: 'A flagship reality series challenging entrepreneurs and innovators to solve real economic problems through teamwork, strategy, and execution.', logo: '', comingSoon: true, dwell: 6000 }
   ];
@@ -311,13 +328,21 @@ class Component extends DCLogic {
     const active = this.state.active;
     const accentColor = this.props.accentColor ?? '#7fae5c';
     const videoPillar = this.pillarsData[this.state.activeVideoIndex] ?? this.pillarsData[0];
+    const ratioW = videoPillar.portrait ? 9 : 16;
+    const ratioH = videoPillar.portrait ? 16 : 9;
     return {
       accentColor,
       showNav: this.props.showNav ?? true,
       activeIndicatorOffset: active * 100,
       videoSrc: this.getVideoSrc(videoPillar),
       videoTitle: `${videoPillar.name} on Wisdom for Living`,
+      videoAspectRatio: `${ratioW} / ${ratioH}`,
+      videoWidth: `min(100%, calc(100cqh * ${ratioW} / ${ratioH}))`,
+      videoHeight: `min(100%, calc(100cqw * ${ratioH} / ${ratioW}))`,
+      videoPlaylistUrl: `https://www.youtube.com/playlist?list=${videoPillar.playlist}`,
       watchFullscreen: this.watchFullscreen,
+      playPrevious: this.playPrevious,
+      playNext: this.playNext,
       pauseRotation: this.pauseRotation,
       resumeRotation: this.resumeRotation,
       pillars: this.pillarsData.map((p, i) => ({
