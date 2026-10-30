@@ -52,6 +52,7 @@
       [data-wfl-grid] { display: flex !important; flex-direction: column !important; gap: 28px !important; padding: 20px 20px 32px !important; height: auto !important; }
       [data-screen-label="Hero"] { grid-column: auto !important; grid-row: auto !important; padding: 0 !important; }
       [data-screen-label="Narration"] { grid-column: auto !important; grid-row: auto !important; aspect-ratio: 16/10 !important; height: auto !important; width: 100% !important; }
+      [data-screen-label="Narration"][data-video-orientation="portrait"] { aspect-ratio: auto !important; height: 90vh !important; height: 90svh !important; }
       [data-screen-label="Pillars"] { grid-column: auto !important; grid-row: auto !important; flex-direction: column !important; height: auto !important; }
       [data-screen-label="Pillars"] > div { flex: none !important; width: 100% !important; }
       [data-screen-label="Pillars"] > div[data-active="true"] { flex-direction: column !important; align-items: center !important; padding: 28px 20px !important; }
@@ -102,7 +103,7 @@
     </div>
 
     <!-- VIDEO -->
-    <div data-screen-label="Narration" style="grid-column:2; grid-row:1; position:relative; border-radius:12px; overflow:hidden; background-color:#0c0e08; min-height:0; min-width:0; animation:wfl-rise 0.8s ease-out 0.1s both; container-type:size;">
+    <div data-screen-label="Narration" data-video-orientation="{{ videoOrientation }}" style="grid-column:2; grid-row:1; position:relative; border-radius:12px; overflow:hidden; background-color:#0c0e08; min-height:0; min-width:0; animation:wfl-rise 0.8s ease-out 0.1s both; container-type:size;">
       <div onClick="{{ watchFullscreen }}" style="position:absolute; top:10px; left:10px; z-index:3; display:flex; align-items:center; gap:6px; font-family:'JetBrains Mono',monospace; font-size:clamp(9px,1vh,11px); letter-spacing:0.08em; text-transform:uppercase; color:#f3f1e8; background:#141610; padding:6px 12px; border-radius:100px; cursor:pointer; transition:background 0.2s ease;" style-hover="background:#1c1f16;">
         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#f3f1e8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M8 3H5a2 2 0 0 0-2 2v3"></path><path d="M16 3h3a2 2 0 0 1 2 2v3"></path><path d="M21 16v3a2 2 0 0 1-2 2h-3"></path><path d="M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
         Watch in full screen
@@ -390,6 +391,7 @@ class Component extends DCLogic {
       videoTitle: `${videoPillar.name} on Wisdom for Living`,
       videoPillarName: videoPillar.name,
       videoAspectRatio: `${ratioW} / ${ratioH}`,
+      videoOrientation: videoPillar.portrait ? 'portrait' : 'landscape',
       videoWidth: `min(100%, calc(100cqh * ${ratioW} / ${ratioH}))`,
       videoHeight: `min(100%, calc(100cqw * ${ratioH} / ${ratioW}))`,
       watchFullscreen: this.watchFullscreen,
