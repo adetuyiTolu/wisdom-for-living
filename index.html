@@ -140,7 +140,7 @@
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#f3f1e8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M8 3H5a2 2 0 0 0-2 2v3"></path><path d="M16 3h3a2 2 0 0 1 2 2v3"></path><path d="M21 16v3a2 2 0 0 1-2 2h-3"></path><path d="M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
             Watch in full screen
           </div>
-          <div style="position:absolute; bottom:10px; left:10px; z-index:3; display:flex; align-items:center; gap:2px; background:#141610; padding:4px; border-radius:100px;">
+          <div style="position:absolute; bottom:10px; left:10px; z-index:3; display:flex; align-items:center; gap:2px; background:#141610; padding:4px; border-radius:100px; display:{{ playlistBarDisplay }};">
             <div onClick="{{ playPrevious }}" style="display:flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:50%; cursor:pointer; color:#f3f1e8; transition:background 0.2s ease;" style-hover="background:#1c1f16;" aria-label="Previous video">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zM20 6L9 12l11 6V6z"></path></svg>
             </div>
@@ -153,7 +153,12 @@
             </div>
           </div>
           <div style="aspect-ratio:{{ videoAspectRatio }}; width:{{ videoWidth }}; height:{{ videoHeight }};">
-            <iframe data-wfl-video="true" src="{{ videoSrc }}" title="{{ videoTitle }}" style="width:100%; height:100%; border:0; display:block;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe>
+            <sc-if value="{{ isYouTube }}" hint-placeholder-val="{{ true }}">
+              <iframe data-wfl-video="true" src="{{ videoSrc }}" title="{{ videoTitle }}" style="width:100%; height:100%; border:0; display:block;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe>
+            </sc-if>
+            <sc-if value="{{ isLocalVideo }}" hint-placeholder-val="{{ false }}">
+              <video data-wfl-video="true" src="{{ localVideoSrc }}" title="{{ videoTitle }}" style="width:100%; height:100%; border:0; display:block; object-fit:cover;" autoplay muted loop playsinline></video>
+            </sc-if>
           </div>
         </div>
       </div>
@@ -310,12 +315,17 @@ class Component extends DCLogic {
   }
 
   watchFullscreen = () => {
-    const iframe = document.querySelector('[data-wfl-video]');
-    if (!iframe) return;
-    const request = iframe.requestFullscreen || iframe.webkitRequestFullscreen || iframe.mozRequestFullScreen;
-    if (request) request.call(iframe);
-    this.sendPlayerCommand('unMute');
-    this.sendPlayerCommand('playVideo');
+    const el = document.querySelector('[data-wfl-video]');
+    if (!el) return;
+    const request = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen;
+    if (request) request.call(el);
+    if (el.tagName === 'VIDEO') {
+      el.muted = false;
+      el.play();
+    } else {
+      this.sendPlayerCommand('unMute');
+      this.sendPlayerCommand('playVideo');
+    }
   };
 
   // Jumps by index within our own video list (rather than letting the YouTube player
@@ -365,8 +375,8 @@ class Component extends DCLogic {
       { id: '7zfrfdGIkSo', title: 'One Shock, Four Answers' },
       { id: 'BqXH09T_2Og', title: 'Lenders Started Choosing: ZeroToAct Signal' },
     ] },
-    { name: 'Books', abbr: 'BKS', href: '', domain: '', tagline: 'The Prosperity Engine and The Oversized Mind of a Visionary, two forthcoming titles by Tolu Adetuyi.', logo: '', comingSoon: true, dwell: 5600 },
-    { name: 'The Builders', abbr: 'TB', href: '', domain: '', tagline: 'A flagship reality series challenging entrepreneurs and innovators to solve real economic problems through teamwork, strategy, and execution.', logo: '', comingSoon: true, dwell: 6000 }
+    { name: 'Books', abbr: 'BKS', href: '', domain: '', tagline: 'The Prosperity Engine and The Oversized Mind of a Visionary, two forthcoming titles by Tolu Adetuyi.', logo: '', comingSoon: true, dwell: 5600, localVideo: './videos/books-coming-soon.mp4' },
+    { name: 'The Builders', abbr: 'TB', href: '', domain: '', tagline: 'A flagship reality series challenging entrepreneurs and innovators to solve real economic problems through teamwork, strategy, and execution.', logo: '', comingSoon: true, dwell: 6000, localVideo: './videos/the-builders-intro.mp4' }
   ];
 
   componentDidMount() {
@@ -394,7 +404,7 @@ class Component extends DCLogic {
   setActive(i) {
     clearTimeout(this._timer);
     const next = { active: i };
-    if (this.pillarsData[i].playlist) {
+    if (this.pillarsData[i].playlist || this.pillarsData[i].localVideo) {
       next.activeVideoIndex = i;
       next.manualVideoId = null;
       next.playlistOpen = false;
@@ -426,6 +436,10 @@ class Component extends DCLogic {
       videoSrc: this.getVideoSrc(videoPillar, this.state.manualVideoId),
       videoTitle: `${videoPillar.name} on Wisdom for Living`,
       videoPillarName: videoPillar.name,
+      isYouTube: !!videoPillar.playlist,
+      isLocalVideo: !!videoPillar.localVideo,
+      localVideoSrc: videoPillar.localVideo || '',
+      playlistBarDisplay: videoPillar.playlist ? 'flex' : 'none',
       videoAspectRatio: `${ratioW} / ${ratioH}`,
       videoOrientation: videoPillar.portrait ? 'portrait' : 'landscape',
       videoWidth: `min(100%, calc(100cqh * ${ratioW} / ${ratioH}))`,
