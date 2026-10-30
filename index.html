@@ -283,7 +283,7 @@
 <script type="text/x-dc" data-dc-script data-props="{
   &quot;accentColor&quot;: {&quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#7fae5c&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;options&quot;: [&quot;#7fae5c&quot;, &quot;#c9a15a&quot;, &quot;#5c9aad&quot;], &quot;section&quot;: &quot;Theme&quot;},
   &quot;showNav&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Layout&quot;},
-  &quot;autoRotate&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Behavior&quot;}
+  &quot;autoRotate&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: false, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Behavior&quot;}
 }">
 class Component extends DCLogic {
   state = { active: 0, activeVideoIndex: 0, manualVideoId: null, playlistOpen: false };
@@ -293,6 +293,14 @@ class Component extends DCLogic {
     const vid = manualVideoId || p.startVideo;
     const base = vid ? `https://www.youtube.com/embed/${vid}` : 'https://www.youtube.com/embed/videoseries';
     return `${base}?list=${p.playlist}&rel=0&autoplay=1&mute=1&playsinline=1&enablejsapi=1`;
+  }
+
+  getVideoPillar() {
+    return this.pillarsData[this.state.activeVideoIndex] ?? this.pillarsData[0];
+  }
+
+  getCurrentVideoId(p) {
+    return this.state.manualVideoId || p.startVideo || (p.videos && p.videos[0] && p.videos[0].id);
   }
 
   sendPlayerCommand(func) {
@@ -310,8 +318,22 @@ class Component extends DCLogic {
     this.sendPlayerCommand('playVideo');
   };
 
-  playPrevious = () => this.sendPlayerCommand('previousVideo');
-  playNext = () => this.sendPlayerCommand('nextVideo');
+  // Jumps by index within our own video list (rather than letting the YouTube player
+  // advance on its own) so the sidebar's "now playing" highlight always matches what's
+  // actually on screen.
+  stepVideo(direction) {
+    const p = this.getVideoPillar();
+    const videos = p.videos || [];
+    if (!videos.length) return this.sendPlayerCommand(direction > 0 ? 'nextVideo' : 'previousVideo');
+    const currentId = this.getCurrentVideoId(p);
+    const idx = videos.findIndex(v => v.id === currentId);
+    const base = idx === -1 ? 0 : idx;
+    const nextIdx = (base + direction + videos.length) % videos.length;
+    this.selectVideo(videos[nextIdx].id);
+  }
+
+  playPrevious = () => this.stepVideo(-1);
+  playNext = () => this.stepVideo(1);
 
   togglePlaylist = () => {
     this.setState(s => ({ playlistOpen: !s.playlistOpen }));
@@ -393,10 +415,10 @@ class Component extends DCLogic {
   renderVals() {
     const active = this.state.active;
     const accentColor = this.props.accentColor ?? '#7fae5c';
-    const videoPillar = this.pillarsData[this.state.activeVideoIndex] ?? this.pillarsData[0];
+    const videoPillar = this.getVideoPillar();
     const ratioW = videoPillar.portrait ? 9 : 16;
     const ratioH = videoPillar.portrait ? 16 : 9;
-    const currentVideoId = this.state.manualVideoId || videoPillar.startVideo || (videoPillar.videos && videoPillar.videos[0] && videoPillar.videos[0].id);
+    const currentVideoId = this.getCurrentVideoId(videoPillar);
     return {
       accentColor,
       showNav: this.props.showNav ?? true,
