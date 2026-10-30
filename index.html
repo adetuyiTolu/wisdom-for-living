@@ -28,10 +28,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    @keyframes wfl-pulse {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.08); opacity: 0.85; }
-    }
     @keyframes wfl-drift {
       0% { background-position: 0 0; }
       100% { background-position: 60px 60px; }
@@ -107,26 +103,14 @@
 
     <!-- VIDEO -->
     <div data-screen-label="Narration" style="grid-column:2; grid-row:1; position:relative; border-radius:12px; overflow:hidden; background-color:#0c0e08; min-height:0; min-width:0; animation:wfl-rise 0.8s ease-out 0.1s both; container-type:size;">
-      <div style="position:absolute; top:10px; left:10px; z-index:2; display:flex; gap:4px; background:rgba(0,0,0,0.4); padding:4px; border-radius:100px;">
-        <div onClick="{{ goLiveTab }}" style="display:flex; align-items:center; gap:6px; font-family:'JetBrains Mono',monospace; font-size:clamp(9px,1vh,11px); letter-spacing:0.08em; text-transform:uppercase; color:{{ liveTabColor }}; background:{{ liveTabBg }}; padding:6px 12px; border-radius:100px; cursor:pointer; transition:background 0.2s ease, color 0.2s ease;">
-          <span style="width:6px; height:6px; border-radius:50%; background:#e0503c; flex-shrink:0;"></span>
-          Happening now
-        </div>
-        <div onClick="{{ goIntroTab }}" style="display:flex; align-items:center; gap:6px; font-family:'JetBrains Mono',monospace; font-size:clamp(9px,1vh,11px); letter-spacing:0.08em; text-transform:uppercase; color:{{ introTabColor }}; background:{{ introTabBg }}; padding:6px 12px; border-radius:100px; cursor:pointer; transition:background 0.2s ease, color 0.2s ease; white-space:nowrap; animation:{{ introTabAnim }}; box-shadow:{{ introTabGlow }};">
-          <svg width="8" height="9" viewBox="0 0 22 24" style="flex-shrink:0;"><path d="M0 0 L22 12 L0 24 Z" fill="{{ introTabColor }}"></path></svg>
-          New here? Watch intro
-        </div>
+      <div onClick="{{ watchFullscreen }}" style="position:absolute; top:10px; left:10px; z-index:2; display:flex; align-items:center; gap:6px; font-family:'JetBrains Mono',monospace; font-size:clamp(9px,1vh,11px); letter-spacing:0.08em; text-transform:uppercase; color:#f3f1e8; background:rgba(0,0,0,0.45); padding:6px 12px; border-radius:100px; cursor:pointer; transition:background 0.2s ease;" style-hover="background:rgba(0,0,0,0.65);">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#f3f1e8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M8 3H5a2 2 0 0 0-2 2v3"></path><path d="M16 3h3a2 2 0 0 1 2 2v3"></path><path d="M21 16v3a2 2 0 0 1-2 2h-3"></path><path d="M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+        Watch in full screen
       </div>
-      <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; opacity:{{ liveLayerOpacity }}; pointer-events:{{ liveLayerPE }}; transition:opacity 0.3s ease;">
+      <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;">
         <div style="aspect-ratio:16/9; width:min(100%, calc(100cqh * 16 / 9)); height:min(100%, calc(100cqw * 9 / 16));">
-          <iframe data-wfl-video="true" src="https://www.youtube.com/embed/zbeBT46ymp4?list=PLX-5gsq5-pTg&rel=0&autoplay=1&mute=1&playsinline=1&enablejsapi=1" title="Happening now on Wisdom for Living" style="width:100%; height:100%; border:0; display:block;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <iframe data-wfl-video="true" src="{{ videoSrc }}" title="{{ videoTitle }}" style="width:100%; height:100%; border:0; display:block;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe>
         </div>
-      </div>
-      <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.2vh; opacity:{{ introLayerOpacity }}; pointer-events:{{ introLayerPE }}; transition:opacity 0.3s ease;">
-        <div style="width:clamp(36px,7vh,60px); height:clamp(36px,7vh,60px); border-radius:50%; border:1.5px solid rgba(243,241,232,0.35); display:flex; align-items:center; justify-content:center; animation:wfl-pulse 2.6s ease-in-out infinite;">
-          <svg width="30%" height="34%" viewBox="0 0 22 24"><path d="M0 0 L22 12 L0 24 Z" fill="#f3f1e8"></path></svg>
-        </div>
-        <div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(13px,1.7vh,18px); color:#f3f1e8; text-align:center; padding:0 12px;">Founder's Intro</div>
       </div>
     </div>
 
@@ -257,23 +241,29 @@
   &quot;autoRotate&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Behavior&quot;}
 }">
 class Component extends DCLogic {
-  state = { active: 0, videoTab: 'live', videoTabTouched: false };
+  state = { active: 0, activeVideoIndex: 0 };
 
-  setVideoTab = (tab) => {
-    if (tab !== this.state.videoTab) {
-      const iframe = document.querySelector('[data-wfl-video]');
-      const win = iframe && iframe.contentWindow;
-      if (win) {
-        const func = tab === 'live' ? 'playVideo' : 'pauseVideo';
-        win.postMessage(JSON.stringify({ event: 'command', func, args: [] }), '*');
-      }
+  getVideoSrc(p) {
+    if (!p || !p.playlist) return null;
+    const base = p.startVideo ? `https://www.youtube.com/embed/${p.startVideo}` : 'https://www.youtube.com/embed/videoseries';
+    return `${base}?list=${p.playlist}&rel=0&autoplay=1&mute=1&playsinline=1&enablejsapi=1`;
+  }
+
+  watchFullscreen = () => {
+    const iframe = document.querySelector('[data-wfl-video]');
+    if (!iframe) return;
+    const request = iframe.requestFullscreen || iframe.webkitRequestFullscreen || iframe.mozRequestFullScreen;
+    if (request) request.call(iframe);
+    const win = iframe.contentWindow;
+    if (win) {
+      win.postMessage(JSON.stringify({ event: 'command', func: 'unMute', args: [] }), '*');
+      win.postMessage(JSON.stringify({ event: 'command', func: 'playVideo', args: [] }), '*');
     }
-    this.setState({ videoTab: tab, videoTabTouched: true });
   };
 
   pillarsData = [
-    { name: 'Chronicles of Innovation', abbr: 'COI', href: 'https://chroniclesofinnovation.com', domain: 'chroniclesofinnovation.com', tagline: 'Documentaries drawn from history, so people can learn from it.', logo: './logos/chronicles-of-innovation.png', dwell: 4400 },
-    { name: 'ZeroToAct', abbr: 'Z2A', href: 'https://zerotoact.com', domain: 'zerotoact.com', tagline: 'Insights into the global economy through video, text, and more, frameworks to apply them, a community of builders, and an annual gathering for the year\'s outlook.', logo: './logos/zerotoact.png', logoChip: true, dwell: 5200 },
+    { name: 'Chronicles of Innovation', abbr: 'COI', href: 'https://chroniclesofinnovation.com', domain: 'chroniclesofinnovation.com', tagline: 'Documentaries drawn from history, so people can learn from it.', logo: './logos/chronicles-of-innovation.png', dwell: 4400, playlist: 'PLX-5gsq5-pTg' },
+    { name: 'ZeroToAct', abbr: 'Z2A', href: 'https://zerotoact.com', domain: 'zerotoact.com', tagline: 'Insights into the global economy through video, text, and more, frameworks to apply them, a community of builders, and an annual gathering for the year\'s outlook.', logo: './logos/zerotoact.png', logoChip: true, dwell: 5200, playlist: 'PLX_mgoh4inS4', startVideo: 'V0gEUW2dQAU' },
     { name: 'Books', abbr: 'BKS', href: '', domain: '', tagline: 'The Prosperity Engine and The Oversized Mind of a Visionary, two forthcoming titles by Tolu Adetuyi.', logo: '', comingSoon: true, dwell: 5600 },
     { name: 'The Builders', abbr: 'TB', href: '', domain: '', tagline: 'A flagship reality series challenging entrepreneurs and innovators to solve real economic problems through teamwork, strategy, and execution.', logo: '', comingSoon: true, dwell: 6000 }
   ];
@@ -302,7 +292,9 @@ class Component extends DCLogic {
 
   setActive(i) {
     clearTimeout(this._timer);
-    this.setState({ active: i }, () => this.maybeStartRotation());
+    const next = { active: i };
+    if (this.pillarsData[i].playlist) next.activeVideoIndex = i;
+    this.setState(next, () => this.maybeStartRotation());
   }
 
   pauseRotation = () => {
@@ -318,22 +310,14 @@ class Component extends DCLogic {
   renderVals() {
     const active = this.state.active;
     const accentColor = this.props.accentColor ?? '#7fae5c';
+    const videoPillar = this.pillarsData[this.state.activeVideoIndex] ?? this.pillarsData[0];
     return {
       accentColor,
       showNav: this.props.showNav ?? true,
       activeIndicatorOffset: active * 100,
-      liveLayerOpacity: this.state.videoTab === 'live' ? 1 : 0,
-      liveLayerPE: this.state.videoTab === 'live' ? 'auto' : 'none',
-      introLayerOpacity: this.state.videoTab === 'intro' ? 1 : 0,
-      introLayerPE: this.state.videoTab === 'intro' ? 'auto' : 'none',
-      liveTabColor: this.state.videoTab === 'live' ? '#101209' : '#f3f1e8',
-      liveTabBg: this.state.videoTab === 'live' ? accentColor : '#141610',
-      introTabColor: this.state.videoTab === 'intro' ? '#101209' : '#f3f1e8',
-      introTabBg: this.state.videoTab === 'intro' ? accentColor : '#141610',
-      introTabAnim: this.state.videoTabTouched ? 'none' : 'wfl-pulse 1.8s ease-in-out infinite',
-      introTabGlow: this.state.videoTabTouched ? 'none' : `0 0 0 2px ${accentColor}`,
-      goLiveTab: () => this.setVideoTab('live'),
-      goIntroTab: () => this.setVideoTab('intro'),
+      videoSrc: this.getVideoSrc(videoPillar),
+      videoTitle: `${videoPillar.name} on Wisdom for Living`,
+      watchFullscreen: this.watchFullscreen,
       pauseRotation: this.pauseRotation,
       resumeRotation: this.resumeRotation,
       pillars: this.pillarsData.map((p, i) => ({
