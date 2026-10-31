@@ -1,0 +1,5 @@
+# HyperFrames cache, lint/snapshot artifacts, and lock files -- regenerated on demand.
+*/.hyperframes/
+
+# Rendered output lives in /videos at the repo root; no need to duplicate it here.
+*/renders/

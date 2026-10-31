@@ -1,0 +1,155 @@
+<template>
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      background: var(--color-ground);
+      overflow: hidden;
+      font-family: var(--font-display), sans-serif;
+    }
+    .pf-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(0deg, rgba(243,241,232,0.05) 0px, rgba(243,241,232,0.05) 1px, transparent 1px, transparent 64px),
+        repeating-linear-gradient(90deg, rgba(243,241,232,0.05) 0px, rgba(243,241,232,0.05) 1px, transparent 1px, transparent 64px);
+    }
+    .pf-stage {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .pf-draw {
+      width: 900px;
+      height: 460px;
+      overflow: visible;
+    }
+    .pf-draw path {
+      fill: none;
+      stroke: var(--color-ink);
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .pf-leader {
+      stroke: var(--color-accent);
+      stroke-width: 2.5;
+      fill: none;
+    }
+    .pf-dot {
+      fill: var(--color-accent);
+    }
+    .pf-card {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      opacity: 0;
+      transform-origin: left center;
+    }
+    .pf-kw {
+      font-size: 72px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--color-ink);
+    }
+    .pf-sub {
+      font-size: 29px;
+      font-weight: 500;
+      color: #c7c9bb;
+      font-family: 'Inter', sans-serif;
+      max-width: 520px;
+    }
+  </style>
+
+  <div id="scene-proof" data-composition-id="scene-proof" data-width="1920" data-height="1080">
+    <div class="pf-grid"></div>
+
+    <div class="pf-stage">
+      <svg class="pf-draw" viewBox="0 0 900 460">
+        <path d="M120 400 L780 400" />
+        <path d="M160 400 L160 220" />
+        <path d="M740 400 L740 150" />
+        <path d="M440 400 L440 260" />
+        <path d="M160 220 L440 180 L740 150" />
+        <path d="M620 150 L620 90 L860 90 L860 400" />
+
+        <path id="leader-1" class="pf-leader" d="M160 400 L160 420 L30 420" stroke-dasharray="1" stroke-dashoffset="1" />
+        <circle class="pf-dot" cx="160" cy="400" r="6" />
+
+        <path id="leader-2" class="pf-leader" d="M440 320 L560 320 L560 420" stroke-dasharray="1" stroke-dashoffset="1" />
+        <circle class="pf-dot" cx="440" cy="320" r="6" />
+
+        <path id="leader-3" class="pf-leader" d="M740 150 L800 150 L800 40" stroke-dasharray="1" stroke-dashoffset="1" />
+        <circle class="pf-dot" cx="740" cy="150" r="6" />
+      </svg>
+    </div>
+
+    <div class="pf-card" id="card-1" style="left: 130px; top: 790px;">
+      <div class="pf-kw">STRATEGY</div>
+      <div class="pf-sub">Plan what gets built, and why it matters.</div>
+    </div>
+
+    <div class="pf-card" id="card-2" style="left: 1090px; top: 640px;">
+      <div class="pf-kw">TEAMWORK</div>
+      <div class="pf-sub">No one on this build works alone.</div>
+    </div>
+
+    <div class="pf-card" id="card-3" data-hold="true" style="left: 1330px; top: 110px;">
+      <div class="pf-kw">EXECUTION</div>
+      <div class="pf-sub">Ideas don't count until they're built.</div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const root = document.getElementById('scene-proof');
+      const leaders = ['#leader-1', '#leader-2', '#leader-3'].map((s) => root.querySelector(s));
+      leaders.forEach((p) => {
+        const len = p.getTotalLength();
+        p.style.strokeDasharray = len;
+        p.style.strokeDashoffset = len;
+      });
+
+      const tl = gsap.timeline({ paused: true });
+
+      // card 1: STRATEGY
+      tl.to(leaders[0], { strokeDashoffset: 0, duration: 0.3, ease: 'power2.out' }, 0.2);
+      tl.fromTo(
+        '#card-1',
+        { opacity: 0, scale: 1.15, filter: 'blur(4px)' },
+        { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.3, ease: 'back.out(1.5)' },
+        0.4,
+      );
+      tl.to('#card-1', { opacity: 0, duration: 0.25, ease: 'power2.in' }, 3.65);
+      tl.to(leaders[0], { opacity: 0, duration: 0.25, ease: 'power2.in' }, 3.65);
+
+      // card 2: TEAMWORK
+      tl.to(leaders[1], { strokeDashoffset: 0, duration: 0.3, ease: 'power2.out' }, 4.0);
+      tl.fromTo(
+        '#card-2',
+        { opacity: 0, scale: 1.15, filter: 'blur(4px)' },
+        { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.3, ease: 'back.out(1.5)' },
+        4.2,
+      );
+      tl.to('#card-2', { opacity: 0, duration: 0.25, ease: 'power2.in' }, 7.45);
+      tl.to(leaders[1], { opacity: 0, duration: 0.25, ease: 'power2.in' }, 7.45);
+
+      // card 3: EXECUTION
+      tl.to(leaders[2], { strokeDashoffset: 0, duration: 0.3, ease: 'power2.out' }, 7.8);
+      tl.fromTo(
+        '#card-3',
+        { opacity: 0, scale: 1.15, filter: 'blur(4px)' },
+        { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.3, ease: 'back.out(1.5)' },
+        8.0,
+      );
+      tl.to('#card-3', { opacity: 0, duration: 0.3, ease: 'power2.in' }, 11.5);
+      tl.to(leaders[2], { opacity: 0, duration: 0.3, ease: 'power2.in' }, 11.5);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines['scene-proof'] = tl;
+    })();
+  </script>
+</template>
