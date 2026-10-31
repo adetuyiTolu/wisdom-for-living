@@ -75,6 +75,17 @@
       [data-screen-label="Pillars"] > div[data-active="false"] > div[style*="flex:1"] > div { flex-direction: row !important; }
       [data-screen-label="Pillar list"] { display: none !important; }
       [data-screen-label="Footer"] { flex-direction: column !important; align-items: flex-start !important; gap: 8px !important; text-align: left !important; padding: 16px 20px 24px !important; }
+
+      /* Video control buttons were sized for a mouse cursor (26px circles with 2px
+         gaps) — too small and too close together to reliably hit with a thumb. */
+      [data-screen-label="Narration"] [aria-label="Previous video"],
+      [data-screen-label="Narration"] [aria-label="Next video"],
+      [data-screen-label="Narration"] [data-playlist-close] { width: 40px !important; height: 40px !important; }
+      [data-screen-label="Narration"] [aria-label="Previous video"] svg,
+      [data-screen-label="Narration"] [aria-label="Next video"] svg { width: 15px !important; height: 15px !important; }
+      [data-screen-label="Narration"] [data-playlist-toggle] { height: 40px !important; padding: 0 16px 0 12px !important; }
+      [data-screen-label="Narration"] [data-playlist-toggle] svg { width: 15px !important; height: 15px !important; }
+      [data-screen-label="Narration"] div:has(> [aria-label="Previous video"]) { gap: 8px !important; padding: 6px !important; }
     }
   </style>
 </helmet>
@@ -317,12 +328,20 @@ class Component extends DCLogic {
   watchFullscreen = () => {
     const el = document.querySelector('[data-wfl-video]');
     if (!el) return;
-    const request = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen;
-    if (request) request.call(el);
     if (el.tagName === 'VIDEO') {
       el.muted = false;
       el.play();
+      // iPhone Safari has no standard Fullscreen API for arbitrary elements;
+      // video fullscreen there only works via this non-standard method.
+      if (el.webkitEnterFullscreen) {
+        el.webkitEnterFullscreen();
+      } else {
+        const request = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen;
+        if (request) request.call(el);
+      }
     } else {
+      const request = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen;
+      if (request) request.call(el);
       this.sendPlayerCommand('unMute');
       this.sendPlayerCommand('playVideo');
     }
@@ -375,7 +394,7 @@ class Component extends DCLogic {
       { id: '7zfrfdGIkSo', title: 'One Shock, Four Answers' },
       { id: 'BqXH09T_2Og', title: 'Lenders Started Choosing: ZeroToAct Signal' },
     ] },
-    { name: 'Books', abbr: 'BKS', href: '', domain: '', tagline: 'The Prosperity Engine and The Oversized Mind of a Visionary, two forthcoming titles by Tolu Adetuyi.', logo: '', comingSoon: true, dwell: 5600, localVideo: './videos/books-coming-soon.mp4' },
+    { name: 'Books', abbr: 'BKS', href: '', domain: '', tagline: 'The Prosperity Engine and The Oversized Mind of a Visionary, two forthcoming titles from Wisdom for Living.', logo: '', comingSoon: true, dwell: 5600, localVideo: './videos/books-coming-soon.mp4' },
     { name: 'The Builders', abbr: 'TB', href: '', domain: '', tagline: 'A flagship reality series challenging entrepreneurs and innovators to solve real economic problems through teamwork, strategy, and execution.', logo: '', comingSoon: true, dwell: 6000, localVideo: './videos/the-builders-intro.mp4' }
   ];
 
