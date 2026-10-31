@@ -51,7 +51,26 @@ with sync_playwright() as p:
    channels.nth(2).click()
    page.wait_for_function("document.querySelector('video')?.controls === true")
    assert page.locator('[data-screen-label="Pillar list"]').is_visible()
-   assert page.locator('[data-player-area]').evaluate("e=>getComputedStyle(e).paddingTop")=='62px'
+   assert page.locator('[data-player-area]').evaluate("e=>getComputedStyle(e).paddingTop")=='0px'
+  # Local films use the full available frame, including their native controls.
+  for channel_index in [2,3]:
+   if width<=820:
+    page.locator('[data-mobile-nav]').get_by_role('button',name=['The Builders','Books'][channel_index-2],exact=True).click()
+   else:
+    channels.nth(channel_index).click()
+   page.wait_for_timeout(500)
+   frame=page.locator('[data-screen-label="Narration"]').bounding_box()
+   movie=page.locator('video').bounding_box()
+   assert abs(movie['width']/movie['height']-16/9)<.01
+   assert movie['width']>=frame['width']-.5 or movie['height']>=frame['height']-.5,(frame,movie)
+   assert page.locator('video').get_attribute('poster'), 'Local film needs its cover before loading'
+   assert not page.locator('[data-fullscreen-button]').is_visible(), 'Native local controls keep artwork unobstructed'
+   assert page.locator('[data-player-area]').evaluate("e=>getComputedStyle(e).paddingTop")=='0px'
+  # Leave Builders selected for the existing reload/progress check.
+  if width<=820:
+   page.locator('[data-mobile-nav]').get_by_role('button',name='The Builders',exact=True).click()
+  else:
+   channels.nth(2).click()
   page.wait_for_timeout(600)
   page.screenshot(path=f'/tmp/wfl-{width}.png',full_page=True)
   print(f'PASS {width}x{height}: rendering, overflow, mobile navigation and controls')
@@ -65,7 +84,7 @@ with sync_playwright() as p:
    assert saved['positions']['local:./videos/the-builders-intro.mp4']>=11,saved
    page.reload(wait_until='networkidle')
    page.wait_for_function("document.querySelector('video')?.currentTime >= 11")
-   assert page.evaluate('scrollY')>=500
+   page.wait_for_function('(expected) => Math.abs(scrollY - expected) <= 2',arg=saved['scrollY'])
    print('PASS reload restores channel, local playback time and page position')
   page.close()
  browser.close()

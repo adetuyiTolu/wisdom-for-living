@@ -17,7 +17,10 @@ in this session. This file preserves context when a new session opens the repo.
 - [x] Remove the custom sound button and enlarge YouTube playback. ZeroToAct
   spans the full desktop right column; narrower desktops use a playlist overlay.
   Builders/Books sources and layout are preserved. Six screen widths and six
-  playback tests pass; fix/larger-video-player is ready for PR merge.
+  playback tests pass; PR #36 is merged.
+- [x] Builders and Books now maximize their player frame without the old control
+  padding; cover posters load before video, and native controls keep the artwork
+  unobstructed. Six screen widths and saved playback restoration verified.
 
 Automatic execution after session expiry is unavailable: no automation tool is
 exposed. Reopening this repository preserves these instructions but does not
