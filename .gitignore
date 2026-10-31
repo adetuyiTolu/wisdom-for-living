@@ -1,1 +1,6 @@
 .DS_Store
+
+# Local AI-agent skill tooling (installed via `npx skills add`), not website content.
+.agents/
+.claude/skills/
+skills-lock.json
