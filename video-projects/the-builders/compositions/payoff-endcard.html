@@ -1,0 +1,198 @@
+<template>
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      background: var(--color-ground);
+      overflow: hidden;
+      font-family: var(--font-display), sans-serif;
+    }
+    .pe-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(0deg, rgba(243,241,232,0.05) 0px, rgba(243,241,232,0.05) 1px, transparent 1px, transparent 64px),
+        repeating-linear-gradient(90deg, rgba(243,241,232,0.05) 0px, rgba(243,241,232,0.05) 1px, transparent 1px, transparent 64px);
+    }
+    .pe-flash {
+      position: absolute;
+      inset: 0;
+      background: var(--color-accent);
+      opacity: 0;
+    }
+    .pe-stage-a {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .pe-draw {
+      width: 760px;
+      height: 390px;
+      overflow: visible;
+    }
+    .pe-draw path {
+      fill: none;
+      stroke: var(--color-ink);
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .pe-fill {
+      fill: var(--color-accent);
+      opacity: 0;
+    }
+    .pe-tagline-wrap {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 150px;
+    }
+    .pe-tagline {
+      font-family: 'Inter', sans-serif;
+      font-size: 36px;
+      font-weight: 500;
+      color: var(--color-ink);
+      text-align: center;
+      max-width: 1100px;
+      opacity: 0;
+      filter: blur(8px);
+    }
+    .pe-end {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 26px;
+      opacity: 0;
+    }
+    .pe-mark {
+      width: 72px;
+      height: 102px;
+    }
+    .pe-mark path {
+      opacity: 0;
+    }
+    .pe-wordmark-clip {
+      overflow: hidden;
+      clip-path: inset(0 100% 0 0);
+    }
+    .pe-wordmark {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 28px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #9a9d8d;
+      white-space: nowrap;
+    }
+    .pe-title {
+      font-size: 108px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--color-ink);
+      opacity: 0;
+    }
+    .pe-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 28px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-ground);
+      background: var(--color-accent);
+      padding: 12px 30px;
+      border-radius: 100px;
+      opacity: 0;
+      transform: scale(0.7);
+    }
+  </style>
+
+  <div id="scene-payoff" data-composition-id="scene-payoff" data-width="1920" data-height="1080">
+    <div class="pe-grid"></div>
+    <div class="pe-flash" id="pe-flash"></div>
+
+    <div class="pe-stage-a" id="pe-stage-a">
+      <svg class="pe-draw" viewBox="0 0 900 460">
+        <path d="M120 400 L780 400" />
+        <path d="M160 400 L160 220" />
+        <path d="M740 400 L740 150" />
+        <path d="M440 400 L440 260" />
+        <path d="M160 220 L440 180 L740 150" />
+        <path d="M620 150 L620 90 L860 90 L860 400" />
+        <polygon class="pe-fill" id="pe-fill-1" points="160,400 160,220 440,180 440,400" />
+        <polygon class="pe-fill" id="pe-fill-2" points="440,400 440,260 740,150 740,400" />
+        <polygon class="pe-fill" id="pe-fill-3" points="620,150 620,90 860,90 860,400 740,400 740,150" />
+      </svg>
+    </div>
+
+    <div class="pe-tagline-wrap">
+      <div class="pe-tagline" id="pe-tagline">A flagship series. Real problems. Real builders.</div>
+    </div>
+
+    <div class="pe-end" id="pe-end">
+      <svg class="pe-mark" viewBox="-14 -20 28 40">
+        <path d="M 0 -18 C 9 -16 12 -6 10 4 C 8 14 4 19 0 18.5 C -4 19 -8 13 -9 3 C -10 -7 -8 -16 0 -18 Z" fill="var(--color-accent)"></path>
+        <path d="M 0 -13 C 2 -4 1 6 -1 15" fill="none" stroke="var(--color-ground)" stroke-width="1.2" stroke-opacity="0.55"></path>
+      </svg>
+      <div class="pe-wordmark-clip" id="pe-wordmark-clip">
+        <div class="pe-wordmark">Wisdom for Living</div>
+      </div>
+      <div class="pe-title" id="pe-title">THE BUILDERS</div>
+      <div class="pe-badge" id="pe-badge">Coming Soon</div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+
+      // Payoff: the structure fills with colour — the idea made real.
+      tl.to(['#pe-fill-1', '#pe-fill-2', '#pe-fill-3'], {
+        opacity: 0.85,
+        duration: 0.5,
+        ease: 'power2.inOut',
+        stagger: 0.08,
+      }, 0.1);
+      tl.to('#pe-stage-a', { scale: 0.86, duration: 0.6, ease: 'power2.inOut' }, 0.1);
+
+      // Claim: the one line, read alone.
+      tl.to('#pe-tagline', { opacity: 1, filter: 'blur(0px)', duration: 0.5, ease: 'power2.out' }, 0.9);
+      tl.to('#pe-tagline', { opacity: 0, filter: 'blur(8px)', duration: 0.35, ease: 'power2.in' }, 2.75);
+
+      // Dip cut into the end card world.
+      tl.to('#pe-stage-a', { opacity: 0, duration: 0.2, ease: 'power2.in' }, 3.0);
+      tl.to('#pe-flash', { opacity: 0.55, duration: 0.12, ease: 'power1.in' }, 3.05);
+      tl.to('#pe-flash', { opacity: 0, duration: 0.25, ease: 'power1.out' }, 3.17);
+
+      // End card: the mark lands with weight, the wordmark wipes in beside it.
+      tl.set('#pe-end', { opacity: 1 }, 3.3);
+      tl.fromTo(
+        '.pe-mark path',
+        { opacity: 0, scale: 0.6, transformOrigin: '50% 50%' },
+        { opacity: 1, scale: 1, duration: 0.35, ease: 'back.out(1.8)' },
+        3.3,
+      );
+      tl.to('#pe-wordmark-clip', { clipPath: 'inset(0 0% 0 0)', duration: 0.5, ease: 'power3.out' }, 3.6);
+      tl.fromTo(
+        '#pe-title',
+        { opacity: 0, scale: 1.12, filter: 'blur(5px)' },
+        { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.4, ease: 'back.out(1.5)' },
+        4.0,
+      );
+      tl.fromTo(
+        '#pe-badge',
+        { opacity: 0, scale: 0.7 },
+        { opacity: 1, scale: 1, duration: 0.35, ease: 'back.out(2)' },
+        4.5,
+      );
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines['scene-payoff'] = tl;
+    })();
+  </script>
+</template>
