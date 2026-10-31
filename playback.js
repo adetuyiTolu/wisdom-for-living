@@ -38,11 +38,12 @@
       this.onSound = onSound;
       this.onVideo = onVideo;
       this.positions = readSession()?.positions || {};
-      this.flush = () => this.capture();
-      this.hidden = () => { if (document.visibilityState === 'hidden') this.capture(); };
+      this.flush = () => this.capture(true);
+      this.tick = () => { if (document.visibilityState !== 'hidden') this.capture(); };
+      this.hidden = () => { if (document.visibilityState === 'hidden') this.capture(true); };
       window.addEventListener('pagehide', this.flush);
       document.addEventListener('visibilitychange', this.hidden);
-      this.poll = setInterval(this.flush, 1000);
+      this.poll = setInterval(this.tick, 1000);
     }
     bind(context) {
       this.context = context || this.context;
@@ -51,6 +52,7 @@
       this.release();
       this.element = element;
       this.restoredKey = null;
+      this.mutedAutoplayTried = false;
       if (element.tagName === 'VIDEO') {
         this.change = () => this.onSound(!element.muted && !element.paused);
         element.addEventListener('volumechange', this.change);
@@ -59,7 +61,7 @@
         element.addEventListener('loadedmetadata', this.loaded);
         element.addEventListener('pause', this.flush);
         element.addEventListener('seeked', this.flush);
-        element.addEventListener('timeupdate', this.flush);
+        element.addEventListener('timeupdate', this.tick);
         element.addEventListener('loadeddata', this.loaded);
         if (element.readyState >= 1) { this.restoreTime(); this.enableSound(); }
       } else {
@@ -75,7 +77,11 @@
             },
             onAutoplayBlocked: () => {
               if (this.element !== element || !this.player) return;
-              this.player.mute(); this.player.playVideo(); this.onSound(false);
+              this.onSound(false);
+              if (!this.mutedAutoplayTried) {
+                this.mutedAutoplayTried = true;
+                this.player.mute(); this.player.playVideo();
+              }
             }
           }});
         });
@@ -98,7 +104,7 @@
         this.element.currentTime = Number.isFinite(duration) ? Math.min(seconds, Math.max(0, duration - 0.1)) : seconds;
       } else this.player.seekTo(seconds, true);
     }
-    capture() {
+    capture(force = false) {
       if (!this.context) return;
       const key = this.mediaKey();
       const seconds = this.element?.tagName === 'VIDEO' ? this.element.currentTime : this.player?.getCurrentTime?.();
@@ -106,10 +112,17 @@
       const id = key?.startsWith('youtube:') ? key.slice(8) : null;
       if (id && id !== this.currentId) { this.currentId = id; this.onVideo?.(id); }
       try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        const now = Date.now();
+        if (!force && this.savedAt !== undefined && now - this.savedAt < 1000) return;
+        const snapshot = JSON.stringify({
           version: 1, ...this.context, videoId: id || this.context.manualVideoId,
           positions: this.positions, scrollY: window.scrollY
-        }));
+        });
+        if (snapshot !== this.savedSnapshot) {
+          localStorage.setItem(STORAGE_KEY, snapshot);
+          this.savedSnapshot = snapshot;
+        }
+        this.savedAt = now;
       } catch { /* Playback stays available in private mode or when storage is full. */ }
     }
     enableSound() {
@@ -136,7 +149,7 @@
         this.element.removeEventListener('loadedmetadata', this.loaded);
         this.element.removeEventListener('pause', this.flush);
         this.element.removeEventListener('seeked', this.flush);
-        this.element.removeEventListener('timeupdate', this.flush);
+        this.element.removeEventListener('timeupdate', this.tick);
       }
       // React owns connected DOM. Once it has replaced an iframe, dispose of
       // YouTube's detached player and message listeners as well.
@@ -145,7 +158,7 @@
       this.element = null;
     }
     destroy() {
-      this.capture();
+      this.capture(true);
       clearInterval(this.poll);
       window.removeEventListener('pagehide', this.flush);
       document.removeEventListener('visibilitychange', this.hidden);

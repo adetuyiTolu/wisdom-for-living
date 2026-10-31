@@ -1,22 +1,23 @@
-"""Run with Playwright and local React/Babel test dependencies (see VALIDATION.md)."""
+"""Run with Python Playwright and Chromium; external media is blocked."""
 import os
-from pathlib import Path
 from playwright.sync_api import sync_playwright
-DEPS=Path(os.environ.get('WFL_TEST_DEPS','/tmp/wfl-browser-deps/node_modules'))
 with sync_playwright() as p:
  browser=p.chromium.launch(executable_path='/usr/bin/chromium',headless=True,args=['--no-sandbox'])
- for width,height in [(320,740),(390,844),(768,1024),(1024,768),(1440,900),(1920,1080)]:
-  page=browser.new_page(viewport={'width':width,'height':height})
+ for width,height in [(320,740),(360,800),(390,844),(768,1024),(820,1180),(821,900),(844,390),(1024,768),(1280,720),(1366,640),(1440,900),(1920,1080),(2560,1440)]:
+  page=browser.new_page(viewport={'width':width,'height':height},has_touch=width<=820)
   errors=[]
   page.on('pageerror',lambda e:errors.append(str(e)))
-  def route(r):
-   mapping={'react@18.3.1/umd/react.production.min.js':'react/umd/react.production.min.js','react-dom@18.3.1/umd/react-dom.production.min.js':'react-dom/umd/react-dom.production.min.js','@babel/standalone@7.29.0/babel.min.js':'@babel/standalone/babel.min.js'}
-   for key,value in mapping.items():
-    if key in r.request.url:
-     r.fulfill(path=str(DEPS/value),content_type='application/javascript');return
-   r.abort()
-  page.route('https://**/*',route)
+  page.route('https://**/*',lambda route: route.abort())
   page.goto(os.environ.get('WFL_TEST_URL','http://127.0.0.1:8001'),wait_until='networkidle')
+  page.evaluate('document.fonts.ready')
+  page.wait_for_timeout(600)  # Let the intentional entrance animations finish before measuring clipping.
+  assert page.locator('main').count()==1
+  resources=page.evaluate('performance.getEntriesByType("resource").map(r=>r.name)')
+  assert not any('unpkg.com' in r or 'fonts.googleapis.com' in r or 'fonts.gstatic.com' in r for r in resources),resources
+  hero=page.locator('[data-screen-label="Hero"]').bounding_box()
+  for child in page.locator('[data-screen-label="Hero"] > h1, [data-screen-label="Hero"] > p').all():
+   box=child.bounding_box()
+   assert box['y']>=hero['y']-1 and box['y']+box['height']<=hero['y']+hero['height']+1,(width,height,hero,box)
   assert page.locator('h1').inner_text()=='Insight sees.\nWisdom builds.'
   assert not errors,errors
   assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'),f'overflow {width}'
@@ -39,9 +40,18 @@ with sync_playwright() as p:
 
   page.locator('[data-playlist-toggle]').click()
   assert page.locator('[data-playlist-panel]').is_visible()
-  page.locator('[data-playlist-close]').click()
+  page.keyboard.press('Escape')
   assert not page.locator('[data-playlist-panel]').is_visible()
+  assert page.locator('[data-playlist-toggle]').evaluate('e=>e===document.activeElement')
 
+  # Keyboard selection supports both activation keys without resetting the current channel.
+  cards=page.locator('[data-screen-label="Pillars"]')
+  cards.get_by_role('button',name='ZeroToAct',exact=True).focus()
+  page.keyboard.press('Enter')
+  assert page.locator('[data-wfl-grid]').get_attribute('data-video-layout')=='youtube-portrait'
+  cards.get_by_role('button',name='Chronicles of Innovation',exact=True).focus()
+  page.keyboard.press('Space')
+  assert page.locator('[data-wfl-grid]').get_attribute('data-video-layout')=='youtube-landscape'
   if width<=820:
    nav=page.locator('[data-mobile-nav]')
    assert nav.is_visible()
@@ -84,6 +94,12 @@ with sync_playwright() as p:
    movie=page.locator('video').bounding_box()
    assert abs(movie['width']/movie['height']-16/9)<.01
    assert movie['width']>=frame['width']-.5 or movie['height']>=frame['height']-.5,(frame,movie)
+   page.evaluate('window.existingVideo=document.querySelector("video")')
+   if width<=820:
+    page.locator('[data-mobile-nav]').get_by_role('button',name=['The Builders','Books'][channel_index-2],exact=True).click()
+   else:
+    channels.nth(channel_index).click()
+   assert page.evaluate('window.existingVideo===document.querySelector("video")'), 'Selecting the active channel should not reload media'
    assert page.locator('video').get_attribute('poster'), 'Local film needs its cover before loading'
    assert page.get_by_role('button',name='View full screen',exact=True).is_visible()
    page.locator('video').evaluate('(el) => { el.requestFullscreen = () => { window.fullscreenTarget = el.tagName; return Promise.resolve(); }; }')
@@ -111,5 +127,6 @@ with sync_playwright() as p:
    page.wait_for_function("document.querySelector('video')?.currentTime >= 11")
    page.wait_for_function('(expected) => Math.abs(scrollY - expected) <= 2',arg=saved['scrollY'])
    print('PASS reload restores channel, local playback time and page position')
+  assert not errors,errors
   page.close()
  browser.close()

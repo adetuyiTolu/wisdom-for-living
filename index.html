@@ -20,14 +20,17 @@
 <link rel="icon" href="./favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="./favicon-16x16.png" sizes="16x16" type="image/png">
 <link rel="apple-touch-icon" href="./apple-touch-icon.png" sizes="180x180">
-<script src="./playback.js"></script>
-<script src="./support.js"></script>
+<style>html,body{margin:0;background:#101209;color:#f3f1e8}x-dc{display:none!important}</style>
+<link rel="stylesheet" href="./assets/fonts.css">
+<link rel="preload" href="./assets/fonts/space-grotesk.woff2" as="font" type="font/woff2" crossorigin>
+<script defer src="./assets/vendor/react-18.3.1.min.js"></script>
+<script defer src="./assets/vendor/react-dom-18.3.1.min.js"></script>
+<script defer src="./playback.js"></script>
+<script defer src="./support.js"></script>
 </head>
 <body>
 <x-dc>
 <helmet>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     @keyframes wfl-drift {
       0% { background-position: 0 0; }
@@ -60,7 +63,7 @@
     button { font: inherit; }
     [data-playlist-item] { border: 0; text-align: left; color: inherit; }
     button:focus-visible, a:focus-visible, [role="button"]:focus-visible { outline: 2px solid #b1d58c; outline-offset: 3px; }
-    [data-mobile-nav] { display: none; }
+    [data-mobile-nav], [data-channel-name] { display: none; }
     [data-player-area] { box-sizing: border-box; padding: 0; }
     [data-video-controls] { bottom: 8px !important; }
     /* Keep the YouTube picture large; its own controls provide volume. */
@@ -79,6 +82,19 @@
       [data-video-layout="youtube-portrait"] [data-screen-label="Narration"] [data-playlist-toggle],
       [data-video-layout="youtube-portrait"] [data-screen-label="Narration"] [data-playlist-close] { display: flex !important; }
     }
+    /* Short desktop windows scroll instead of squeezing the hero and cards. */
+    @media (min-width: 821px) and (max-height: 700px) {
+      html, body { height: auto !important; overflow: auto !important; }
+      [data-screen-label="Page"] { height: auto !important; min-height: 100svh; overflow: visible !important; }
+      [data-wfl-grid] { height: 640px; flex: none !important; }
+    }
+    [data-screen-label="Pillars"] [role="button"]:focus-visible { outline-offset: -3px; }
+    [data-fullscreen-button], [data-playlist-toggle], [data-playlist-close],
+    [aria-label="Previous video"], [aria-label="Next video"] { touch-action: manipulation; }
+    @media (max-width: 360px) {
+      [data-screen-label="Header"] > div > span { font-size: 14px !important; }
+      [data-screen-label="Header"] a { font-size: 12px !important; padding: 9px 10px !important; }
+    }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
     }
@@ -91,6 +107,9 @@
       [data-screen-label="Hero"] { gap: 12px !important; }
       [data-screen-label="Hero"] h1 { font-size: clamp(32px, 9vw, 48px) !important; }
       [data-screen-label="Hero"] p { font-size: 15px !important; }
+      [data-channel-name] { display: inline; }
+      [data-channel-abbr] { display: none; }
+      [data-screen-label="Pillars"] > div[data-active="false"] [style*="vertical-rl"] { font-family: 'Space Grotesk',sans-serif !important; font-size: 14px !important; color: #c7c9bb !important; letter-spacing: 0 !important; }
       [data-mobile-nav] { display: flex; gap: 8px; overflow-x: auto; padding: 3px 3px 8px; scrollbar-width: thin; }
       [data-mobile-nav] button { min-height: 44px; flex-shrink: 0; padding: 10px 14px; border: 1px solid #515744; border-radius: 24px; background: #141610; color: #f3f1e8; cursor: pointer; }
       [data-mobile-nav] button[aria-pressed="true"] { background: #7fae5c; border-color: #7fae5c; color: #101209; }
@@ -152,20 +171,20 @@
     </div>
     <sc-if value="{{ showNav }}" hint-placeholder-val="{{ true }}">
       <a href="mailto:tolu@adetuyi.com" style="display:flex; align-items:center; gap:8px; color:#f3f1e8; text-decoration:none; font-size:13px; padding:9px 16px; border:1px solid rgba(243,241,232,0.22); border-radius:100px;">
-        Get in touch <span aria-hidden="true">↗︎</span>
+        Get in touch <svg aria-hidden="true" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="display:inline-block; vertical-align:middle;"><path d="M4 12 12 4M4 4h8v8"></path></svg>
       </a>
     </sc-if>
   </header>
 
   <!-- CONTENT GRID -->
-  <div data-wfl-grid="true" data-video-layout="{{ videoLayout }}" style="flex:1 1 auto; min-height:0; display:grid; grid-template-columns:0.85fr 1.15fr; grid-template-rows:1.4fr 1fr; gap:2.2vh 2vw; padding:1.6vh 3vw; box-sizing:border-box;">
+  <main data-wfl-grid="true" data-video-layout="{{ videoLayout }}" style="flex:1 1 auto; min-height:0; display:grid; grid-template-columns:0.85fr 1.15fr; grid-template-rows:1.4fr 1fr; gap:2.2vh 2vw; padding:1.6vh 3vw; box-sizing:border-box;">
 
     <!-- HEADLINE -->
     <div data-screen-label="Hero" style="grid-column:1; grid-row:1; position:relative; display:flex; flex-direction:column; justify-content:center; gap:1.6vh; min-height:0; min-width:0;">
       <svg viewBox="-14 -20 28 40" style="position:absolute; right:-6%; top:50%; transform:translateY(-50%); width:52%; opacity:0.05; pointer-events:none;">
         <path d="M 0 -18 C 9 -16 12 -6 10 4 C 8 14 4 19 0 18.5 C -4 19 -8 13 -9 3 C -10 -7 -8 -16 0 -18 Z" fill="{{ accentColor }}"></path>
       </svg>
-      <h1 style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:clamp(28px,5.4vh,64px); line-height:1.04; letter-spacing:-0.02em; margin:0; position:relative; animation:wfl-rise 0.7s ease-out both;">
+      <h1 style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:clamp(28px,min(5.4vh,4vw),64px); line-height:1.04; letter-spacing:-0.02em; margin:0; position:relative; animation:wfl-rise 0.7s ease-out both;">
         Insight sees.<br>Wisdom builds.
       </h1>
       <p style="font-size:clamp(13px,1.7vh,18px); line-height:1.55; color:#c7c9bb; max-width:46ch; margin:0; position:relative; animation:wfl-rise 0.7s ease-out 0.12s both;">
@@ -185,7 +204,7 @@
     <!-- VIDEO -->
     <div data-screen-label="Narration" data-video-orientation="{{ videoOrientation }}" data-playlist-open="{{ playlistOpen }}" style="grid-column:2; grid-row:1; position:relative; border-radius:12px; overflow:hidden; background-color:#0c0e08; min-height:0; min-width:0; animation:wfl-rise 0.8s ease-out 0.1s both;">
       <div style="position:absolute; inset:0; display:flex; flex-direction:row;">
-        <div data-playlist-panel style="flex-direction:column; padding:14px 10px 10px 14px; z-index:4;">
+        <div data-playlist-panel role="region" aria-label="{{ videoPillarName }} playlist" style="flex-direction:column; padding:14px 10px 10px 14px; z-index:4;">
           <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:8px; flex-shrink:0;">
             <span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(13px,1.6vh,16px); color:#f3f1e8;">{{ videoPillarName }} playlist</span>
             <button type="button" data-playlist-close onClick="{{ togglePlaylist }}" style="display:flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:50%; cursor:pointer; border:0; color:#f3f1e8; background:#141610; flex-shrink:0;" style-hover="background:#1c1f16;" aria-label="Close playlist">
@@ -195,7 +214,7 @@
           <div style="flex:1; min-height:0; overflow-y:auto; display:flex; flex-direction:column; gap:4px; scrollbar-width:thin; scrollbar-color:rgba(243,241,232,0.25) transparent;">
             <sc-for list="{{ playlistVideos }}" as="v" hint-placeholder-count="4">
               <button type="button" data-playlist-item onClick="{{ v.onClick }}" style="display:flex; align-items:center; gap:10px; padding:6px; border-radius:8px; cursor:pointer; background:{{ v.rowBg }}; transition:background 0.15s ease;" style-hover="background:#1c1f16;">
-                <img src="{{ v.thumb }}" alt="" style="width:72px; height:40px; object-fit:cover; border-radius:6px; flex-shrink:0; background:#0c0e08;" loading="lazy">
+                <img src="{{ v.thumb }}" alt="" style="width:72px; height:40px; object-fit:cover; border-radius:6px; flex-shrink:0; background:#0c0e08;" loading="lazy" decoding="async" width="72" height="40">
                 <span style="font-size:clamp(11px,1.3vh,13px); line-height:1.3; color:{{ v.textColor }};">{{ v.title }}</span>
               </button>
             </sc-for>
@@ -213,7 +232,7 @@
             <button type="button" onClick="{{ playNext }}" style="display:flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:50%; cursor:pointer; border:0; color:#f3f1e8; background:transparent; transition:background 0.2s ease;" style-hover="background:#1c1f16;" aria-label="Next video">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M16 6h2v12h-2zM4 6l11 6-11 6V6z"></path></svg>
             </button>
-            <button type="button" data-playlist-toggle aria-label="Toggle playlist" onClick="{{ togglePlaylist }}" style="display:flex; align-items:center; gap:5px; height:26px; padding:0 10px 0 6px; border-radius:100px; cursor:pointer; border:0; color:{{ playlistToggleColor }}; background:{{ playlistToggleBg }}; transition:background 0.2s ease, color 0.2s ease;" style-hover="background:#1c1f16;">
+            <button type="button" data-playlist-toggle aria-label="Toggle playlist" aria-expanded="{{ playlistOpen }}" onClick="{{ togglePlaylist }}" style="display:flex; align-items:center; gap:5px; height:26px; padding:0 10px 0 6px; border-radius:100px; cursor:pointer; border:0; color:{{ playlistToggleColor }}; background:{{ playlistToggleBg }}; transition:background 0.2s ease, color 0.2s ease;" style-hover="background:#1c1f16;">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v2H4zM4 11h16v2H4zM4 16h10v2H4z"></path></svg>
               <span style="font-family:'JetBrains Mono',monospace; font-size:clamp(9px,1vh,11px); letter-spacing:0.06em; text-transform:uppercase; white-space:nowrap;">Playlist</span>
             </button>
@@ -234,54 +253,54 @@
     <div data-screen-label="Pillars" onMouseEnter="{{ pauseRotation }}" onMouseLeave="{{ resumeRotation }}" style="grid-column:1; grid-row:2; display:flex; gap:2px; background:rgba(243,241,232,0.08); border:1px solid rgba(243,241,232,0.08); border-radius:12px; overflow:hidden; min-height:0; min-width:0;">
 
       <!-- Tab 0: Chronicles of Innovation -->
-      <div onClick="{{ pillars.0.onClick }}" data-active="{{ pillars.0.isActive }}" style="flex:{{ pillars.0.flexValue }}; background:#141610; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:2vh 1vw; cursor:pointer; transition:flex 0.4s cubic-bezier(0.4,0,0.2,1), background 0.2s ease; gap:1.4vh; min-width:0; overflow:hidden;" style-hover="background:#181b12;">
+      <div onClick="{{ pillars.0.onClick }}" onKeyDown="{{ channelKeyDown }}" role="{{ pillars.0.cardRole }}" tabIndex="{{ pillars.0.cardTabIndex }}" aria-label="{{ pillars.0.name }}" data-active="{{ pillars.0.isActive }}" style="flex:{{ pillars.0.flexValue }}; background:#141610; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:2vh 1vw; cursor:pointer; transition:flex 0.4s cubic-bezier(0.4,0,0.2,1), background 0.2s ease; gap:1.4vh; min-width:0; overflow:hidden;" style-hover="background:#181b12;">
         <span style="width:7px; height:7px; border-radius:50%; background:{{ pillars.0.dotBg }}; flex-shrink:0; transition:background 0.3s ease;"></span>
         <div style="position:relative; flex:1; min-height:0; min-width:0; width:100%; overflow-x:hidden; overflow-y:{{ pillars.0.scrollY }}; scrollbar-width:thin; scrollbar-color:rgba(243,241,232,0.25) transparent;">
-          <div style="position:{{ pillars.0.activePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.0.activeOpacity }}; pointer-events:{{ pillars.0.activePE }}; transform:translateY({{ pillars.0.activeShift }}); transition:{{ pillars.0.activeTransition }};">
+          <div aria-hidden="{{ pillars.0.isInactive }}" style="position:{{ pillars.0.activePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.0.activeOpacity }}; pointer-events:{{ pillars.0.activePE }}; transform:translateY({{ pillars.0.activeShift }}); transition:{{ pillars.0.activeTransition }};">
             <div style="width:clamp(40px,9vh,64px); height:clamp(40px,9vh,64px); border-radius:14px; overflow:hidden; flex-shrink:0;">
-              <img src="./logos/chronicles-of-innovation.png" alt="Chronicles of Innovation" style="width:82%; height:82%; object-fit:contain; margin:9%;">
+              <img src="./logos/chronicles-of-innovation.png" alt="Chronicles of Innovation" decoding="async" style="width:82%; height:82%; object-fit:contain; margin:9%;">
             </div>
             <div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(16px,2.6vh,26px); text-align:center; line-height:1.15;">Chronicles of Innovation</div>
             <div style="font-size:clamp(11px,1.3vh,14px); line-height:1.4; color:#9a9d8d; text-align:center; max-width:100%;">Documentaries drawn from history, so people can learn from it.</div>
-            <a href="https://chroniclesofinnovation.com" target="_blank" rel="noopener" style="font-family:'JetBrains Mono',monospace; font-size:clamp(10px,1.1vh,12px); color:#8a8d7d; text-decoration:none;">chroniclesofinnovation.com ↗︎</a>
+            <a tabIndex="{{ pillars.0.cardLinkTabIndex }}" href="https://chroniclesofinnovation.com" target="_blank" rel="noopener" style="font-family:'JetBrains Mono',monospace; font-size:clamp(10px,1.1vh,12px); color:#8a8d7d; text-decoration:none;">chroniclesofinnovation.com <svg aria-hidden="true" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="display:inline-block; vertical-align:middle;"><path d="M4 12 12 4M4 4h8v8"></path></svg></a>
           </div>
-          <div style="position:{{ pillars.0.inactivePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.0.inactiveOpacity }}; pointer-events:{{ pillars.0.inactivePE }}; transform:translateY({{ pillars.0.inactiveShift }}); transition:{{ pillars.0.inactiveTransition }};">
+          <div aria-hidden="{{ pillars.0.isActive }}" style="position:{{ pillars.0.inactivePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.0.inactiveOpacity }}; pointer-events:{{ pillars.0.inactivePE }}; transform:translateY({{ pillars.0.inactiveShift }}); transition:{{ pillars.0.inactiveTransition }};">
             <div style="width:20px; height:20px; border-radius:6px; overflow:hidden; flex-shrink:0;">
-              <img src="./logos/chronicles-of-innovation.png" alt="Chronicles of Innovation" style="width:80%; height:80%; object-fit:contain; margin:10%;">
+              <img src="./logos/chronicles-of-innovation.png" alt="Chronicles of Innovation" decoding="async" style="width:80%; height:80%; object-fit:contain; margin:10%;">
             </div>
-            <div style="font-family:'JetBrains Mono',monospace; font-size:clamp(10px,1.2vh,13px); letter-spacing:0.06em; color:#5f6254; writing-mode:vertical-rl; text-orientation:mixed;">COI</div>
+            <div style="font-family:'JetBrains Mono',monospace; font-size:clamp(10px,1.2vh,13px); letter-spacing:0.06em; color:#a0a58e; writing-mode:vertical-rl; text-orientation:mixed;"><span data-channel-abbr>COI</span><span data-channel-name>Chronicles of Innovation</span></div>
           </div>
         </div>
         <span></span>
       </div>
 
       <!-- Tab 1: ZeroToAct -->
-      <div onClick="{{ pillars.1.onClick }}" data-active="{{ pillars.1.isActive }}" style="flex:{{ pillars.1.flexValue }}; background:#141610; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:2vh 1vw; cursor:pointer; transition:flex 0.4s cubic-bezier(0.4,0,0.2,1), background 0.2s ease; gap:1.4vh; min-width:0; overflow:hidden;" style-hover="background:#181b12;">
+      <div onClick="{{ pillars.1.onClick }}" onKeyDown="{{ channelKeyDown }}" role="{{ pillars.1.cardRole }}" tabIndex="{{ pillars.1.cardTabIndex }}" aria-label="{{ pillars.1.name }}" data-active="{{ pillars.1.isActive }}" style="flex:{{ pillars.1.flexValue }}; background:#141610; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:2vh 1vw; cursor:pointer; transition:flex 0.4s cubic-bezier(0.4,0,0.2,1), background 0.2s ease; gap:1.4vh; min-width:0; overflow:hidden;" style-hover="background:#181b12;">
         <span style="width:7px; height:7px; border-radius:50%; background:{{ pillars.1.dotBg }}; flex-shrink:0; transition:background 0.3s ease;"></span>
         <div style="position:relative; flex:1; min-height:0; min-width:0; width:100%; overflow-x:hidden; overflow-y:{{ pillars.1.scrollY }}; scrollbar-width:thin; scrollbar-color:rgba(243,241,232,0.25) transparent;">
-          <div style="position:{{ pillars.1.activePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.1.activeOpacity }}; pointer-events:{{ pillars.1.activePE }}; transform:translateY({{ pillars.1.activeShift }}); transition:{{ pillars.1.activeTransition }};">
+          <div aria-hidden="{{ pillars.1.isInactive }}" style="position:{{ pillars.1.activePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.1.activeOpacity }}; pointer-events:{{ pillars.1.activePE }}; transform:translateY({{ pillars.1.activeShift }}); transition:{{ pillars.1.activeTransition }};">
             <div style="width:clamp(40px,9vh,64px); height:clamp(40px,9vh,64px); border-radius:14px; background:#f3f1e8; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
-              <img src="./logos/zerotoact.png" alt="ZeroToAct" style="width:68%; height:68%; object-fit:contain;">
+              <img src="./logos/zerotoact.png" alt="ZeroToAct" decoding="async" style="width:68%; height:68%; object-fit:contain;">
             </div>
             <div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(16px,2.6vh,26px); text-align:center; line-height:1.15;">ZeroToAct</div>
             <div style="font-size:clamp(11px,1.3vh,14px); line-height:1.4; color:#9a9d8d; text-align:center; max-width:100%;">Insights into the global economy through video, text, and more, frameworks to apply them, a community of builders, and an annual gathering for the year's outlook.</div>
-            <a href="https://zerotoact.com" target="_blank" rel="noopener" style="font-family:'JetBrains Mono',monospace; font-size:clamp(10px,1.1vh,12px); color:#8a8d7d; text-decoration:none;">zerotoact.com ↗︎</a>
+            <a tabIndex="{{ pillars.1.cardLinkTabIndex }}" href="https://zerotoact.com" target="_blank" rel="noopener" style="font-family:'JetBrains Mono',monospace; font-size:clamp(10px,1.1vh,12px); color:#8a8d7d; text-decoration:none;">zerotoact.com <svg aria-hidden="true" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="display:inline-block; vertical-align:middle;"><path d="M4 12 12 4M4 4h8v8"></path></svg></a>
           </div>
-          <div style="position:{{ pillars.1.inactivePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.1.inactiveOpacity }}; pointer-events:{{ pillars.1.inactivePE }}; transform:translateY({{ pillars.1.inactiveShift }}); transition:{{ pillars.1.inactiveTransition }};">
+          <div aria-hidden="{{ pillars.1.isActive }}" style="position:{{ pillars.1.inactivePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.1.inactiveOpacity }}; pointer-events:{{ pillars.1.inactivePE }}; transform:translateY({{ pillars.1.inactiveShift }}); transition:{{ pillars.1.inactiveTransition }};">
             <div style="width:20px; height:20px; border-radius:6px; background:#f3f1e8; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
-              <img src="./logos/zerotoact.png" alt="ZeroToAct" style="width:65%; height:65%; object-fit:contain;">
+              <img src="./logos/zerotoact.png" alt="ZeroToAct" decoding="async" style="width:65%; height:65%; object-fit:contain;">
             </div>
-            <div style="font-family:'JetBrains Mono',monospace; font-size:clamp(10px,1.2vh,13px); letter-spacing:0.06em; color:#5f6254; writing-mode:vertical-rl; text-orientation:mixed;">Z2A</div>
+            <div style="font-family:'JetBrains Mono',monospace; font-size:clamp(10px,1.2vh,13px); letter-spacing:0.06em; color:#a0a58e; writing-mode:vertical-rl; text-orientation:mixed;"><span data-channel-abbr>Z2A</span><span data-channel-name>ZeroToAct</span></div>
           </div>
         </div>
         <span></span>
       </div>
 
       <!-- Tab 2: The Builders -->
-      <div onClick="{{ pillars.2.onClick }}" data-active="{{ pillars.2.isActive }}" style="flex:{{ pillars.2.flexValue }}; background:#141610; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:2vh 1vw; cursor:pointer; transition:flex 0.4s cubic-bezier(0.4,0,0.2,1), background 0.2s ease; gap:1.4vh; min-width:0; overflow:hidden;" style-hover="background:#181b12;">
+      <div onClick="{{ pillars.2.onClick }}" onKeyDown="{{ channelKeyDown }}" role="{{ pillars.2.cardRole }}" tabIndex="{{ pillars.2.cardTabIndex }}" aria-label="{{ pillars.2.name }}" data-active="{{ pillars.2.isActive }}" style="flex:{{ pillars.2.flexValue }}; background:#141610; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:2vh 1vw; cursor:pointer; transition:flex 0.4s cubic-bezier(0.4,0,0.2,1), background 0.2s ease; gap:1.4vh; min-width:0; overflow:hidden;" style-hover="background:#181b12;">
         <span style="width:7px; height:7px; border-radius:50%; background:{{ pillars.2.dotBg }}; flex-shrink:0; transition:background 0.3s ease;"></span>
         <div style="position:relative; flex:1; min-height:0; min-width:0; width:100%; overflow-x:hidden; overflow-y:{{ pillars.2.scrollY }}; scrollbar-width:thin; scrollbar-color:rgba(243,241,232,0.25) transparent;">
-          <div style="position:{{ pillars.2.activePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.2.activeOpacity }}; pointer-events:{{ pillars.2.activePE }}; transform:translateY({{ pillars.2.activeShift }}); transition:{{ pillars.2.activeTransition }};">
+          <div aria-hidden="{{ pillars.2.isInactive }}" style="position:{{ pillars.2.activePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.2.activeOpacity }}; pointer-events:{{ pillars.2.activePE }}; transform:translateY({{ pillars.2.activeShift }}); transition:{{ pillars.2.activeTransition }};">
             <div style="width:clamp(40px,9vh,64px); height:clamp(40px,9vh,64px); border-radius:14px; background:#1c1f16; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
               <svg width="46%" height="46%" viewBox="0 0 24 24"><rect x="2" y="14" width="5" height="8" fill="{{ accentColor }}"></rect><rect x="9.5" y="9" width="5" height="13" fill="{{ accentColor }}"></rect><rect x="17" y="4" width="5" height="18" fill="{{ accentColor }}"></rect></svg>
             </div>
@@ -289,21 +308,21 @@
             <div style="font-size:clamp(11px,1.3vh,14px); line-height:1.4; color:#9a9d8d; text-align:center; max-width:100%;">A flagship reality series challenging entrepreneurs and innovators to solve real economic problems through teamwork, strategy, and execution.</div>
             <span style="font-family:'JetBrains Mono',monospace; font-size:clamp(9px,1vh,11px); letter-spacing:0.08em; text-transform:uppercase; color:#101209; background:{{ accentColor }}; padding:3px 10px; border-radius:20px;">Coming soon</span>
           </div>
-          <div style="position:{{ pillars.2.inactivePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.2.inactiveOpacity }}; pointer-events:{{ pillars.2.inactivePE }}; transform:translateY({{ pillars.2.inactiveShift }}); transition:{{ pillars.2.inactiveTransition }};">
+          <div aria-hidden="{{ pillars.2.isActive }}" style="position:{{ pillars.2.inactivePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.2.inactiveOpacity }}; pointer-events:{{ pillars.2.inactivePE }}; transform:translateY({{ pillars.2.inactiveShift }}); transition:{{ pillars.2.inactiveTransition }};">
             <div style="width:20px; height:20px; border-radius:6px; background:#1c1f16; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
               <svg width="46%" height="46%" viewBox="0 0 24 24"><rect x="2" y="14" width="5" height="8" fill="{{ accentColor }}"></rect><rect x="9.5" y="9" width="5" height="13" fill="{{ accentColor }}"></rect><rect x="17" y="4" width="5" height="18" fill="{{ accentColor }}"></rect></svg>
             </div>
-            <div style="font-family:'JetBrains Mono',monospace; font-size:clamp(10px,1.2vh,13px); letter-spacing:0.06em; color:#5f6254; writing-mode:vertical-rl; text-orientation:mixed;">TB</div>
+            <div style="font-family:'JetBrains Mono',monospace; font-size:clamp(10px,1.2vh,13px); letter-spacing:0.06em; color:#a0a58e; writing-mode:vertical-rl; text-orientation:mixed;"><span data-channel-abbr>TB</span><span data-channel-name>The Builders</span></div>
           </div>
         </div>
         <span></span>
       </div>
 
       <!-- Tab 3: Books -->
-      <div onClick="{{ pillars.3.onClick }}" data-active="{{ pillars.3.isActive }}" style="flex:{{ pillars.3.flexValue }}; background:#141610; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:2vh 1vw; cursor:pointer; transition:flex 0.4s cubic-bezier(0.4,0,0.2,1), background 0.2s ease; gap:1.4vh; min-width:0; overflow:hidden;" style-hover="background:#181b12;">
+      <div onClick="{{ pillars.3.onClick }}" onKeyDown="{{ channelKeyDown }}" role="{{ pillars.3.cardRole }}" tabIndex="{{ pillars.3.cardTabIndex }}" aria-label="{{ pillars.3.name }}" data-active="{{ pillars.3.isActive }}" style="flex:{{ pillars.3.flexValue }}; background:#141610; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:2vh 1vw; cursor:pointer; transition:flex 0.4s cubic-bezier(0.4,0,0.2,1), background 0.2s ease; gap:1.4vh; min-width:0; overflow:hidden;" style-hover="background:#181b12;">
         <span style="width:7px; height:7px; border-radius:50%; background:{{ pillars.3.dotBg }}; flex-shrink:0; transition:background 0.3s ease;"></span>
         <div style="position:relative; flex:1; min-height:0; min-width:0; width:100%; overflow-x:hidden; overflow-y:{{ pillars.3.scrollY }}; scrollbar-width:thin; scrollbar-color:rgba(243,241,232,0.25) transparent;">
-          <div style="position:{{ pillars.3.activePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.3.activeOpacity }}; pointer-events:{{ pillars.3.activePE }}; transform:translateY({{ pillars.3.activeShift }}); transition:{{ pillars.3.activeTransition }};">
+          <div aria-hidden="{{ pillars.3.isInactive }}" style="position:{{ pillars.3.activePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.3.activeOpacity }}; pointer-events:{{ pillars.3.activePE }}; transform:translateY({{ pillars.3.activeShift }}); transition:{{ pillars.3.activeTransition }};">
             <div style="width:clamp(40px,9vh,64px); height:clamp(40px,9vh,64px); border-radius:14px; background:#1c1f16; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
               <svg width="46%" height="46%" viewBox="0 0 24 24"><path d="M4 5c2-1.3 5-1.3 7 0v13c-2-1.3-5-1.3-7 0V5z" fill="{{ accentColor }}"></path><path d="M20 5c-2-1.3-5-1.3-7 0v13c2-1.3 5-1.3 7 0V5z" fill="{{ accentColor }}"></path></svg>
             </div>
@@ -315,11 +334,11 @@
             </div>
             <span style="font-family:'JetBrains Mono',monospace; font-size:clamp(9px,1vh,11px); letter-spacing:0.08em; text-transform:uppercase; color:#101209; background:{{ accentColor }}; padding:3px 10px; border-radius:20px;">Coming soon</span>
           </div>
-          <div style="position:{{ pillars.3.inactivePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.3.inactiveOpacity }}; pointer-events:{{ pillars.3.inactivePE }}; transform:translateY({{ pillars.3.inactiveShift }}); transition:{{ pillars.3.inactiveTransition }};">
+          <div aria-hidden="{{ pillars.3.isActive }}" style="position:{{ pillars.3.inactivePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.3.inactiveOpacity }}; pointer-events:{{ pillars.3.inactivePE }}; transform:translateY({{ pillars.3.inactiveShift }}); transition:{{ pillars.3.inactiveTransition }};">
             <div style="width:20px; height:20px; border-radius:6px; background:#1c1f16; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
               <svg width="46%" height="46%" viewBox="0 0 24 24"><path d="M4 5c2-1.3 5-1.3 7 0v13c-2-1.3-5-1.3-7 0V5z" fill="{{ accentColor }}"></path><path d="M20 5c-2-1.3-5-1.3-7 0v13c2-1.3 5-1.3 7 0V5z" fill="{{ accentColor }}"></path></svg>
             </div>
-            <div style="font-family:'JetBrains Mono',monospace; font-size:clamp(10px,1.2vh,13px); letter-spacing:0.06em; color:#5f6254; writing-mode:vertical-rl; text-orientation:mixed;">BKS</div>
+            <div style="font-family:'JetBrains Mono',monospace; font-size:clamp(10px,1.2vh,13px); letter-spacing:0.06em; color:#a0a58e; writing-mode:vertical-rl; text-orientation:mixed;"><span data-channel-abbr>BKS</span><span data-channel-name>Books</span></div>
           </div>
         </div>
         <span></span>
@@ -331,16 +350,16 @@
     <div data-screen-label="Pillar list" onMouseEnter="{{ pauseRotation }}" onMouseLeave="{{ resumeRotation }}" style="grid-column:2; grid-row:2; position:relative; display:flex; flex-direction:column; min-height:0; min-width:0; border-top:1px solid rgba(243,241,232,0.1); padding-left:16px;">
       <div style="position:absolute; left:0; top:0; width:2px; height:25%; background:{{ accentColor }}; transform:translateY({{ activeIndicatorOffset }}%); transition:transform 0.4s cubic-bezier(0.4,0,0.2,1);"></div>
       <sc-for list="{{ pillars }}" as="p" hint-placeholder-count="4">
-        <div onClick="{{ p.onClick }}" style="flex:1; display:flex; align-items:center; gap:8px; border-bottom:1px solid rgba(243,241,232,0.1); cursor:pointer; color:{{ p.listColor }}; transition:color 0.25s ease, padding-left 0.25s ease;" style-hover="color:#f3f1e8; padding-left:6px;">
+        <button type="button" onClick="{{ p.onClick }}" style="border:0; background:transparent; text-align:left; padding:0; flex:1; display:flex; align-items:center; gap:8px; border-bottom:1px solid rgba(243,241,232,0.1); cursor:pointer; color:{{ p.listColor }}; transition:color 0.25s ease, padding-left 0.25s ease;" style-hover="color:#f3f1e8; padding-left:6px;">
           <span style="font-size:clamp(13px,1.7vh,17px); font-weight:{{ p.listWeight }};">{{ p.name }}</span>
           <sc-if value="{{ p.isComingSoon }}" hint-placeholder-val="{{ false }}">
             <span style="font-family:'JetBrains Mono',monospace; font-size:clamp(8px,0.9vh,10px); letter-spacing:0.06em; text-transform:uppercase; color:#8a8d7d; border:1px solid rgba(243,241,232,0.2); padding:1px 6px; border-radius:20px;">Soon</span>
           </sc-if>
-        </div>
+        </button>
       </sc-for>
     </div>
 
-  </div>
+  </main>
 
   <!-- FOOTER -->
   <footer data-screen-label="Footer" style="flex:0 0 auto; display:flex; align-items:center; justify-content:space-between; gap:24px; padding:1.6vh 3vw; border-top:1px solid rgba(243,241,232,0.08); font-size:clamp(11px,1.3vh,13px);">
@@ -428,13 +447,18 @@ class Component extends DCLogic {
   playNext = () => this.stepVideo(1);
 
   togglePlaylist = () => {
-    this.setState(s => ({ playlistOpen: !s.playlistOpen }));
+    this.setState(s => ({ playlistOpen: !s.playlistOpen }), () => {
+      document.querySelector(this.state.playlistOpen ? '[data-playlist-close]' : '[data-playlist-toggle]')?.focus();
+    });
   };
 
   selectVideo = (id) => {
     this.enableSound();
-    this._playback?.capture();
-    this.setState({ manualVideoId: id, playingVideoId: null, playlistOpen: false });
+    this._playback?.capture(true);
+    const wasOpen = this.state.playlistOpen;
+    this.setState({ manualVideoId: id, playingVideoId: null, playlistOpen: false }, () => {
+      if (wasOpen) document.querySelector('[data-playlist-toggle]')?.focus();
+    });
   };
 
   // Keep each video list in newest-to-oldest upload order. Add new uploads at the top.
@@ -464,7 +488,21 @@ class Component extends DCLogic {
     { name: 'Books', abbr: 'BKS', href: '', domain: '', tagline: 'The Prosperity Engine and The Oversized Mind of a Visionary, two forthcoming titles from Wisdom for Living.', logo: '', comingSoon: true, dwell: 5600, localVideo: './videos/books-coming-soon.mp4', poster: './videos/books-coming-soon-poster.jpg' }
   ];
 
+  channelKeyDown = (event) => {
+    if (event.target === event.currentTarget && (event.key === 'Enter' || event.key === ' ')) {
+      event.preventDefault();
+      event.currentTarget.click();
+    }
+  };
+
+  escapePlaylist = (event) => {
+    if (event.key === 'Escape' && this.state.playlistOpen) {
+      this.setState({ playlistOpen: false }, () => document.querySelector('[data-playlist-toggle]')?.focus());
+    }
+  };
+
   componentDidMount() {
+    document.addEventListener('keydown', this.escapePlaylist);
     const restored = WFLPlayback.restore(this.pillarsData);
     this._playback = new WFLPlayback(() => {}, playingVideoId => {
       if (this.state.playingVideoId !== playingVideoId) this.setState({ playingVideoId });
@@ -473,7 +511,12 @@ class Component extends DCLogic {
       const { scrollY, ...state } = restored;
       this.setState(state, () => {
         this._playback.bind(this.playbackContext());
-        requestAnimationFrame(() => requestAnimationFrame(() => window.scrollTo(0, scrollY)));
+        // Font swaps can change page height; restore once the final text is laid out.
+        requestAnimationFrame(() => {
+          (document.fonts?.ready || Promise.resolve()).then(() => {
+            requestAnimationFrame(() => { if (!this._unmounted) window.scrollTo(0, scrollY); });
+          });
+        });
       });
     } else this._playback.bind(this.playbackContext());
     this.maybeStartRotation();
@@ -490,6 +533,8 @@ class Component extends DCLogic {
   }
 
   componentWillUnmount() {
+    this._unmounted = true;
+    document.removeEventListener('keydown', this.escapePlaylist);
     this._playback?.destroy();
     clearTimeout(this._timer);
   }
@@ -505,7 +550,8 @@ class Component extends DCLogic {
   }
 
   setActive(i) {
-    this._playback?.capture();
+    if (i === this.state.active) return;
+    this._playback?.capture(true);
     clearTimeout(this._timer);
     const next = { active: i };
     if (this.pillarsData[i].playlist || this.pillarsData[i].localVideo) {
@@ -565,10 +611,14 @@ class Component extends DCLogic {
         textColor: v.id === currentVideoId ? '#f3f1e8' : '#c7c9bb',
         onClick: () => this.selectVideo(v.id),
       })),
+      channelKeyDown: this.channelKeyDown,
       pauseRotation: this.pauseRotation,
       resumeRotation: this.resumeRotation,
       pillars: this.pillarsData.map((p, i) => ({
         name: p.name,
+        cardRole: i === active ? 'group' : 'button',
+        cardTabIndex: i === active ? -1 : 0,
+        cardLinkTabIndex: i === active ? 0 : -1,
         isActive: i === active,
         isInactive: i !== active,
         activeOpacity: i === active ? 1 : 0,
@@ -596,7 +646,7 @@ class Component extends DCLogic {
         listColor: i === active ? '#f3f1e8' : '#8a8d7d',
         listWeight: i === active ? 600 : 400,
         isComingSoon: !!p.comingSoon,
-        onClick: () => this.setActive(i),
+        onClick: (event) => { if (!event?.target?.closest('a')) this.setActive(i); },
       })),
     };
   }

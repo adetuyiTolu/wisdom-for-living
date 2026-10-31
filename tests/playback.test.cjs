@@ -3,13 +3,13 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const vm=require('node:vm');
 function setup(element, YT, saved=null) {
- const events={}; let sound, stored;
+ const events={}; let sound, stored, writes=0, now=1000;
  element.addEventListener=(name,handler)=>events[name]=handler;
  element.removeEventListener=name=>delete events[name];
- const context={window:{YT,addEventListener(){},removeEventListener(){},scrollY:0},YT, localStorage:{getItem:()=>JSON.stringify(saved),setItem(key,value){stored=JSON.parse(value)}},setInterval:()=>1,clearInterval(){},document:{querySelector:()=>element,addEventListener(){},removeEventListener(){}},console};
+ const context={Date:{now:()=>now},window:{YT,addEventListener(){},removeEventListener(){},scrollY:0},YT, localStorage:{getItem:()=>JSON.stringify(saved),setItem(key,value){stored=JSON.parse(value);writes++}},setInterval:()=>1,clearInterval(){},document:{querySelector:()=>element,addEventListener(){},removeEventListener(){}},console};
  vm.createContext(context); vm.runInContext(fs.readFileSync('playback.js','utf8'),context);
  const playback=new context.window.WFLPlayback(value=>sound=value);
- playback.bind(); return {playback,events,sound:()=>sound,stored:()=>stored};
+ playback.bind(); return {playback,events,sound:()=>sound,stored:()=>stored,writes:()=>writes,advance:ms=>now+=ms,context};
 }
 test('local video unmutes and plays after interaction',()=>{
  const video={tagName:'VIDEO',readyState:0,muted:true,paused:false,play:()=>Promise.resolve()};
@@ -50,4 +50,22 @@ test('YouTube restores the saved timestamp before recording progress',async()=>{
  await Promise.resolve();options.events.onReady();assert.equal(time,42.5);
  time=48;playback.capture();assert.equal(stored().positions['youtube:saved-video'],48);
  assert.equal(stored().videoId,'saved-video');
+});
+test('time updates throttle storage but pausing flushes the latest position',()=>{
+ const video={tagName:'VIDEO',readyState:1,muted:true,paused:false,duration:30,currentTime:1,getAttribute:()=>'/intro.mp4',play:()=>Promise.resolve()};
+ const {playback,events,writes,stored,advance,context}=setup(video);
+ playback.bind({active:2,activeVideoIndex:2});playback.capture();
+ for(let t=2;t<=8;t++) {video.currentTime=t;events.timeupdate();}
+ assert.equal(writes(),1);
+ events.pause();assert.equal(writes(),2);assert.equal(stored().positions['local:/intro.mp4'],8);
+ playback.capture(true);assert.equal(writes(),2,'identical snapshots are not rewritten');
+ context.document.visibilityState='hidden';video.currentTime=9;advance(2000);playback.tick();assert.equal(writes(),2);
+});
+test('muted autoplay retries once when the browser blocks all playback',async()=>{
+ let options,plays=0;
+ const player={mute(){},playVideo(){plays++}};
+ const YT={Player:function(el,opts){options=opts;return player}};
+ setup({tagName:'IFRAME'},YT);await Promise.resolve();
+ options.events.onAutoplayBlocked();options.events.onAutoplayBlocked();
+ assert.equal(plays,1);
 });
