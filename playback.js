@@ -1,5 +1,5 @@
-/* Shared media lifecycle. YouTube owns autoplay permission; a visible sound button
-   remains available when a browser requires a gesture. */
+/* Shared media lifecycle. YouTube owns autoplay permission; viewers can use
+   the native player controls when their browser requires a gesture for sound. */
 (() => {
   let api;
   function youtubeReady() {

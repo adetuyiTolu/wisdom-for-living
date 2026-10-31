@@ -13,8 +13,11 @@ in this session. This file preserves context when a new session opens the repo.
   30 seconds. Full checks and visual reviews pass; final MP4s, posters,
   editable sources and measured delivery reports are included.
 - [x] Final browser checks at 320/390/768/1440px; six playback/storage tests pass.
-- Final film branch: feat/premium-intro-films. If resumed, check its GitHub PR
-  merge status before repeating work. PRs #31, #32 and #33 are merged.
+- [x] Film replacements merged in PR #35.
+- [x] Remove the custom sound button and enlarge YouTube playback. ZeroToAct
+  spans the full desktop right column; narrower desktops use a playlist overlay.
+  Builders/Books sources and layout are preserved. Six screen widths and six
+  playback tests pass; fix/larger-video-player is ready for PR merge.
 
 Automatic execution after session expiry is unavailable: no automation tool is
 exposed. Reopening this repository preserves these instructions but does not
