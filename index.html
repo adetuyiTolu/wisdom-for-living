@@ -63,9 +63,13 @@
     [data-mobile-nav] { display: none; }
     [data-player-area] { box-sizing: border-box; padding: 0; }
     [data-video-controls] { bottom: 8px !important; }
-    [data-video-layout="local"] [data-fullscreen-button] { display: none !important; }
+    [data-video-layout="local"] [data-fullscreen-button],
+    [data-video-layout="youtube-landscape"] [data-fullscreen-button] { display: none !important; }
     /* Keep the YouTube picture large; its own controls provide volume. */
     [data-video-layout^="youtube-"] [data-player-area] { padding: 0 0 48px; }
+    /* Landscape playback uses the full frame; the playlist controls overlay it. */
+    [data-video-layout="youtube-landscape"] [data-player-area] { padding: 0; }
+    [data-video-layout="youtube-landscape"] [data-video-controls] { top: 8px; right: 8px; bottom: auto !important; left: auto !important; }
     @media (min-width: 821px) {
       /* Portrait viewing uses the full right column, with the playlist alongside. */
       [data-video-layout="youtube-portrait"] [data-screen-label="Narration"] { grid-row: 1 / span 2 !important; }
@@ -104,7 +108,8 @@
       [data-screen-label="Narration"] { grid-column: auto !important; grid-row: auto !important; aspect-ratio: auto !important; height: calc((100vw - 32px) * 9 / 16) !important; width: 100% !important; }
       [data-screen-label="Narration"][data-video-orientation="portrait"] { aspect-ratio: auto !important; height: min(86svh, calc((100vw - 32px) * 16 / 9)) !important; }
       [data-video-layout^="youtube-"] [data-player-area] { padding: 0 0 60px; }
-      [data-video-layout="youtube-landscape"] [data-screen-label="Narration"] { height: calc((100vw - 32px) * 9 / 16 + 60px) !important; }
+      [data-video-layout="youtube-landscape"] [data-player-area] { padding: 0; }
+      [data-video-layout="youtube-landscape"] [data-screen-label="Narration"] { height: calc((100vw - 32px) * 9 / 16) !important; }
       [data-video-layout="youtube-portrait"] [data-screen-label="Narration"] { height: min(86svh, calc((100vw - 32px) * 16 / 9 + 60px)) !important; }
       [data-screen-label="Narration"][data-video-orientation="portrait"] [data-playlist-panel] { display: none; position: absolute !important; inset: 0 !important; width: auto !important; }
       [data-screen-label="Narration"][data-video-orientation="portrait"][data-playlist-open="true"] [data-playlist-panel] { display: flex; }
