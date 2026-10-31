@@ -24,10 +24,14 @@ Video projects have their own checks and render measurements; film source and
 media are unchanged by this optimization pass.
 
 Playlist synchronization regressions: run `node tests/playlist.test.cjs` and
-`python tests/playlist-browser.py` (same WFL_TEST_URL option). Four component
+`python tests/playlist-browser.py` (same WFL_TEST_URL option). Six component
 checks and the controlled YouTube API integration exercise all 13 ZeroToAct
 choices at 390px/1440px, late events, rapid selection, automatic advance,
 reselecting the original embed video, next/previous, explicit restart and
 return-visit restoration. The player double follows YouTube's documented
 [path-video then playlist queue](https://developers.google.com/youtube/player_parameters#playlist).
 These tests do not validate live hosted media or the hard-coded title metadata.
+
+The responsive suite also checks COI's desktop sidebar versus mobile overlay,
+unchanged panel transparency, preserving the player while toggling, and keeping
+the desktop sidebar open after selecting a video.

@@ -38,8 +38,33 @@ with sync_playwright() as p:
   fullscreen.click()
   assert page.evaluate('window.fullscreenTarget')=='IFRAME'
 
+  page.evaluate('window.coiFrame=document.querySelector("iframe")')
   page.locator('[data-playlist-toggle]').click()
+  assert page.evaluate('window.coiFrame===document.querySelector("iframe")')
   assert page.locator('[data-playlist-panel]').is_visible()
+  playlist_region=page.locator('[data-playlist-panel]').bounding_box()
+  open_video=page.locator('iframe').bounding_box()
+  player_area=page.locator('[data-player-area]').bounding_box()
+  if width>820:
+   assert playlist_region['x']+playlist_region['width']<=player_area['x']+.5,(playlist_region,player_area)
+   assert open_video['width']>0 and abs(open_video['width']/open_video['height']-16/9)<.01
+   assert playlist_region['width']<=230.5 and playlist_region['width']<coi_frame['width']*.5
+   assert page.locator('[data-playlist-panel]').evaluate('e=>getComputedStyle(e).position')=='relative'
+  else:
+   assert abs(playlist_region['width']-coi_frame['width'])<1
+   assert page.locator('[data-playlist-panel]').evaluate('e=>getComputedStyle(e).position')=='absolute'
+  assert page.locator('[data-playlist-panel]').evaluate('e=>getComputedStyle(e).backgroundColor')=='rgba(10, 12, 8, 0.96)'
+  assert page.locator('iframe').evaluate('e=>e.requestFullscreen!==undefined')
+  page.screenshot(path=f'/tmp/wfl-coi-playlist-{width}.png',full_page=True)
+  picked=page.locator('[data-playlist-item]').nth(1).get_attribute('data-video-id')
+  page.locator('[data-playlist-item]').nth(1).click()
+  assert page.locator('[data-playlist-item][aria-current="true"]').get_attribute('data-video-id')==picked
+  assert page.locator('iframe').get_attribute('src').split('/embed/')[1].split('?')[0]==picked
+  if width>820:
+   assert page.locator('[data-playlist-panel]').is_visible()
+  else:
+   assert not page.locator('[data-playlist-panel]').is_visible()
+   page.locator('[data-playlist-toggle]').click()
   page.keyboard.press('Escape')
   assert not page.locator('[data-playlist-panel]').is_visible()
   assert page.locator('[data-playlist-toggle]').evaluate('e=>e===document.activeElement')
