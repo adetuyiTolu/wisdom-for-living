@@ -58,10 +58,24 @@
     [data-screen-label="Narration"][data-video-orientation="portrait"] [data-playlist-close] { display: none !important; }
 
     button { font: inherit; }
+    [data-playlist-item] { border: 0; text-align: left; color: inherit; }
     button:focus-visible, a:focus-visible, [role="button"]:focus-visible { outline: 2px solid #b1d58c; outline-offset: 3px; }
     [data-mobile-nav] { display: none; }
     [data-player-area] { box-sizing: border-box; padding: 62px 0 68px; }
     [data-video-controls] { bottom: 8px !important; }
+    /* Keep the YouTube picture large; its own controls provide volume. */
+    [data-video-layout^="youtube-"] [data-player-area] { padding: 0 0 48px; }
+    @media (min-width: 821px) {
+      /* Portrait viewing uses the full right column, with the playlist alongside. */
+      [data-video-layout="youtube-portrait"] [data-screen-label="Narration"] { grid-row: 1 / span 2 !important; }
+      [data-video-layout="youtube-portrait"] [data-screen-label="Pillar list"] { display: none !important; }
+    }
+    @media (min-width: 821px) and (max-width: 1199px) {
+      [data-video-layout="youtube-portrait"] [data-screen-label="Narration"][data-video-orientation="portrait"] [data-playlist-panel] { display: none; position: absolute; inset: 0; width: auto; }
+      [data-video-layout="youtube-portrait"] [data-screen-label="Narration"][data-video-orientation="portrait"][data-playlist-open="true"] [data-playlist-panel] { display: flex; }
+      [data-video-layout="youtube-portrait"] [data-screen-label="Narration"] [data-playlist-toggle],
+      [data-video-layout="youtube-portrait"] [data-screen-label="Narration"] [data-playlist-close] { display: flex !important; }
+    }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
     }
@@ -88,6 +102,9 @@
       [data-screen-label="Hero"] { grid-column: auto !important; grid-row: auto !important; padding: 0 !important; }
       [data-screen-label="Narration"] { grid-column: auto !important; grid-row: auto !important; aspect-ratio: auto !important; height: calc((100vw - 32px) * 9 / 16 + 124px) !important; width: 100% !important; }
       [data-screen-label="Narration"][data-video-orientation="portrait"] { aspect-ratio: auto !important; height: min(86svh, calc((100vw - 32px) * 16 / 9 + 124px)) !important; }
+      [data-video-layout^="youtube-"] [data-player-area] { padding: 0 0 60px; }
+      [data-video-layout="youtube-landscape"] [data-screen-label="Narration"] { height: calc((100vw - 32px) * 9 / 16 + 60px) !important; }
+      [data-video-layout="youtube-portrait"] [data-screen-label="Narration"] { height: min(86svh, calc((100vw - 32px) * 16 / 9 + 60px)) !important; }
       [data-screen-label="Narration"][data-video-orientation="portrait"] [data-playlist-panel] { display: none; position: absolute !important; inset: 0 !important; width: auto !important; }
       [data-screen-label="Narration"][data-video-orientation="portrait"][data-playlist-open="true"] [data-playlist-panel] { display: flex; }
       [data-screen-label="Narration"][data-video-orientation="portrait"] [data-playlist-toggle],
@@ -134,7 +151,7 @@
   </header>
 
   <!-- CONTENT GRID -->
-  <div data-wfl-grid="true" style="flex:1 1 auto; min-height:0; display:grid; grid-template-columns:0.85fr 1.15fr; grid-template-rows:1.4fr 1fr; gap:2.2vh 2vw; padding:1.6vh 3vw; box-sizing:border-box;">
+  <div data-wfl-grid="true" data-video-layout="{{ videoLayout }}" style="flex:1 1 auto; min-height:0; display:grid; grid-template-columns:0.85fr 1.15fr; grid-template-rows:1.4fr 1fr; gap:2.2vh 2vw; padding:1.6vh 3vw; box-sizing:border-box;">
 
     <!-- HEADLINE -->
     <div data-screen-label="Hero" style="grid-column:1; grid-row:1; position:relative; display:flex; flex-direction:column; justify-content:center; gap:1.6vh; min-height:0; min-width:0;">
@@ -178,7 +195,6 @@
           </div>
         </div>
         <div data-player-area style="flex:1; min-width:0; min-height:0; position:relative; display:flex; align-items:center; justify-content:center; container-type:size;">
-          <button data-sound-button onClick="{{ enableSound }}" type="button" style="position:absolute; top:10px; right:10px; z-index:3; border:1px solid #515744; border-radius:100px; padding:8px 12px; background:#141610; color:#f3f1e8; cursor:pointer; min-height:44px;">{{ soundLabel }}</button>
           <button type="button" data-fullscreen-button onClick="{{ watchFullscreen }}" style="position:absolute; top:10px; left:10px; z-index:3; display:flex; align-items:center; gap:6px; font-family:'JetBrains Mono',monospace; font-size:clamp(9px,1vh,11px); letter-spacing:0.08em; text-transform:uppercase; color:#f3f1e8; background:#141610; border:0; padding:6px 12px; border-radius:100px; cursor:pointer; transition:background 0.2s ease;" style-hover="background:#1c1f16;">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#f3f1e8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M8 3H5a2 2 0 0 0-2 2v3"></path><path d="M16 3h3a2 2 0 0 1 2 2v3"></path><path d="M21 16v3a2 2 0 0 1-2 2h-3"></path><path d="M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
             Full screen
@@ -334,7 +350,7 @@
   &quot;autoRotate&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: false, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Behavior&quot;}
 }">
 class Component extends DCLogic {
-  state = { active: 0, activeVideoIndex: 0, manualVideoId: null, playlistOpen: false, soundOn: false };
+  state = { active: 0, activeVideoIndex: 0, manualVideoId: null, playlistOpen: false };
 
   getVideoSrc(p, manualVideoId) {
     if (!p || !p.playlist) return null;
@@ -443,9 +459,7 @@ class Component extends DCLogic {
 
   componentDidMount() {
     const restored = WFLPlayback.restore(this.pillarsData);
-    this._playback = new WFLPlayback(soundOn => {
-      if (this.state.soundOn !== soundOn) this.setState({ soundOn });
-    }, playingVideoId => {
+    this._playback = new WFLPlayback(() => {}, playingVideoId => {
       if (this.state.playingVideoId !== playingVideoId) this.setState({ playingVideoId });
     });
     if (restored) {
@@ -527,10 +541,9 @@ class Component extends DCLogic {
       playlistBarDisplay: videoPillar.playlist ? 'flex' : 'none',
       videoAspectRatio: `${ratioW} / ${ratioH}`,
       videoOrientation: videoPillar.portrait ? 'portrait' : 'landscape',
+      videoLayout: videoPillar.playlist ? (videoPillar.portrait ? 'youtube-portrait' : 'youtube-landscape') : 'local',
       videoWidth: `min(100%, calc(100cqh * ${ratioW} / ${ratioH}))`,
       videoHeight: `min(100%, calc(100cqw * ${ratioH} / ${ratioW}))`,
-      enableSound: this.enableSound,
-      soundLabel: this.state.soundOn ? 'Sound on' : 'Play with sound',
       watchFullscreen: this.watchFullscreen,
       playPrevious: this.playPrevious,
       playNext: this.playNext,
