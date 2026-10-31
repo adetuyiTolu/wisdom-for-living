@@ -1,4 +1,4 @@
-Run `node tests/playback.test.cjs` for eight playback/storage checks.
+Run `node tests/playback.test.cjs` for nine playback/storage checks.
 
 Browser checks use Python Playwright and Chromium. Run `python tests/serve.py`
 from the repository (port 8001), then `python tests/browser-smoke.py`. Set
@@ -22,3 +22,12 @@ See PERFORMANCE_REVIEW.md for the measured results and limitations.
 
 Video projects have their own checks and render measurements; film source and
 media are unchanged by this optimization pass.
+
+Playlist synchronization regressions: run `node tests/playlist.test.cjs` and
+`python tests/playlist-browser.py` (same WFL_TEST_URL option). Four component
+checks and the controlled YouTube API integration exercise all 13 ZeroToAct
+choices at 390px/1440px, late events, rapid selection, automatic advance,
+reselecting the original embed video, next/previous, explicit restart and
+return-visit restoration. The player double follows YouTube's documented
+[path-video then playlist queue](https://developers.google.com/youtube/player_parameters#playlist).
+These tests do not validate live hosted media or the hard-coded title metadata.

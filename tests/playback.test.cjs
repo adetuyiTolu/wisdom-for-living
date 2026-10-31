@@ -69,3 +69,10 @@ test('muted autoplay retries once when the browser blocks all playback',async()=
  options.events.onAutoplayBlocked();options.events.onAutoplayBlocked();
  assert.equal(plays,1);
 });
+test('explicit playlist choices restart only that video; other resume positions remain',()=>{
+ const saved={version:1,positions:{'youtube:selected':29,'youtube:other':12}};
+ const {playback}=setup({tagName:'VIDEO',readyState:0},undefined,saved);
+ playback.restartVideo('selected');
+ assert.equal(playback.positions['youtube:selected'],0);
+ assert.equal(playback.positions['youtube:other'],12);
+});
