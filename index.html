@@ -353,7 +353,7 @@ class Component extends DCLogic {
   }
 
   getCurrentVideoId(p) {
-    return this.state.manualVideoId || (p.videos && p.videos[0] && p.videos[0].id);
+    return this.state.playingVideoId || this.state.manualVideoId || (p.videos && p.videos[0] && p.videos[0].id);
   }
 
   sendPlayerCommand(func) {
@@ -410,7 +410,8 @@ class Component extends DCLogic {
 
   selectVideo = (id) => {
     this.enableSound();
-    this.setState({ manualVideoId: id, playlistOpen: false });
+    this._playback?.capture();
+    this.setState({ manualVideoId: id, playingVideoId: null, playlistOpen: false });
   };
 
   // Keep each video list in newest-to-oldest upload order. Add new uploads at the top.
@@ -441,15 +442,29 @@ class Component extends DCLogic {
   ];
 
   componentDidMount() {
+    const restored = WFLPlayback.restore(this.pillarsData);
     this._playback = new WFLPlayback(soundOn => {
       if (this.state.soundOn !== soundOn) this.setState({ soundOn });
+    }, playingVideoId => {
+      if (this.state.playingVideoId !== playingVideoId) this.setState({ playingVideoId });
     });
-    this._playback.bind();
+    if (restored) {
+      const { scrollY, ...state } = restored;
+      this.setState(state, () => {
+        this._playback.bind(this.playbackContext());
+        requestAnimationFrame(() => requestAnimationFrame(() => window.scrollTo(0, scrollY)));
+      });
+    } else this._playback.bind(this.playbackContext());
     this.maybeStartRotation();
   }
 
+  playbackContext() {
+    const { active, activeVideoIndex, manualVideoId, playlistOpen } = this.state;
+    return { active, activeVideoIndex, manualVideoId, playlistOpen };
+  }
+
   componentDidUpdate(prevProps) {
-    this._playback?.bind();
+    this._playback?.bind(this.playbackContext());
     if (prevProps.autoRotate !== this.props.autoRotate) this.maybeStartRotation();
   }
 
@@ -469,11 +484,13 @@ class Component extends DCLogic {
   }
 
   setActive(i) {
+    this._playback?.capture();
     clearTimeout(this._timer);
     const next = { active: i };
     if (this.pillarsData[i].playlist || this.pillarsData[i].localVideo) {
       next.activeVideoIndex = i;
       next.manualVideoId = null;
+      next.playingVideoId = null;
       next.playlistOpen = false;
     }
     this.setState(next, () => this.maybeStartRotation());

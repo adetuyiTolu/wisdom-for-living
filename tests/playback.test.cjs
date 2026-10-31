@@ -6,7 +6,7 @@ function setup(element, YT) {
  const events={}; let sound;
  element.addEventListener=(name,handler)=>events[name]=handler;
  element.removeEventListener=name=>delete events[name];
- const context={window:{YT},YT, document:{querySelector:()=>element},console};
+ const context={window:{YT,addEventListener(){},removeEventListener(){},scrollY:0},YT, localStorage:{getItem:()=>null,setItem(){}},setInterval:()=>1,clearInterval(){},document:{querySelector:()=>element,addEventListener(){},removeEventListener(){}},console};
  vm.createContext(context); vm.runInContext(fs.readFileSync('playback.js','utf8'),context);
  const playback=new context.window.WFLPlayback(value=>sound=value);
  playback.bind(); return {playback,events,sound:()=>sound};
@@ -28,4 +28,15 @@ test('YouTube readiness unmutes; blocked autoplay falls back safely',async()=>{
  const {sound}=setup({tagName:'IFRAME'},YT);await Promise.resolve();options.events.onReady();
  assert.equal(muted,false);assert.equal(sound(),true);
  options.events.onAutoplayBlocked();assert.equal(muted,true);assert.equal(sound(),false);assert.equal(plays,2);
+});
+test('saved sessions validate channel and discard removed videos',()=>{
+ const context={window:{},localStorage:{getItem:()=>JSON.stringify({version:1,positions:{},active:1,activeVideoIndex:0,videoId:'removed',scrollY:80})}};
+ vm.createContext(context);vm.runInContext(fs.readFileSync('playback.js','utf8'),context);
+ const saved=context.window.WFLPlayback.restore([{videos:[{id:'current'}]},{}]);
+ assert.equal(saved.manualVideoId,null);assert.equal(saved.activeVideoIndex,0);assert.equal(saved.scrollY,80);
+});
+test('corrupted or unavailable storage never prevents playback',()=>{
+ const context={window:{},localStorage:{getItem(){throw Error('denied')}}};
+ vm.createContext(context);vm.runInContext(fs.readFileSync('playback.js','utf8'),context);
+ assert.equal(context.window.WFLPlayback.restore([{}]),null);
 });
