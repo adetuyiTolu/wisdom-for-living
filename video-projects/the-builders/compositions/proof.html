@@ -1,155 +1,22 @@
 <template>
-  <style>
-    #root {
-      position: absolute;
-      inset: 0;
-      background: var(--color-ground);
-      overflow: hidden;
-      font-family: var(--font-display), sans-serif;
-    }
-    .pf-grid {
-      position: absolute;
-      inset: 0;
-      background-image:
-        repeating-linear-gradient(0deg, rgba(243,241,232,0.05) 0px, rgba(243,241,232,0.05) 1px, transparent 1px, transparent 64px),
-        repeating-linear-gradient(90deg, rgba(243,241,232,0.05) 0px, rgba(243,241,232,0.05) 1px, transparent 1px, transparent 64px);
-    }
-    .pf-stage {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .pf-draw {
-      width: 900px;
-      height: 460px;
-      overflow: visible;
-    }
-    .pf-draw path {
-      fill: none;
-      stroke: var(--color-ink);
-      stroke-width: 3;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-    .pf-leader {
-      stroke: var(--color-accent);
-      stroke-width: 2.5;
-      fill: none;
-    }
-    .pf-dot {
-      fill: var(--color-accent);
-    }
-    .pf-card {
-      position: absolute;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      opacity: 0;
-      transform-origin: left center;
-    }
-    .pf-kw {
-      font-size: 72px;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-      color: var(--color-ink);
-    }
-    .pf-sub {
-      font-size: 29px;
-      font-weight: 500;
-      color: #c7c9bb;
-      font-family: 'Inter', sans-serif;
-      max-width: 520px;
-    }
-  </style>
-
-  <div id="scene-proof" data-composition-id="scene-proof" data-width="1920" data-height="1080">
-    <div class="pf-grid"></div>
-
-    <div class="pf-stage">
-      <svg class="pf-draw" viewBox="0 0 900 460">
-        <path d="M120 400 L780 400" />
-        <path d="M160 400 L160 220" />
-        <path d="M740 400 L740 150" />
-        <path d="M440 400 L440 260" />
-        <path d="M160 220 L440 180 L740 150" />
-        <path d="M620 150 L620 90 L860 90 L860 400" />
-
-        <path id="leader-1" class="pf-leader" d="M160 400 L160 420 L30 420" stroke-dasharray="1" stroke-dashoffset="1" />
-        <circle class="pf-dot" cx="160" cy="400" r="6" />
-
-        <path id="leader-2" class="pf-leader" d="M440 320 L560 320 L560 420" stroke-dasharray="1" stroke-dashoffset="1" />
-        <circle class="pf-dot" cx="440" cy="320" r="6" />
-
-        <path id="leader-3" class="pf-leader" d="M740 150 L800 150 L800 40" stroke-dasharray="1" stroke-dashoffset="1" />
-        <circle class="pf-dot" cx="740" cy="150" r="6" />
-      </svg>
-    </div>
-
-    <div class="pf-card" id="card-1" style="left: 130px; top: 790px;">
-      <div class="pf-kw">STRATEGY</div>
-      <div class="pf-sub">Plan what gets built, and why it matters.</div>
-    </div>
-
-    <div class="pf-card" id="card-2" style="left: 1090px; top: 640px;">
-      <div class="pf-kw">TEAMWORK</div>
-      <div class="pf-sub">No one on this build works alone.</div>
-    </div>
-
-    <div class="pf-card" id="card-3" data-hold="true" style="left: 1330px; top: 110px;">
-      <div class="pf-kw">EXECUTION</div>
-      <div class="pf-sub">Ideas don't count until they're built.</div>
-    </div>
-  </div>
-
-  <script>
-    (function () {
-      const root = document.getElementById('scene-proof');
-      const leaders = ['#leader-1', '#leader-2', '#leader-3'].map((s) => root.querySelector(s));
-      leaders.forEach((p) => {
-        const len = p.getTotalLength();
-        p.style.strokeDasharray = len;
-        p.style.strokeDashoffset = len;
-      });
-
-      const tl = gsap.timeline({ paused: true });
-
-      // card 1: STRATEGY
-      tl.to(leaders[0], { strokeDashoffset: 0, duration: 0.3, ease: 'power2.out' }, 0.2);
-      tl.fromTo(
-        '#card-1',
-        { opacity: 0, scale: 1.15, filter: 'blur(4px)' },
-        { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.3, ease: 'back.out(1.5)' },
-        0.4,
-      );
-      tl.to('#card-1', { opacity: 0, duration: 0.25, ease: 'power2.in' }, 3.65);
-      tl.to(leaders[0], { opacity: 0, duration: 0.25, ease: 'power2.in' }, 3.65);
-
-      // card 2: TEAMWORK
-      tl.to(leaders[1], { strokeDashoffset: 0, duration: 0.3, ease: 'power2.out' }, 4.0);
-      tl.fromTo(
-        '#card-2',
-        { opacity: 0, scale: 1.15, filter: 'blur(4px)' },
-        { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.3, ease: 'back.out(1.5)' },
-        4.2,
-      );
-      tl.to('#card-2', { opacity: 0, duration: 0.25, ease: 'power2.in' }, 7.45);
-      tl.to(leaders[1], { opacity: 0, duration: 0.25, ease: 'power2.in' }, 7.45);
-
-      // card 3: EXECUTION
-      tl.to(leaders[2], { strokeDashoffset: 0, duration: 0.3, ease: 'power2.out' }, 7.8);
-      tl.fromTo(
-        '#card-3',
-        { opacity: 0, scale: 1.15, filter: 'blur(4px)' },
-        { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.3, ease: 'back.out(1.5)' },
-        8.0,
-      );
-      tl.to('#card-3', { opacity: 0, duration: 0.3, ease: 'power2.in' }, 11.5);
-      tl.to(leaders[2], { opacity: 0, duration: 0.3, ease: 'power2.in' }, 11.5);
-
-      window.__timelines = window.__timelines || {};
-      window.__timelines['scene-proof'] = tl;
-    })();
-  </script>
+<style>#root{position:absolute;inset:0;overflow:hidden;font-family:'Space Grotesk',sans-serif;color:#f3f1e8}*{box-sizing:border-box}h1,h2,p{margin:0}.copy{position:absolute;z-index:3}.big{font-size:136px;font-weight:700;line-height:1.02;letter-spacing:-6px}.small{font-size:48px;line-height:1.3}.accent{color:#b1d58c}.cut{overflow:hidden}.line{display:block}.rule{height:3px;background:currentColor;transform-origin:left center}.coming{font-size:42px;letter-spacing:3px;text-transform:uppercase}.brand{font-size:48px;font-weight:500}.scene-art{position:absolute;inset:0} #root{background:#17251b}.model{position:absolute;left:40px;top:0;width:1120px;height:1120px}.copy{left:1200px;top:195px;width:540px}.big{font-size:112px;letter-spacing:-4px}.verb{position:absolute;left:1200px;top:500px;width:540px}.verb h2{font-size:80px;line-height:1.05;letter-spacing:-3px}.verb p{font-size:64px;line-height:1.35;margin-top:28px;max-width:500px;color:#d2ddc9}.index{position:absolute;left:180px;top:165px;font-size:48px;color:#b1d58c}.track{position:absolute;left:1200px;top:930px;width:470px;background:#536447;height:4px}.track span{display:block;height:4px;width:470px;transform-origin:left;background:#b1d58c}</style>
+<div data-hf-id="hf-14z3" id="proof" data-composition-id="proof" data-width="1920" data-height="1080"><div data-hf-id="hf-aph5" id="root"><div data-hf-id="hf-hwot" class="art-window" style="position:absolute;left:0;top:0;width:1160px;height:1080px;overflow:hidden"><div data-hf-id="hf-wvkm" class="model" data-layout-allow-overflow><svg data-hf-id="hf-fwes" viewBox="0 0 1000 1000" width="100%" height="100%" aria-label="Architectural model assembled from individual building blocks"><path data-hf-id="hf-jpme" d="M10 600L490 320 980 600 500 880Z" fill="#272d22"/><g data-hf-id="hf-u624" id="proof-block-0" class="block"><path data-hf-id="hf-vqil" d="M110 530l125 -70.0v-120l-125 70.0Z" fill="#c2cbb4" stroke="#101d14" stroke-width="2"/><path data-hf-id="hf-gegn" d="M235 460.0l70 39.2v-120l-70 -39.2Z" fill="#536b44" stroke="#101d14" stroke-width="2"/><path data-hf-id="hf-eleq" d="M110 410l125 -70.0 70 39.2 -125 70.0Z" fill="#dfe4d4" stroke="#101d14" stroke-width="2"/><path data-hf-id="hf-vls5" d="M148.75 438.3l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-gyh0" d="M172.5 425.0l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-rmag" d="M196.25 411.7l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-ppj4" d="M148.75 415.3l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-261b" d="M172.5 402.0l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-56az" d="M196.25 388.7l12 -6.7v-9l-12 6.7Z" fill="#34452d"/></g><g data-hf-id="hf-uxpx" id="proof-block-1" class="block"><path data-hf-id="hf-s221" d="M300 420l130 -72.80000000000001v-240l-130 72.80000000000001Z" fill="#82966e" stroke="#101d14" stroke-width="2"/><path data-hf-id="hf-fbm7" d="M430 347.2l80 44.800000000000004v-240l-80 -44.800000000000004Z" fill="#536b44" stroke="#101d14" stroke-width="2"/><path data-hf-id="hf-igty" d="M300 180l130 -72.80000000000001 80 44.800000000000004 -130 72.80000000000001Z" fill="#dfe4d4" stroke="#101d14" stroke-width="2"/><path data-hf-id="hf-ux15" d="M340.0 327.6l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-zkfn" d="M365.0 313.6l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-s516" d="M390.0 299.6l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-z052" d="M340.0 304.6l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-sz85" d="M365.0 290.6l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-twpd" d="M390.0 276.6l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-5fe2" d="M340.0 281.6l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-pzrf" d="M365.0 267.6l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-bs2w" d="M390.0 253.6l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-lyw4" d="M340.0 258.6l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-ji08" d="M365.0 244.6l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-2el7" d="M390.0 230.6l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-17ut" d="M340.0 235.6l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-wccx" d="M365.0 221.6l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-jyc5" d="M390.0 207.6l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-9ru6" d="M340.0 212.6l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-zo2c" d="M365.0 198.6l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-xex1" d="M390.0 184.6l12 -6.7v-9l-12 6.7Z" fill="#34452d"/></g><g data-hf-id="hf-yvty" id="proof-block-2" class="block"><path data-hf-id="hf-0cct" d="M510 330l145 -81.2v-320l-145 81.2Z" fill="#c2cbb4" stroke="#101d14" stroke-width="2"/><path data-hf-id="hf-mpst" d="M655 248.8l85 47.6v-320l-85 -47.6Z" fill="#536b44" stroke="#101d14" stroke-width="2"/><path data-hf-id="hf-c61v" d="M510 10l145 -81.2 85 47.6 -145 81.2Z" fill="#dfe4d4" stroke="#101d14" stroke-width="2"/><path data-hf-id="hf-q4qm" d="M553.75 235.5l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-phem" d="M582.5 219.4l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-p5yl" d="M611.25 203.3l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-hw85" d="M553.75 212.5l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-xsgq" d="M582.5 196.4l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-yb8t" d="M611.25 180.3l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-y23w" d="M553.75 189.5l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-nrtr" d="M582.5 173.4l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-o29p" d="M611.25 157.3l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-07ov" d="M553.75 166.5l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-5yn0" d="M582.5 150.4l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-5cyi" d="M611.25 134.3l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-4ldy" d="M553.75 143.5l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-jnd2" d="M582.5 127.4l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-akc7" d="M611.25 111.3l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-d1hx" d="M553.75 120.5l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-l865" d="M582.5 104.4l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-jreu" d="M611.25 88.3l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-0o7k" d="M553.75 97.5l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-vb4b" d="M582.5 81.4l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-9c2v" d="M611.25 65.3l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-806v" d="M553.75 74.5l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-4g85" d="M582.5 58.4l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-hotg" d="M611.25 42.3l12 -6.7v-9l-12 6.7Z" fill="#34452d"/></g><g data-hf-id="hf-51jr" id="proof-block-3" class="block"><path data-hf-id="hf-u1dq" d="M670 470l140 -78.4v-165l-140 78.4Z" fill="#82966e" stroke="#101d14" stroke-width="2"/><path data-hf-id="hf-5n6q" d="M810 391.6l80 44.800000000000004v-165l-80 -44.800000000000004Z" fill="#536b44" stroke="#101d14" stroke-width="2"/><path data-hf-id="hf-901d" d="M670 305l140 -78.4 80 44.800000000000004 -140 78.4Z" fill="#dfe4d4" stroke="#101d14" stroke-width="2"/><path data-hf-id="hf-p5jv" d="M712.5 376.2l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-37mu" d="M740.0 360.8l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-stsj" d="M767.5 345.4l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-bpli" d="M712.5 353.2l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-zfte" d="M740.0 337.8l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-58p4" d="M767.5 322.4l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-rzzt" d="M712.5 330.2l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-4pll" d="M740.0 314.8l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-fdil" d="M767.5 299.4l12 -6.7v-9l-12 6.7Z" fill="#34452d"/></g><g data-hf-id="hf-8zns" id="proof-block-4" class="block"><path data-hf-id="hf-m51s" d="M450 650l160 -89.60000000000001v-110l-160 89.60000000000001Z" fill="#c2cbb4" stroke="#101d14" stroke-width="2"/><path data-hf-id="hf-xml6" d="M610 560.4l90 50.400000000000006v-110l-90 -50.400000000000006Z" fill="#536b44" stroke="#101d14" stroke-width="2"/><path data-hf-id="hf-cqta" d="M450 540l160 -89.60000000000001 90 50.400000000000006 -160 89.60000000000001Z" fill="#dfe4d4" stroke="#101d14" stroke-width="2"/><path data-hf-id="hf-bpt0" d="M497.5 553.4l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-j8ip" d="M530.0 535.2l12 -6.7v-9l-12 6.7Z" fill="#34452d"/><path data-hf-id="hf-th57" d="M562.5 517.0l12 -6.7v-9l-12 6.7Z" fill="#34452d"/></g><g data-hf-id="hf-9rbl" id="proof-block-5" class="block"><path data-hf-id="hf-rnpw" d="M230 680l100 -56.00000000000001v-70l-100 56.00000000000001Z" fill="#82966e" stroke="#101d14" stroke-width="2"/><path data-hf-id="hf-x5z3" d="M330 624.0l60 33.6v-70l-60 -33.6Z" fill="#536b44" stroke="#101d14" stroke-width="2"/><path data-hf-id="hf-b380" d="M230 610l100 -56.00000000000001 60 33.6 -100 56.00000000000001Z" fill="#dfe4d4" stroke="#101d14" stroke-width="2"/></g><g data-hf-id="hf-dpfm" id="proof-block-6" class="block"><path data-hf-id="hf-eiae" d="M720 700l130 -72.80000000000001v-80l-130 72.80000000000001Z" fill="#c2cbb4" stroke="#101d14" stroke-width="2"/><path data-hf-id="hf-zdok" d="M850 627.2l65 36.400000000000006v-80l-65 -36.400000000000006Z" fill="#536b44" stroke="#101d14" stroke-width="2"/><path data-hf-id="hf-dq65" d="M720 620l130 -72.80000000000001 65 36.400000000000006 -130 72.80000000000001Z" fill="#dfe4d4" stroke="#101d14" stroke-width="2"/></g><path data-hf-id="hf-cj33" d="M40 636L480 890M510 305L987 579" fill="none" stroke="#b1d58c" stroke-width="5"/><path data-hf-id="hf-8du0" d="M30 628L475 885" stroke="#f3f1e8" stroke-width="2" stroke-dasharray="15 12"/></svg></div></div><div data-hf-id="hf-bdx3" class="copy"><h1 data-hf-id="hf-xh9z" class="big">The<br data-hf-id="hf-x5px"><span data-hf-id="hf-jtlz" class="accent">Builders</span></h1></div><div data-hf-id="hf-eqll" class="verb" id="proof-strategy"><h2 data-hf-id="hf-vpmq">Strategy</h2><p data-hf-id="hf-cwho">Real economic<br data-hf-id="hf-rsrt">problems</p></div><div data-hf-id="hf-sixl" class="verb" id="proof-team"><h2 data-hf-id="hf-aloj">Teamwork</h2><p data-hf-id="hf-nx73">Different skills<br data-hf-id="hf-szow">One team</p></div><div data-hf-id="hf-lr4r" class="verb" id="proof-execute"><h2 data-hf-id="hf-asaf">Execution</h2><p data-hf-id="hf-pvrs">A plan becomes<br data-hf-id="hf-sldv">a working solution</p></div><div data-hf-id="hf-64lp" class="track"><span data-hf-id="hf-eyvo" id="proof-progress"></span></div></div></div>
+<script>
+const tl=gsap.timeline({paused:true});
+tl.fromTo('.model',{scale:1.3,x:-180},{scale:1.3,x:-180,duration:.1},0);
+tl.to('.model',{scale:1.14,x:-70,duration:1,ease:'power3.inOut'},4.2);
+tl.to('.model',{scale:1,x:0,duration:1,ease:'power3.inOut'},8.3);
+tl.fromTo('#proof-strategy',{opacity:0,x:45},{opacity:1,x:0,duration:.5,ease:'power3.out'},.25);
+tl.to('#proof-strategy',{opacity:0,x:-35,duration:.3},3.8);
+tl.fromTo('#proof-team',{opacity:0,x:45},{opacity:1,x:0,duration:.5,ease:'power3.out'},4.15);
+tl.to('#proof-team',{opacity:0,x:-35,duration:.3},7.9);
+tl.fromTo('#proof-execute',{opacity:0,x:45},{opacity:1,x:0,duration:.5,ease:'power3.out'},8.25);
+tl.fromTo('#proof-progress',{scaleX:0},{scaleX:1,duration:12.8,ease:'none'},0);
+tl.fromTo('#proof-block-2',{y:-220,opacity:0},{y:0,opacity:1,duration:1,ease:'power3.out'},1.5);
+tl.fromTo('#proof-block-3',{x:90,opacity:0},{x:0,opacity:1,duration:.8,ease:'power3.out'},5.1);
+tl.fromTo('#proof-block-4',{y:-140,opacity:0},{y:0,opacity:1,duration:.8,ease:'power3.out'},9.2);
+tl.to('.model',{rotation:3,duration:1.2,ease:'power2.inOut'},10.8);
+window.__timelines=window.__timelines||{};
+window.__timelines['proof']=tl;
+</script>
 </template>
