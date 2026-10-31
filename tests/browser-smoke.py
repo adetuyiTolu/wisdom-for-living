@@ -27,6 +27,16 @@ with sync_playwright() as p:
   assert abs(coi_video['width']/coi_video['height']-16/9)<.01
   assert coi_video['width']>=coi_frame['width']-.5 or coi_video['height']>=coi_frame['height']-.5,(coi_frame,coi_video)
   assert page.locator('[data-player-area]').evaluate("e=>getComputedStyle(e).paddingBottom")=='0px'
+  fullscreen=page.get_by_role('button',name='View full screen',exact=True)
+  assert fullscreen.is_visible()
+  fullscreen_box=fullscreen.bounding_box()
+  playlist_box=page.locator('[data-video-controls]').bounding_box()
+  assert fullscreen_box['x']+fullscreen_box['width']<=playlist_box['x'],(width,fullscreen_box,playlist_box)
+  # Spy on the browser API to check button wiring without entering headless fullscreen.
+  page.locator('iframe').evaluate('(el) => { el.requestFullscreen = () => { window.fullscreenTarget = el.tagName; return Promise.resolve(); }; }')
+  fullscreen.click()
+  assert page.evaluate('window.fullscreenTarget')=='IFRAME'
+
   page.locator('[data-playlist-toggle]').click()
   assert page.locator('[data-playlist-panel]').is_visible()
   page.locator('[data-playlist-close]').click()
@@ -75,7 +85,11 @@ with sync_playwright() as p:
    assert abs(movie['width']/movie['height']-16/9)<.01
    assert movie['width']>=frame['width']-.5 or movie['height']>=frame['height']-.5,(frame,movie)
    assert page.locator('video').get_attribute('poster'), 'Local film needs its cover before loading'
-   assert not page.locator('[data-fullscreen-button]').is_visible(), 'Native local controls keep artwork unobstructed'
+   assert page.get_by_role('button',name='View full screen',exact=True).is_visible()
+   page.locator('video').evaluate('(el) => { el.requestFullscreen = () => { window.fullscreenTarget = el.tagName; return Promise.resolve(); }; }')
+   page.get_by_role('button',name='View full screen',exact=True).click()
+   assert page.evaluate('window.fullscreenTarget')=='VIDEO'
+
    assert page.locator('[data-player-area]').evaluate("e=>getComputedStyle(e).paddingTop")=='0px'
   # Leave Builders selected for the existing reload/progress check.
   if width<=820:
