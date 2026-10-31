@@ -23,7 +23,11 @@ in this session. This file preserves context when a new session opens the repo.
   unobstructed. Six screen widths and saved playback restoration verified; PR #37 merged.
 - [x] COI uses its full landscape player without the reserved 48px/60px control
   strip. Playlist controls overlay the top corner; native fullscreen stays
-  available. All six screen widths and playback/storage checks pass.
+  available. All six screen widths and playback/storage checks pass; PR #38 merged.
+- [x] Restore the visible Full screen button on every channel as an overlay.
+  Compact COI playlist controls on mobile so the fullscreen label remains
+  visible without overlap or reserved player space. Browser checks cover
+  fullscreen API wiring for both YouTube and local videos.
 
 Automatic execution after session expiry is unavailable: no automation tool is
 exposed. Reopening this repository preserves these instructions but does not
