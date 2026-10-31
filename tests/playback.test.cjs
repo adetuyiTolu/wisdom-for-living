@@ -2,14 +2,14 @@ const {test}=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const vm=require('node:vm');
-function setup(element, YT) {
- const events={}; let sound;
+function setup(element, YT, saved=null) {
+ const events={}; let sound, stored;
  element.addEventListener=(name,handler)=>events[name]=handler;
  element.removeEventListener=name=>delete events[name];
- const context={window:{YT,addEventListener(){},removeEventListener(){},scrollY:0},YT, localStorage:{getItem:()=>null,setItem(){}},setInterval:()=>1,clearInterval(){},document:{querySelector:()=>element,addEventListener(){},removeEventListener(){}},console};
+ const context={window:{YT,addEventListener(){},removeEventListener(){},scrollY:0},YT, localStorage:{getItem:()=>JSON.stringify(saved),setItem(key,value){stored=JSON.parse(value)}},setInterval:()=>1,clearInterval(){},document:{querySelector:()=>element,addEventListener(){},removeEventListener(){}},console};
  vm.createContext(context); vm.runInContext(fs.readFileSync('playback.js','utf8'),context);
  const playback=new context.window.WFLPlayback(value=>sound=value);
- playback.bind(); return {playback,events,sound:()=>sound};
+ playback.bind(); return {playback,events,sound:()=>sound,stored:()=>stored};
 }
 test('local video unmutes and plays after interaction',()=>{
  const video={tagName:'VIDEO',readyState:0,muted:true,paused:false,play:()=>Promise.resolve()};
@@ -39,4 +39,15 @@ test('corrupted or unavailable storage never prevents playback',()=>{
  const context={window:{},localStorage:{getItem(){throw Error('denied')}}};
  vm.createContext(context);vm.runInContext(fs.readFileSync('playback.js','utf8'),context);
  assert.equal(context.window.WFLPlayback.restore([{}]),null);
+});
+test('YouTube restores the saved timestamp before recording progress',async()=>{
+ let options,time=0;
+ const player={getVideoData:()=>({video_id:'saved-video'}),getCurrentTime:()=>time,seekTo(value){time=value},unMute(){},setVolume(){},playVideo(){},isMuted:()=>false,getPlayerState:()=>1};
+ const YT={Player:function(el,opts){options=opts;return player}};
+ const saved={version:1,positions:{'youtube:saved-video':42.5}};
+ const {playback,stored}=setup({tagName:'IFRAME'},YT,saved);
+ playback.bind({active:1,activeVideoIndex:1,manualVideoId:'saved-video'});
+ await Promise.resolve();options.events.onReady();assert.equal(time,42.5);
+ time=48;playback.capture();assert.equal(stored().positions['youtube:saved-video'],48);
+ assert.equal(stored().videoId,'saved-video');
 });

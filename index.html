@@ -197,10 +197,10 @@
           </div>
           <div style="aspect-ratio:{{ videoAspectRatio }}; width:{{ videoWidth }}; height:{{ videoHeight }};">
             <sc-if value="{{ isYouTube }}" hint-placeholder-val="{{ true }}">
-              <iframe data-wfl-video="true" src="{{ videoSrc }}" title="{{ videoTitle }}" style="width:100%; height:100%; border:0; display:block;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowFullScreen="{{ true }}"></iframe>
+              <iframe key="{{ videoSrc }}" data-wfl-video="true" src="{{ videoSrc }}" title="{{ videoTitle }}" style="width:100%; height:100%; border:0; display:block;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowFullScreen="{{ true }}"></iframe>
             </sc-if>
             <sc-if value="{{ isLocalVideo }}" hint-placeholder-val="{{ false }}">
-              <video data-wfl-video="true" src="{{ localVideoSrc }}" title="{{ videoTitle }}" style="width:100%; height:100%; border:0; display:block; object-fit:cover;" autoPlay="{{ true }}" muted="{{ true }}" loop="{{ true }}" playsInline="{{ true }}" controls="{{ true }}" preload="metadata"></video>
+              <video key="{{ localVideoSrc }}" data-wfl-video="true" src="{{ localVideoSrc }}" title="{{ videoTitle }}" style="width:100%; height:100%; border:0; display:block; object-fit:cover;" autoPlay="{{ true }}" muted="{{ true }}" loop="{{ true }}" playsInline="{{ true }}" controls="{{ true }}" preload="metadata"></video>
             </sc-if>
           </div>
         </div>
@@ -437,8 +437,8 @@ class Component extends DCLogic {
       { id: 'oT6wE8OkkyA', title: "ZeroToAct Weekly Brief: The Room Where It Isn't Being Written" },
       { id: 'V0gEUW2dQAU', title: 'The $700 Billion Compute Divide' },
     ] },
-    { name: 'The Builders', abbr: 'TB', href: '', domain: '', tagline: 'A flagship reality series challenging entrepreneurs and innovators to solve real economic problems through teamwork, strategy, and execution.', logo: '', comingSoon: true, dwell: 6000, localVideo: './videos/the-builders-intro.mp4' },
-    { name: 'Books', abbr: 'BKS', href: '', domain: '', tagline: 'The Prosperity Engine and The Oversized Mind of a Visionary, two forthcoming titles from Wisdom for Living.', logo: '', comingSoon: true, dwell: 5600, localVideo: './videos/books-coming-soon.mp4' }
+    { name: 'The Builders', abbr: 'TB', href: '', domain: '', tagline: 'A flagship reality series challenging entrepreneurs and innovators to solve real economic problems through teamwork, strategy, and execution.', logo: '', comingSoon: true, dwell: 6000, localVideo: './videos/the-builders-intro.mp4', poster: './videos/the-builders-intro-poster.jpg' },
+    { name: 'Books', abbr: 'BKS', href: '', domain: '', tagline: 'The Prosperity Engine and The Oversized Mind of a Visionary, two forthcoming titles from Wisdom for Living.', logo: '', comingSoon: true, dwell: 5600, localVideo: './videos/books-coming-soon.mp4', poster: './videos/books-coming-soon-poster.jpg' }
   ];
 
   componentDidMount() {
@@ -523,6 +523,7 @@ class Component extends DCLogic {
       isYouTube: !!videoPillar.playlist,
       isLocalVideo: !!videoPillar.localVideo,
       localVideoSrc: videoPillar.localVideo || '',
+      localVideoPoster: videoPillar.poster || '',
       playlistBarDisplay: videoPillar.playlist ? 'flex' : 'none',
       videoAspectRatio: `${ratioW} / ${ratioH}`,
       videoOrientation: videoPillar.portrait ? 'portrait' : 'landscape',

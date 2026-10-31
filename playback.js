@@ -138,7 +138,9 @@
         this.element.removeEventListener('seeked', this.flush);
         this.element.removeEventListener('timeupdate', this.flush);
       }
-      // Do not destroy the iframe: it belongs to the component renderer.
+      // React owns connected DOM. Once it has replaced an iframe, dispose of
+      // YouTube's detached player and message listeners as well.
+      if (this.player?.getIframe && !this.element?.isConnected) this.player.destroy();
       this.player = null;
       this.element = null;
     }
