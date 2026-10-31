@@ -32,7 +32,13 @@ in this session. This file preserves context when a new session opens the repo.
   licensed fonts, storage-write throttling, keyboard navigation, playlist focus,
   short-window layouts, readable channel labels and responsive typography.
   All 13 layout scenarios and eight playback checks pass, plus throttled
-  first-paint/layout-shift and first-party-loading checks. See PERFORMANCE_REVIEW.md.
+  first-paint/layout-shift and first-party-loading checks; PR #40 merged.
+  See PERFORMANCE_REVIEW.md.
+- [x] ZeroToAct selection sync: explicit choices recreate the player even when
+  reselecting the original embed after auto-advance, start selected videos at
+  zero, and expose the API-tracked current row. Nine playback checks, four
+  component checks and all 13 choices on desktop/mobile API simulations pass.
+  Return visits still resume. Live YouTube titles/media remain unverified (403).
 
 Automatic execution after session expiry is unavailable: no automation tool is
 exposed. Reopening this repository preserves these instructions but does not

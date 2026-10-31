@@ -93,6 +93,12 @@
       const id = this.player?.getVideoData?.().video_id;
       return id ? `youtube:${id}` : null;
     }
+    // An explicit playlist choice starts that video, rather than resuming near
+    // its previous ending and immediately advancing again. Return visits retain
+    // their saved timestamp because restoration does not call this method.
+    restartVideo(id) {
+      this.positions[`youtube:${id}`] = 0;
+    }
     restoreTime() {
       const key = this.mediaKey();
       if (!key || this.restoredKey === key) return;
