@@ -2,14 +2,14 @@ const {test}=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const vm=require('node:vm');
-function setup(element, YT, saved=null) {
- const events={}; let sound, stored, writes=0, now=1000;
+function setup(element, YT, saved=null, onEnded) {
+ const events={},reported=[]; let sound, stored, writes=0, now=1000;
  element.addEventListener=(name,handler)=>events[name]=handler;
  element.removeEventListener=name=>delete events[name];
  const context={Date:{now:()=>now},window:{YT,addEventListener(){},removeEventListener(){},scrollY:0},YT, localStorage:{getItem:()=>JSON.stringify(saved),setItem(key,value){stored=JSON.parse(value);writes++}},setInterval:()=>1,clearInterval(){},document:{querySelector:()=>element,addEventListener(){},removeEventListener(){}},console};
  vm.createContext(context); vm.runInContext(fs.readFileSync('playback.js','utf8'),context);
- const playback=new context.window.WFLPlayback(value=>sound=value);
- playback.bind(); return {playback,events,sound:()=>sound,stored:()=>stored,writes:()=>writes,advance:ms=>now+=ms,context};
+ const playback=new context.window.WFLPlayback(value=>sound=value,id=>reported.push(id),onEnded);
+ playback.bind(); return {playback,events,sound:()=>sound,stored:()=>stored,writes:()=>writes,advance:ms=>now+=ms,context,reported};
 }
 test('local video unmutes and plays after interaction',()=>{
  const video={tagName:'VIDEO',readyState:0,muted:true,paused:false,play:()=>Promise.resolve()};
@@ -75,4 +75,24 @@ test('explicit playlist choices restart only that video; other resume positions 
  playback.restartVideo('selected');
  assert.equal(playback.positions['youtube:selected'],0);
  assert.equal(playback.positions['youtube:other'],12);
+});
+
+test('ready explicitly loads the requested ID and saved timestamp',async()=>{
+ let options,request,id='wrong-next-video',time=0;
+ const player={loadVideoById(value){request=value;id=value.videoId;time=value.startSeconds},getVideoData:()=>({video_id:id}),getCurrentTime:()=>time,seekTo(value){time=value},unMute(){},setVolume(){},playVideo(){},isMuted:()=>false,getPlayerState:()=>1};
+ const YT={Player:function(el,opts){options=opts;return player}};
+ const {playback}=setup({tagName:'IFRAME'},YT,{version:1,positions:{'youtube:clicked':17}});
+ playback.bind({videoId:'clicked',manualVideoId:'clicked'});await Promise.resolve();options.events.onReady();
+ assert.equal(request.videoId,'clicked');assert.equal(request.startSeconds,17);assert.equal(id,'clicked');
+});
+test('transitional next-video metadata cannot advance or replace the requested video',async()=>{
+ let options,id='wrong-next-video',state=1,ended=0,request;
+ const player={loadVideoById(value){request=value},getVideoData:()=>({video_id:id}),getCurrentTime:()=>0,seekTo(){},unMute(){},setVolume(){},playVideo(){},isMuted:()=>false,getPlayerState:()=>state};
+ const YT={Player:function(el,opts){options=opts;return player}};
+ const {playback,reported}=setup({tagName:'IFRAME'},YT,null,()=>ended++);
+ playback.bind({videoId:'clicked',manualVideoId:'clicked'});await Promise.resolve();options.events.onReady();
+ options.events.onStateChange({data:0});assert.equal(ended,0);assert.deepEqual(reported,[]);
+ assert.equal(request.videoId,'clicked');id='clicked';options.events.onStateChange({data:1});assert.deepEqual(reported,['clicked']);
+ options.events.onStateChange({data:2});options.events.onStateChange({data:3});assert.equal(ended,0);
+ state=0;options.events.onStateChange({data:0});options.events.onStateChange({data:0});assert.equal(ended,1);
 });
