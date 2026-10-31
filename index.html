@@ -72,6 +72,10 @@
     [data-video-layout="youtube-landscape"] [data-player-area] { padding: 0; }
     [data-video-layout="youtube-landscape"] [data-video-controls] { top: 8px; right: 8px; bottom: auto !important; left: auto !important; }
     @media (min-width: 821px) {
+      /* COI opens beside its player, keeping the shared translucent panel surface. */
+      [data-video-layout="youtube-landscape"] [data-screen-label="Narration"][data-playlist-open="true"] [data-playlist-panel] {
+        position: relative; inset: auto; width: clamp(170px,32%,230px); flex-shrink: 0; box-sizing: border-box;
+      }
       /* Portrait viewing uses the full right column, with the playlist alongside. */
       [data-video-layout="youtube-portrait"] [data-screen-label="Narration"] { grid-row: 1 / span 2 !important; }
       [data-video-layout="youtube-portrait"] [data-screen-label="Pillar list"] { display: none !important; }
@@ -459,8 +463,9 @@ class Component extends DCLogic {
     this._playback?.capture(true);
     this._playback?.restartVideo(id);
     const wasOpen = this.state.playlistOpen;
-    this.setState(state => ({ manualVideoId: id, playingVideoId: null, playlistOpen: false, selectionRevision: state.selectionRevision + 1 }), () => {
-      if (wasOpen) document.querySelector('[data-playlist-toggle]')?.focus();
+    const keepOpen = wasOpen && !this.getVideoPillar().portrait && window.matchMedia('(min-width: 821px)').matches;
+    this.setState(state => ({ manualVideoId: id, playingVideoId: null, playlistOpen: keepOpen, selectionRevision: state.selectionRevision + 1 }), () => {
+      if (wasOpen && !keepOpen) document.querySelector('[data-playlist-toggle]')?.focus();
     });
   };
 

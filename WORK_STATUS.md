@@ -38,7 +38,12 @@ in this session. This file preserves context when a new session opens the repo.
   reselecting the original embed after auto-advance, start selected videos at
   zero, and expose the API-tracked current row. Nine playback checks, four
   component checks and all 13 choices on desktop/mobile API simulations pass.
-  Return visits still resume. Live YouTube titles/media remain unverified (403).
+  Return visits still resume. Live YouTube titles/media remain unverified (403);
+  PR #41 merged.
+- [x] COI desktop playlist opens as a translucent sidebar and stays open after
+  choosing a video. Mobile retains its dismissing overlay. Opening/closing
+  preserves the current iframe; transparency and side-by-side geometry verified
+  across all 13 layouts. Portrait overlay behavior remains unchanged.
 
 Automatic execution after session expiry is unavailable: no automation tool is
 exposed. Reopening this repository preserves these instructions but does not

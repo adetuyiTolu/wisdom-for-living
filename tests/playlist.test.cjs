@@ -2,11 +2,11 @@ const {test}=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const vm=require('node:vm');
-function component(){
+function component(desktop=true){
  const html=fs.readFileSync('index.html','utf8');
  const start=html.indexOf('class Component extends DCLogic');
  const code=html.slice(start,html.indexOf('</script>',start));
- const context={DCLogic:class {props={};setState(update,done){Object.assign(this.state,typeof update==='function'?update(this.state):update);done?.();}}};
+ const context={window:{matchMedia:()=>({matches:desktop})},document:{querySelector:()=>({focus(){}})},DCLogic:class {props={};setState(update,done){Object.assign(this.state,typeof update==='function'?update(this.state):update);done?.();}}};
  vm.createContext(context);vm.runInContext(code+';globalThis.instance = new Component();',context);
  const c=context.instance;c.state.active=1;c.state.activeVideoIndex=1;
  return c;
@@ -50,4 +50,16 @@ test('reselecting the original video after auto-advance recreates its player',()
  assert.equal(c.renderVals().videoSrc,src);
  assert.notEqual(c.renderVals().videoPlayerKey,key);
  assert.equal(c.getCurrentVideoId(p),p.videos[2].id);
+});
+
+test('desktop playlist stays open on selection; mobile overlay closes',()=>{
+ for(const desktop of [true,false]){
+  const c=component(desktop);c.state.active=0;c.state.activeVideoIndex=0;c.state.playlistOpen=true;c.selectVideo(c.getVideoPillar().videos[1].id);
+  assert.equal(c.state.playlistOpen,desktop);
+ }
+});
+
+test('portrait overlay still closes after selection on narrower desktops',()=>{
+ const c=component(true);c.state.playlistOpen=true;c.selectVideo(c.getVideoPillar().videos[1].id);
+ assert.equal(c.state.playlistOpen,false);
 });
