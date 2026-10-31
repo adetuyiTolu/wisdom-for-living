@@ -27,14 +27,19 @@ in this session. This file preserves context when a new session opens the repo.
 - [x] Restore the visible Full screen button on every channel as an overlay.
   Compact COI playlist controls on mobile so the fullscreen label remains
   visible without overlap or reserved player space. Browser checks cover
-  fullscreen API wiring for both YouTube and local videos.
+  fullscreen API wiring for both YouTube and local videos; PR #39 merged.
+- [x] Responsive/performance/UX review: first-party deferred UI libraries and
+  licensed fonts, storage-write throttling, keyboard navigation, playlist focus,
+  short-window layouts, readable channel labels and responsive typography.
+  All 13 layout scenarios and eight playback checks pass, plus throttled
+  first-paint/layout-shift and first-party-loading checks. See PERFORMANCE_REVIEW.md.
 
 Automatic execution after session expiry is unavailable: no automation tool is
 exposed. Reopening this repository preserves these instructions but does not
 itself schedule an agent.
 
 Browser: range-capable server port 8001. Python Playwright + /usr/bin/chromium.
-Test dependencies: /tmp/wfl-browser-deps/node_modules. Run
+UI dependencies are bundled; use Python Playwright and Chromium. Run
 `python tests/browser-smoke.py`, `node tests/playback.test.cjs`.
 
 HyperFrames CLI is pinned 0.8.222; use npm_config_cache=/tmp/wfl-npm.
