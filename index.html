@@ -20,6 +20,7 @@
 <link rel="icon" href="./favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="./favicon-16x16.png" sizes="16x16" type="image/png">
 <link rel="apple-touch-icon" href="./apple-touch-icon.png" sizes="180x180">
+<script src="./playback.js"></script>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -147,6 +148,7 @@
           </div>
         </div>
         <div style="flex:1; min-width:0; min-height:0; position:relative; display:flex; align-items:center; justify-content:center; container-type:size;">
+          <button data-sound-button onClick="{{ enableSound }}" type="button" style="position:absolute; top:10px; right:10px; z-index:3; border:1px solid #515744; border-radius:100px; padding:8px 12px; background:#141610; color:#f3f1e8; cursor:pointer; min-height:44px;">{{ soundLabel }}</button>
           <div onClick="{{ watchFullscreen }}" style="position:absolute; top:10px; left:10px; z-index:3; display:flex; align-items:center; gap:6px; font-family:'JetBrains Mono',monospace; font-size:clamp(9px,1vh,11px); letter-spacing:0.08em; text-transform:uppercase; color:#f3f1e8; background:#141610; padding:6px 12px; border-radius:100px; cursor:pointer; transition:background 0.2s ease;" style-hover="background:#1c1f16;">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#f3f1e8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M8 3H5a2 2 0 0 0-2 2v3"></path><path d="M16 3h3a2 2 0 0 1 2 2v3"></path><path d="M21 16v3a2 2 0 0 1-2 2h-3"></path><path d="M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
             Watch in full screen
@@ -168,7 +170,7 @@
               <iframe data-wfl-video="true" src="{{ videoSrc }}" title="{{ videoTitle }}" style="width:100%; height:100%; border:0; display:block;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe>
             </sc-if>
             <sc-if value="{{ isLocalVideo }}" hint-placeholder-val="{{ false }}">
-              <video data-wfl-video="true" src="{{ localVideoSrc }}" title="{{ videoTitle }}" style="width:100%; height:100%; border:0; display:block; object-fit:cover;" autoplay muted loop playsinline></video>
+              <video data-wfl-video="true" src="{{ localVideoSrc }}" title="{{ videoTitle }}" style="width:100%; height:100%; border:0; display:block; object-fit:cover;" autoplay muted loop playsinline controls preload="metadata"></video>
             </sc-if>
           </div>
         </div>
@@ -302,7 +304,7 @@
   &quot;autoRotate&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: false, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Behavior&quot;}
 }">
 class Component extends DCLogic {
-  state = { active: 0, activeVideoIndex: 0, manualVideoId: null, playlistOpen: false };
+  state = { active: 0, activeVideoIndex: 0, manualVideoId: null, playlistOpen: false, soundOn: false };
 
   getVideoSrc(p, manualVideoId) {
     if (!p || !p.playlist) return null;
@@ -330,7 +332,10 @@ class Component extends DCLogic {
     if (win) win.postMessage(JSON.stringify({ event: 'command', func, args: [] }), '*');
   }
 
+  enableSound = () => this._playback?.enableSound();
+
   watchFullscreen = () => {
+    this.enableSound();
     const el = document.querySelector('[data-wfl-video]');
     if (!el) return;
     if (el.tagName === 'VIDEO') {
@@ -374,6 +379,7 @@ class Component extends DCLogic {
   };
 
   selectVideo = (id) => {
+    this.enableSound();
     this.setState({ manualVideoId: id, playlistOpen: false });
   };
 
@@ -405,14 +411,20 @@ class Component extends DCLogic {
   ];
 
   componentDidMount() {
+    this._playback = new WFLPlayback(soundOn => {
+      if (this.state.soundOn !== soundOn) this.setState({ soundOn });
+    });
+    this._playback.bind();
     this.maybeStartRotation();
   }
 
   componentDidUpdate(prevProps) {
+    this._playback?.bind();
     if (prevProps.autoRotate !== this.props.autoRotate) this.maybeStartRotation();
   }
 
   componentWillUnmount() {
+    this._playback?.destroy();
     clearTimeout(this._timer);
   }
 
@@ -469,6 +481,8 @@ class Component extends DCLogic {
       videoOrientation: videoPillar.portrait ? 'portrait' : 'landscape',
       videoWidth: `min(100%, calc(100cqh * ${ratioW} / ${ratioH}))`,
       videoHeight: `min(100%, calc(100cqw * ${ratioH} / ${ratioW}))`,
+      enableSound: this.enableSound,
+      soundLabel: this.state.soundOn ? 'Sound on' : 'Play with sound',
       watchFullscreen: this.watchFullscreen,
       playPrevious: this.playPrevious,
       playNext: this.playNext,
