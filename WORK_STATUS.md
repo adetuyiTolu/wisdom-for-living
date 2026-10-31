@@ -20,7 +20,10 @@ in this session. This file preserves context when a new session opens the repo.
   playback tests pass; PR #36 is merged.
 - [x] Builders and Books now maximize their player frame without the old control
   padding; cover posters load before video, and native controls keep the artwork
-  unobstructed. Six screen widths and saved playback restoration verified.
+  unobstructed. Six screen widths and saved playback restoration verified; PR #37 merged.
+- [x] COI uses its full landscape player without the reserved 48px/60px control
+  strip. Playlist controls overlay the top corner; native fullscreen stays
+  available. All six screen widths and playback/storage checks pass.
 
 Automatic execution after session expiry is unavailable: no automation tool is
 exposed. Reopening this repository preserves these instructions but does not

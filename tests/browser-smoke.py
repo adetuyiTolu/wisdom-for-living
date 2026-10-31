@@ -21,6 +21,17 @@ with sync_playwright() as p:
   assert not errors,errors
   assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'),f'overflow {width}'
   assert page.locator('[data-sound-button]').count()==0
+  # COI has no reserved control strip; its 16:9 picture reaches a frame edge.
+  coi_frame=page.locator('[data-screen-label="Narration"]').bounding_box()
+  coi_video=page.locator('iframe').bounding_box()
+  assert abs(coi_video['width']/coi_video['height']-16/9)<.01
+  assert coi_video['width']>=coi_frame['width']-.5 or coi_video['height']>=coi_frame['height']-.5,(coi_frame,coi_video)
+  assert page.locator('[data-player-area]').evaluate("e=>getComputedStyle(e).paddingBottom")=='0px'
+  page.locator('[data-playlist-toggle]').click()
+  assert page.locator('[data-playlist-panel]').is_visible()
+  page.locator('[data-playlist-close]').click()
+  assert not page.locator('[data-playlist-panel]').is_visible()
+
   if width<=820:
    nav=page.locator('[data-mobile-nav]')
    assert nav.is_visible()
