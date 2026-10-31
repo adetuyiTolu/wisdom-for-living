@@ -11,25 +11,24 @@ function component(desktop=true){
  const c=context.instance;c.state.active=1;c.state.activeVideoIndex=1;
  return c;
 }
-test('every ZeroToAct click matches the embed, effective queue, and current row',()=>{
- const c=component(),p=c.getVideoPillar();
- assert.equal(p.videos.length,13);
- for(const [i,video] of p.videos.entries()){
-  c._playback={enableSound(){},restartVideo(){},capture(){c.state.playingVideoId=p.videos[(i+1)%p.videos.length].id;}};
-  c.selectVideo(video.id);
-  const url=new URL(c.getVideoSrc(p,c.state.manualVideoId));
-  const following=url.searchParams.get('playlist').split(',');
-  const queue=[url.pathname.split('/').pop(),...following];
-  assert.ok(!following.includes(video.id),'the initial video must not be duplicated');
-  assert.equal(url.pathname,'/embed/'+video.id);
-  assert.equal(queue[0],video.id);
-  assert.equal(new Set(queue).size,p.videos.length);
-  assert.deepEqual(queue,Array.from(p.videos.slice(i).concat(p.videos.slice(0,i)),v=>v.id));
-  assert.equal(c.getCurrentVideoId(p),video.id);
-  assert.deepEqual(Array.from(c.renderVals().playlistVideos).filter(v=>v.isCurrent==='true').map(v=>v.id),[video.id]);
+test('every click in both playlists requests only that exact video ID',()=>{
+ const c=component();
+ for(const pillarIndex of [0,1]){
+  c.state.active=pillarIndex;c.state.activeVideoIndex=pillarIndex;const p=c.getVideoPillar();
+  for(const [i,video] of p.videos.entries()){
+   c._playback={restartVideo(){},capture(){c.state.playingVideoId=p.videos[(i+1)%p.videos.length].id;}};
+   c.selectVideo(video.id);
+   const url=new URL(c.renderVals().videoSrc);
+   assert.equal(url.pathname,'/embed/'+video.id);
+   assert.equal(url.searchParams.has('playlist'),false);
+   assert.equal(url.searchParams.has('list'),false);
+   assert.equal(c.playbackContext().videoId,video.id);
+   assert.equal(c.getCurrentVideoId(p),video.id);
+   assert.deepEqual(Array.from(c.renderVals().playlistVideos).filter(v=>v.isCurrent==='true').map(v=>v.id),[video.id]);
+  }
  }
 });
-test('automatic advancement updates the current row without reloading the embed',()=>{
+test('player metadata updates the current row without changing the requested embed',()=>{
  const c=component(),p=c.getVideoPillar();c.selectVideo(p.videos[3].id);
  const src=c.renderVals().videoSrc, playerKey=c.renderVals().videoPlayerKey;
  c.state.playingVideoId=p.videos[4].id;

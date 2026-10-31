@@ -34,9 +34,10 @@
         scrollY: Number.isFinite(saved.scrollY) ? Math.max(0, saved.scrollY) : 0
       };
     }
-    constructor(onSound, onVideo) {
+    constructor(onSound, onVideo, onEnded) {
       this.onSound = onSound;
       this.onVideo = onVideo;
+      this.onEnded = onEnded;
       this.positions = readSession()?.positions || {};
       this.flush = () => this.capture(true);
       this.tick = () => { if (document.visibilityState !== 'hidden') this.capture(); };
@@ -53,6 +54,8 @@
       this.element = element;
       this.restoredKey = null;
       this.mutedAutoplayTried = false;
+      this.endedHandled = false;
+      this.pendingVideoId = null;
       if (element.tagName === 'VIDEO') {
         this.change = () => this.onSound(!element.muted && !element.paused);
         element.addEventListener('volumechange', this.change);
@@ -68,12 +71,27 @@
         youtubeReady().then(() => {
           if (this.element !== element) return;
           this.player = new YT.Player(element, { events: {
-            onReady: () => { if (this.element !== element) return; this.restoreTime(); this.enableSound(); },
-            onStateChange: () => {
+            onReady: () => {
+              if (this.element !== element) return;
+              const id = this.context?.videoId || this.context?.manualVideoId;
+              if (id && this.player.loadVideoById) {
+                this.pendingVideoId = id;
+                const saved = this.positions[`youtube:${id}`];
+                this.player.loadVideoById({ videoId: id, startSeconds: Number.isFinite(saved) && saved >= 0 ? saved : 0 });
+              }
+              this.restoreTime(); this.enableSound();
+            },
+            onStateChange: (event = {}) => {
               if (this.element !== element || !this.player) return;
               this.onSound(!this.player.isMuted() && this.player.getPlayerState() === 1);
               this.restoreTime();
               this.capture();
+              const state = event.data ?? this.player.getPlayerState();
+              if (state === 1) this.endedHandled = false;
+              if (state === 0 && this.mediaKey() && !this.endedHandled) {
+                this.endedHandled = true;
+                this.onEnded?.();
+              }
             },
             onAutoplayBlocked: () => {
               if (this.element !== element || !this.player) return;
@@ -91,6 +109,10 @@
       if (!this.element) return null;
       if (this.element.tagName === 'VIDEO') return `local:${this.element.getAttribute('src')}`;
       const id = this.player?.getVideoData?.().video_id;
+      // Ignore transitional metadata for another video until the exact request
+      // has been acknowledged. Late events must not move the current row.
+      if (this.pendingVideoId && id !== this.pendingVideoId) return null;
+      if (id === this.pendingVideoId) this.pendingVideoId = null;
       return id ? `youtube:${id}` : null;
     }
     // An explicit playlist choice starts that video, rather than resuming near

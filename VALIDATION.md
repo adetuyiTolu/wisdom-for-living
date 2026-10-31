@@ -1,4 +1,4 @@
-Run `node tests/playback.test.cjs` for nine playback/storage checks.
+Run `node tests/playback.test.cjs` for eleven playback/storage checks.
 
 Browser checks use Python Playwright and Chromium. Run `python tests/serve.py`
 from the repository (port 8001), then `python tests/browser-smoke.py`. Set
@@ -25,13 +25,15 @@ media are unchanged by this optimization pass.
 
 Playlist synchronization regressions: run `node tests/playlist.test.cjs` and
 `python tests/playlist-browser.py` (same WFL_TEST_URL option). Six component
-checks and the controlled YouTube API integration exercise all 13 ZeroToAct
-choices at 390px/1440px, late events, rapid selection, automatic advance,
-reselecting the original embed video, next/previous, explicit restart and
-return-visit restoration. The player double follows YouTube's documented
-[path-video then playlist queue](https://developers.google.com/youtube/player_parameters#playlist).
-These tests do not validate live hosted media or the hard-coded title metadata.
+checks and the adversarial YouTube API integration exercise every choice in COI
+and ZeroToAct at 390px/1440px. The API double deliberately starts on a wrong ID;
+only an explicit `loadVideoById({videoId,startSeconds})` can correct it. Tests cover
+late events, rapid choices, duplicate ENDED events, advancing only after completion,
+last-to-first wrapping, next/previous and return-visit restoration. Embed URLs
+must contain no playlist/list queue. Eleven playback checks include exact-ID API
+loading and rejecting transitional metadata for a different video.
 
 The responsive suite also checks COI's desktop sidebar versus mobile overlay,
 unchanged panel transparency, preserving the player while toggling, and keeping
-the desktop sidebar open after selecting a video.
+the desktop sidebar open after selecting a video. Browser checks use an API double,
+not live hosted YouTube playback or a title-metadata assertion.

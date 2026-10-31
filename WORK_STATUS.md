@@ -43,7 +43,13 @@ in this session. This file preserves context when a new session opens the repo.
 - [x] COI desktop playlist opens as a translucent sidebar and stays open after
   choosing a video. Mobile retains its dismissing overlay. Opening/closing
   preserves the current iframe; transparency and side-by-side geometry verified
-  across all 13 layouts. Portrait overlay behavior remains unchanged.
+  across all 13 layouts. Portrait overlay behavior remains unchanged; PR #42 merged.
+- [x] Replace native YouTube URL queues for both COI and ZeroToAct with single
+  video embeds plus explicit loadVideoById. Only a confirmed ENDED event advances
+  the site list, with duplicate-event protection. All 17 choices pass adversarial
+  player simulations on mobile/desktop, including wrong initial metadata,
+  next/previous, end wrapping, stale events and saved-position restoration.
+  Eleven playback and six component checks pass; live media remains blocked.
 
 Automatic execution after session expiry is unavailable: no automation tool is
 exposed. Reopening this repository preserves these instructions but does not
