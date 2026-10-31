@@ -7,13 +7,18 @@ in this session. This file preserves context when a new session opens the repo.
 
 - [x] Newest-first curated playback and sound: PR #31 merged.
 - [x] Mobile navigation, controls, inline playback: PR #32 merged.
-- [x] Resume channel, video, timestamp and scroll: implementation and reload tests
-  pass; PR creation and merge next on branch fix/resume-viewing.
-- [ ] Rebuild the two local intro films (The Builders and Books), each exactly
-  30 seconds. Existing projects are video-projects/the-builders and books.
-  Read their AGENTS.md, HyperFrames skills, check, snapshot, review, render,
-  measure, replace videos/*.mp4, commit, PR and merge.
-- [ ] Final verification and links to merged PRs; candidly report restrictions.
+- [x] Resume channel, video, timestamp and scroll: PR #33 merged;
+  browser reload and YouTube timestamp tests pass.
+- [x] Rebuild the two local intro films (The Builders and Books), each exactly
+  30 seconds. Full checks and visual reviews pass; final MP4s, posters,
+  editable sources and measured delivery reports are included.
+- [x] Final browser checks at 320/390/768/1440px; six playback/storage tests pass.
+- Final film branch: feat/premium-intro-films. If resumed, check its GitHub PR
+  merge status before repeating work. PRs #31, #32 and #33 are merged.
+
+Automatic execution after session expiry is unavailable: no automation tool is
+exposed. Reopening this repository preserves these instructions but does not
+itself schedule an agent.
 
 Browser: range-capable server port 8001. Python Playwright + /usr/bin/chromium.
 Test dependencies: /tmp/wfl-browser-deps/node_modules. Run

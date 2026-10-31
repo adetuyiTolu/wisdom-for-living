@@ -1,147 +1,18 @@
 <template>
-  <style>
-    #root {
-      position: absolute;
-      inset: 0;
-      background: var(--color-ground);
-      overflow: hidden;
-      font-family: var(--font-display), sans-serif;
-    }
-    .bh-case {
-      position: absolute;
-      inset: 0;
-      background-image:
-        repeating-linear-gradient(0deg, rgba(243,241,232,0.055) 0px, rgba(243,241,232,0.055) 1px, transparent 1px, transparent 96px),
-        repeating-linear-gradient(90deg, rgba(243,241,232,0.055) 0px, rgba(243,241,232,0.055) 1px, transparent 1px, transparent 96px);
-    }
-    .bh-block {
-      position: absolute;
-      width: 86px;
-      height: 96px;
-      border: 2px solid rgba(243,241,232,0.5);
-      border-radius: 2px;
-      opacity: 0;
-    }
-    .bh-stage {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .bh-word {
-      display: flex;
-      gap: 6px;
-    }
-    .bh-letter {
-      font-size: 190px;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-      color: var(--color-ink);
-      opacity: 0;
-      display: inline-block;
-    }
-    .bh-byline-wrap {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      padding-bottom: 300px;
-    }
-    .bh-byline {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 28px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: #9a9d8d;
-      opacity: 0;
-    }
-    .bh-ink {
-      position: absolute;
-      width: 340px;
-      height: 200px;
-      border-radius: 4px;
-      background: var(--color-accent);
-      opacity: 0;
-    }
-    .bh-ink-label {
-      position: absolute;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 28px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--color-ground);
-      opacity: 0;
-    }
-  </style>
-
-  <div id="scene-hook" data-composition-id="scene-hook" data-width="1920" data-height="1080">
-    <div class="bh-case"></div>
-    <div class="bh-ink" id="bh-ink" style="left: 790px; top: 440px;">
-      <div class="bh-ink-label" id="bh-ink-label" style="left: 40px; top: 86px;">Wisdom Press</div>
-    </div>
-
-    <!-- scattered type blocks (the tension beat: ideas not yet set) -->
-    <div class="bh-block" id="blk-1" style="left: 420px; top: 220px;"></div>
-    <div class="bh-block" id="blk-2" style="left: 1500px; top: 760px;"></div>
-    <div class="bh-block" id="blk-3" style="left: 1620px; top: 260px;"></div>
-    <div class="bh-block" id="blk-4" style="left: 300px; top: 740px;"></div>
-    <div class="bh-block" id="blk-5" style="left: 940px; top: 150px;"></div>
-    <div class="bh-block" id="blk-6" style="left: 980px; top: 840px;"></div>
-
-    <div class="bh-stage">
-      <div class="bh-word" id="bh-word">
-        <span class="bh-letter">B</span><span class="bh-letter">O</span><span class="bh-letter">O</span><span class="bh-letter">K</span><span class="bh-letter">S</span>
-      </div>
-    </div>
-
-    <div class="bh-byline-wrap">
-      <div class="bh-byline" id="bh-byline">From Wisdom for Living</div>
-    </div>
-  </div>
-
-  <script>
-    (function () {
-      const tl = gsap.timeline({ paused: true });
-
-      // Hook (0 - 2.5s): a single press impression, already struck at frame 0
-      // (the thumbnail frame) rather than entering from nothing.
-      tl.set(['#bh-ink', '#bh-ink-label'], { opacity: 1 }, 0);
-      tl.fromTo('#bh-ink', { scale: 1.15 }, { scale: 1, duration: 0.35, ease: 'power3.out' }, 0);
-      tl.to(['#bh-ink', '#bh-ink-label'], { opacity: 0, duration: 0.5, ease: 'power2.in' }, 1.7);
-
-      // Tension (2.5 - 6.5s): loose type scatters across the case, unsettled.
-      const blocks = ['#blk-1', '#blk-2', '#blk-3', '#blk-4', '#blk-5', '#blk-6'];
-      blocks.forEach((sel, i) => {
-        tl.fromTo(
-          sel,
-          { opacity: 0, scale: 0.6, rotation: i % 2 === 0 ? -8 : 8 },
-          { opacity: 0.8, scale: 1, rotation: 0, duration: 0.35, ease: 'back.out(1.6)' },
-          2.6 + i * 0.14,
-        );
-      });
-      tl.to(blocks, { opacity: 0, duration: 0.3, ease: 'power2.in', stagger: 0.03 }, 5.9);
-
-      // Reveal (6.5 - 9s): the word is set, letter by letter, with press weight.
-      const letters = gsap.utils.toArray('#bh-word .bh-letter');
-      letters.forEach((el, i) => {
-        tl.fromTo(
-          el,
-          { opacity: 0, y: -14, filter: 'blur(3px)' },
-          { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.26, ease: 'back.out(2)' },
-          6.6 + i * 0.09,
-        );
-      });
-      tl.fromTo(
-        '#bh-byline',
-        { opacity: 0 },
-        { opacity: 1, duration: 0.4, ease: 'power2.out' },
-        7.6,
-      );
-
-      window.__timelines = window.__timelines || {};
-      window.__timelines['scene-hook'] = tl;
-    })();
-  </script>
+<style>#root{position:absolute;inset:0;overflow:hidden;font-family:'Space Grotesk',sans-serif;color:#f3f1e8}*{box-sizing:border-box}h1,h2,p{margin:0}.copy{position:absolute;z-index:3}.big{font-size:136px;font-weight:700;line-height:1.02;letter-spacing:-6px}.small{font-size:40px;line-height:1.3}.accent{color:#b1d58c}.cut{overflow:hidden}.line{display:block}.rule{height:3px;background:currentColor;transform-origin:left center}.coming{font-size:42px;letter-spacing:3px;text-transform:uppercase}.brand{font-size:36px;font-weight:500}.scene-art{position:absolute;inset:0} #root{background:#e7e4d9;color:#1e3022}.copy{left:180px;top:180px}.big{font-size:180px;line-height:1.01;letter-spacing:-8px}.rule{width:470px;margin-bottom:50px}.bottom{position:absolute;left:180px;bottom:170px;font-size:43px}.sheet{position:absolute;left:1120px;top:-100px;width:800px;height:1400px;background:#c5cbb8;transform:rotate(-12deg);box-shadow:-18px 0 24px #1e30221a}.sheet-two{background:#a4b58d;left:1320px}.sheet-three{background:#506b49;left:1520px}.sheet-line{position:absolute;left:110px;top:240px;height:700px;width:7px;background:#e7e4d9}</style>
+<div data-hf-id="hf-bhen" id="hook-reveal" data-composition-id="hook-reveal" data-width="1920" data-height="1080"><div data-hf-id="hf-aph5" id="root"><div data-hf-id="hf-1etx" class="sheet" data-layout-allow-overflow id="books-sheet-one"><div data-hf-id="hf-iz28" class="sheet-line"></div></div><div data-hf-id="hf-lq3v" class="sheet sheet-two" data-layout-allow-overflow id="books-sheet-two"></div><div data-hf-id="hf-p19b" class="sheet sheet-three" data-layout-allow-overflow id="books-sheet-three"></div><div data-hf-id="hf-bdx3" class="copy"><div data-hf-id="hf-tvzi" class="rule" id="books-open-rule"></div><h1 data-hf-id="hf-syp0" class="big"><span data-hf-id="hf-sexc" class="line" id="books-hook-one">Some ideas</span><span data-hf-id="hf-fdze" class="line" id="books-hook-two">stay with you</span></h1></div><p data-hf-id="hf-9uz0" class="bottom" id="books-hook-bottom">Others change what you build</p></div></div>
+<script>
+const tl=gsap.timeline({paused:true});
+tl.fromTo('#books-open-rule',{scaleX:0},{scaleX:1,duration:1,ease:'power3.out'},0);
+tl.fromTo('#books-hook-two',{x:-70,opacity:0},{x:0,opacity:1,duration:.65,ease:'power4.out'},.6);
+tl.fromTo('#books-sheet-one',{x:450,rotation:-22},{x:0,rotation:-12,duration:1.2,ease:'power3.out'},.25);
+tl.fromTo('#books-sheet-two',{x:450},{x:0,duration:1.2,ease:'power3.out'},1);
+tl.fromTo('#books-sheet-three',{x:450},{x:0,duration:1.2,ease:'power3.out'},1.75);
+tl.fromTo('#books-hook-bottom',{opacity:0},{opacity:1,duration:.5},3.6);
+tl.to('#books-sheet-one',{x:-60,duration:1.2,ease:'power2.inOut'},5);
+tl.to('#books-sheet-two',{x:-100,duration:1.2,ease:'power2.inOut'},5.25);
+tl.to('#books-sheet-three',{x:-140,duration:1.2,ease:'power2.inOut'},5.5);
+window.__timelines=window.__timelines||{};
+window.__timelines['hook-reveal']=tl;
+</script>
 </template>

@@ -12,7 +12,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=1920, height=1080" />
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <script src="assets/gsap.min.js"></script>
     <style>
       @font-face {
         font-family: 'Space Grotesk';
@@ -43,7 +43,7 @@
     </style>
   </head>
   <body>
-    <div
+    <div data-hf-id="hf-j7pz"
       id="root"
       data-composition-id="main"
       data-start="0"
@@ -51,36 +51,36 @@
       data-width="1920"
       data-height="1080"
     >
-      <div
-        id="scene-hook"
+      <div data-hf-id="hf-p2e0"
+        id="hook-reveal"
         class="clip"
-        data-composition-id="scene-hook"
+        data-composition-id="hook-reveal"
         data-composition-src="compositions/hook-reveal.html"
         data-start="0"
-        data-duration="9"
+        data-duration="8"
         data-track-index="0"
         data-track-kind="graphics"
         data-width="1920"
         data-height="1080"
       ></div>
 
-      <div
-        id="scene-proof"
+      <div data-hf-id="hf-kx8n"
+        id="proof"
         class="clip"
-        data-composition-id="scene-proof"
+        data-composition-id="proof"
         data-composition-src="compositions/proof.html"
-        data-start="9"
-        data-duration="12"
+        data-start="8"
+        data-duration="13"
         data-track-index="0"
         data-track-kind="graphics"
         data-width="1920"
         data-height="1080"
       ></div>
 
-      <div
-        id="scene-payoff"
+      <div data-hf-id="hf-yvrs"
+        id="payoff-endcard"
         class="clip"
-        data-composition-id="scene-payoff"
+        data-composition-id="payoff-endcard"
         data-composition-src="compositions/payoff-endcard.html"
         data-start="21"
         data-duration="9"
@@ -90,7 +90,7 @@
         data-height="1080"
       ></div>
 
-      <audio
+      <audio data-hf-id="hf-w8z3"
         id="music-bed"
         class="clip"
         data-start="0"
@@ -101,7 +101,7 @@
         data-fade-out="1.2"
       ></audio>
 
-      <audio
+      <audio data-hf-id="hf-3eg5"
         id="voice-proof"
         class="clip"
         data-start="9.5"
@@ -111,7 +111,7 @@
         data-volume="1"
       ></audio>
 
-      <audio
+      <audio data-hf-id="hf-bmmt"
         id="voice-claim"
         class="clip"
         data-start="23"
@@ -122,6 +122,7 @@
       ></audio>
     </div>
     <script>
+      window.__timelines = window.__timelines || {};
       window.__timelines["main"] = gsap.timeline({ paused: true });
     </script>
   </body>
