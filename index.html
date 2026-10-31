@@ -20,6 +20,7 @@
 <link rel="icon" href="./favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="./favicon-16x16.png" sizes="16x16" type="image/png">
 <link rel="apple-touch-icon" href="./apple-touch-icon.png" sizes="180x180">
+<script src="./playback.js"></script>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -147,6 +148,7 @@
           </div>
         </div>
         <div style="flex:1; min-width:0; min-height:0; position:relative; display:flex; align-items:center; justify-content:center; container-type:size;">
+          <button data-sound-button onClick="{{ enableSound }}" type="button" style="position:absolute; top:10px; right:10px; z-index:3; border:1px solid #515744; border-radius:100px; padding:8px 12px; background:#141610; color:#f3f1e8; cursor:pointer; min-height:44px;">{{ soundLabel }}</button>
           <div onClick="{{ watchFullscreen }}" style="position:absolute; top:10px; left:10px; z-index:3; display:flex; align-items:center; gap:6px; font-family:'JetBrains Mono',monospace; font-size:clamp(9px,1vh,11px); letter-spacing:0.08em; text-transform:uppercase; color:#f3f1e8; background:#141610; padding:6px 12px; border-radius:100px; cursor:pointer; transition:background 0.2s ease;" style-hover="background:#1c1f16;">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#f3f1e8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M8 3H5a2 2 0 0 0-2 2v3"></path><path d="M16 3h3a2 2 0 0 1 2 2v3"></path><path d="M21 16v3a2 2 0 0 1-2 2h-3"></path><path d="M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
             Watch in full screen
@@ -168,7 +170,7 @@
               <iframe data-wfl-video="true" src="{{ videoSrc }}" title="{{ videoTitle }}" style="width:100%; height:100%; border:0; display:block;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe>
             </sc-if>
             <sc-if value="{{ isLocalVideo }}" hint-placeholder-val="{{ false }}">
-              <video data-wfl-video="true" src="{{ localVideoSrc }}" title="{{ videoTitle }}" style="width:100%; height:100%; border:0; display:block; object-fit:cover;" autoplay muted loop playsinline></video>
+              <video data-wfl-video="true" src="{{ localVideoSrc }}" title="{{ videoTitle }}" style="width:100%; height:100%; border:0; display:block; object-fit:cover;" autoplay muted loop playsinline controls preload="metadata"></video>
             </sc-if>
           </div>
         </div>
@@ -302,13 +304,18 @@
   &quot;autoRotate&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: false, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Behavior&quot;}
 }">
 class Component extends DCLogic {
-  state = { active: 0, activeVideoIndex: 0, manualVideoId: null, playlistOpen: false };
+  state = { active: 0, activeVideoIndex: 0, manualVideoId: null, playlistOpen: false, soundOn: false };
 
   getVideoSrc(p, manualVideoId) {
     if (!p || !p.playlist) return null;
-    const vid = manualVideoId || p.startVideo;
-    const base = vid ? `https://www.youtube.com/embed/${vid}` : 'https://www.youtube.com/embed/videoseries';
-    return `${base}?list=${p.playlist}&rel=0&autoplay=1&mute=1&playsinline=1&enablejsapi=1`;
+    const videos = p.videos || [];
+    const vid = manualVideoId || videos[0]?.id;
+    if (!vid) return `https://www.youtube.com/embed/videoseries?list=${p.playlist}&rel=0&autoplay=1&mute=1&playsinline=1&enablejsapi=1`;
+    // Give YouTube the same newest-first sequence used by the sidebar and controls.
+    const index = videos.findIndex(v => v.id === vid);
+    const following = [...videos.slice(index + 1), ...videos.slice(0, Math.max(0, index))];
+    const queue = following.map(v => v.id).join(',');
+    return `https://www.youtube.com/embed/${vid}?playlist=${queue}&rel=0&autoplay=1&mute=1&playsinline=1&enablejsapi=1`;
   }
 
   getVideoPillar() {
@@ -316,7 +323,7 @@ class Component extends DCLogic {
   }
 
   getCurrentVideoId(p) {
-    return this.state.manualVideoId || p.startVideo || (p.videos && p.videos[0] && p.videos[0].id);
+    return this.state.manualVideoId || (p.videos && p.videos[0] && p.videos[0].id);
   }
 
   sendPlayerCommand(func) {
@@ -325,7 +332,10 @@ class Component extends DCLogic {
     if (win) win.postMessage(JSON.stringify({ event: 'command', func, args: [] }), '*');
   }
 
+  enableSound = () => this._playback?.enableSound();
+
   watchFullscreen = () => {
+    this.enableSound();
     const el = document.querySelector('[data-wfl-video]');
     if (!el) return;
     if (el.tagName === 'VIDEO') {
@@ -369,44 +379,52 @@ class Component extends DCLogic {
   };
 
   selectVideo = (id) => {
+    this.enableSound();
     this.setState({ manualVideoId: id, playlistOpen: false });
   };
 
+  // Keep each video list in newest-to-oldest upload order. Add new uploads at the top.
   pillarsData = [
     { name: 'Chronicles of Innovation', abbr: 'COI', href: 'https://chroniclesofinnovation.com', domain: 'chroniclesofinnovation.com', tagline: 'Documentaries drawn from history, so people can learn from it.', logo: './logos/chronicles-of-innovation.png', dwell: 4400, playlist: 'PLX-5gsq5-pTg', videos: [
-      { id: 'otqgociwb3o', title: 'The Ruthless War That Lit the World' },
-      { id: 'zbeBT46ymp4', title: "The Miracle Drug That Shouldn't Exist" },
-      { id: 'mhE_0kARZmU', title: 'How Two Bicycle Mechanics Taught The World To Fly' },
       { id: 'xprFFq5yy1k', title: 'How a Simple Box Changed Global Trade: The Shipping Container' },
+      { id: 'mhE_0kARZmU', title: 'How Two Bicycle Mechanics Taught The World To Fly' },
+      { id: 'zbeBT46ymp4', title: "The Miracle Drug That Shouldn't Exist" },
+      { id: 'otqgociwb3o', title: 'The Ruthless War That Lit the World' },
     ] },
-    { name: 'ZeroToAct', abbr: 'Z2A', href: 'https://zerotoact.com', domain: 'zerotoact.com', tagline: 'Insights into the global economy through video, text, and more, frameworks to apply them, a community of builders, and an annual gathering for the year\'s outlook.', logo: './logos/zerotoact.png', logoChip: true, dwell: 5200, playlist: 'PLX_mgoh4inS4', startVideo: 'V0gEUW2dQAU', portrait: true, videos: [
-      { id: 'V0gEUW2dQAU', title: 'The $700 Billion Compute Divide' },
-      { id: 'oT6wE8OkkyA', title: "ZeroToAct Weekly Brief: The Room Where It Isn't Being Written" },
-      { id: 'N4GSZjIPma4', title: 'The US Economy dominating the World through Service' },
-      { id: 'iqNrzvKBe34', title: 'ZeroToAct: The Execution Movement, From Insight to Building' },
-      { id: 'PzTXiczPFHE', title: 'ZeroToAct: The Demographic Shift' },
-      { id: 'JFDDP8fVo_U', title: 'Signal of the Week: Three Clocks' },
-      { id: '6G81Fs-SxoU', title: "Weekly Signal: Nigeria's Policy Rate Is 26.5%" },
-      { id: 'bKBjmng4fmA', title: 'A Pipeline Was Hit in Saudi Arabia. Nine Days Later, Four Countries Paid' },
-      { id: 'MuLn_ohEhx8', title: 'Read the Corridor Across These Two Markets' },
-      { id: 'HY6ZU7uJuYw', title: 'The Exit Was Already Written' },
-      { id: 'xgojGTzbPRk', title: 'Nobody Is Being Paid to Wait' },
-      { id: '7zfrfdGIkSo', title: 'One Shock, Four Answers' },
+    { name: 'ZeroToAct', abbr: 'Z2A', href: 'https://zerotoact.com', domain: 'zerotoact.com', tagline: 'Insights into the global economy through video, text, and more, frameworks to apply them, a community of builders, and an annual gathering for the year\'s outlook.', logo: './logos/zerotoact.png', logoChip: true, dwell: 5200, playlist: 'PLX_mgoh4inS4', portrait: true, videos: [
       { id: 'BqXH09T_2Og', title: 'Lenders Started Choosing: ZeroToAct Signal' },
+      { id: '7zfrfdGIkSo', title: 'One Shock, Four Answers' },
+      { id: 'xgojGTzbPRk', title: 'Nobody Is Being Paid to Wait' },
+      { id: 'HY6ZU7uJuYw', title: 'The Exit Was Already Written' },
+      { id: 'MuLn_ohEhx8', title: 'Read the Corridor Across These Two Markets' },
+      { id: 'bKBjmng4fmA', title: 'A Pipeline Was Hit in Saudi Arabia. Nine Days Later, Four Countries Paid' },
+      { id: '6G81Fs-SxoU', title: "Weekly Signal: Nigeria's Policy Rate Is 26.5%" },
+      { id: 'JFDDP8fVo_U', title: 'Signal of the Week: Three Clocks' },
+      { id: 'PzTXiczPFHE', title: 'ZeroToAct: The Demographic Shift' },
+      { id: 'iqNrzvKBe34', title: 'ZeroToAct: The Execution Movement, From Insight to Building' },
+      { id: 'N4GSZjIPma4', title: 'The US Economy dominating the World through Service' },
+      { id: 'oT6wE8OkkyA', title: "ZeroToAct Weekly Brief: The Room Where It Isn't Being Written" },
+      { id: 'V0gEUW2dQAU', title: 'The $700 Billion Compute Divide' },
     ] },
     { name: 'The Builders', abbr: 'TB', href: '', domain: '', tagline: 'A flagship reality series challenging entrepreneurs and innovators to solve real economic problems through teamwork, strategy, and execution.', logo: '', comingSoon: true, dwell: 6000, localVideo: './videos/the-builders-intro.mp4' },
     { name: 'Books', abbr: 'BKS', href: '', domain: '', tagline: 'The Prosperity Engine and The Oversized Mind of a Visionary, two forthcoming titles from Wisdom for Living.', logo: '', comingSoon: true, dwell: 5600, localVideo: './videos/books-coming-soon.mp4' }
   ];
 
   componentDidMount() {
+    this._playback = new WFLPlayback(soundOn => {
+      if (this.state.soundOn !== soundOn) this.setState({ soundOn });
+    });
+    this._playback.bind();
     this.maybeStartRotation();
   }
 
   componentDidUpdate(prevProps) {
+    this._playback?.bind();
     if (prevProps.autoRotate !== this.props.autoRotate) this.maybeStartRotation();
   }
 
   componentWillUnmount() {
+    this._playback?.destroy();
     clearTimeout(this._timer);
   }
 
@@ -463,6 +481,8 @@ class Component extends DCLogic {
       videoOrientation: videoPillar.portrait ? 'portrait' : 'landscape',
       videoWidth: `min(100%, calc(100cqh * ${ratioW} / ${ratioH}))`,
       videoHeight: `min(100%, calc(100cqw * ${ratioH} / ${ratioW}))`,
+      enableSound: this.enableSound,
+      soundLabel: this.state.soundOn ? 'Sound on' : 'Play with sound',
       watchFullscreen: this.watchFullscreen,
       playPrevious: this.playPrevious,
       playNext: this.playNext,
