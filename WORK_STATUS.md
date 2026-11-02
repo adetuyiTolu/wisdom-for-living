@@ -51,6 +51,15 @@ in this session. This file preserves context when a new session opens the repo.
   next/previous, end wrapping, stale events and saved-position restoration.
   Eleven playback and six component checks pass; live media remains blocked.
 
+
+- [x] Added “Nobody Went First” (`ur2qzPD1Yds`) first in ZeroToAct's playlist,
+  preserving all 13 existing entries. The official Signal dated 1 November 2026
+  embeds that ID and YouTube metadata confirms the title:
+  https://www.zerotoact.com/signals/nobody-went-first/
+  All eleven playback and six component checks pass. The playlist browser suite
+  verifies all 14 ZeroToAct choices and all four COI choices at 390/1440px with
+  the adversarial API double; this does not verify live media playback.
+
 Automatic execution after session expiry is unavailable: no automation tool is
 exposed. Reopening this repository preserves these instructions but does not
 itself schedule an agent.
