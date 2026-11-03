@@ -80,6 +80,11 @@ with sync_playwright() as p:
   if width<=820:
    nav=page.locator('[data-mobile-nav]')
    assert nav.is_visible()
+   assert nav.get_by_role('button').count()==4
+   assert nav.evaluate('e=>e.scrollWidth<=e.clientWidth'), 'All four channels should be visible without swiping'
+   for choice in nav.get_by_role('button').all():
+    box=choice.bounding_box()
+    assert box['x']>=0 and box['x']+box['width']<=width and box['height']>=44,(width,box)
    nav.get_by_role('button',name='ZeroToAct',exact=True).click()
    assert page.locator('[data-screen-label="Narration"]').get_attribute('data-video-orientation')=='portrait'
    for selector in ['[data-fullscreen-button]','[aria-label="Next video"]','[data-playlist-toggle]']:

@@ -70,7 +70,18 @@ with sync_playwright() as p:
    page.locator('[aria-label="Next video"]').click();verify(entries[4%count]['id'])
    page.locator('[aria-label="Previous video"]').click();verify(entries[3]['id'])
    # Last item wraps to the first, with no native playlist queue to skip a choice.
-   choose(count-1);page.evaluate('window.activePlayer.finish()');verify(entries[0]['id'])
+   choose(count-1)
+   # Reopening reveals a saved/current entry without moving the page itself.
+   if not page.locator('[data-playlist-panel]').is_visible():
+    before_scroll=page.evaluate('scrollY')
+    page.locator('[data-playlist-toggle]').evaluate('e=>e.click()')
+    assert page.evaluate('scrollY')==before_scroll
+   row=page.locator('[data-playlist-item][aria-current="true"]').bounding_box()
+   frame=page.locator('[data-playlist-scroll]').bounding_box()
+   assert row['y']>=frame['y']-1 and row['y']+row['height']<=frame['y']+frame['height']+1,(channel,width,row,frame)
+   assert page.locator('[data-playing-label]').count()==1
+   assert page.locator('[data-playlist-meta]').inner_text()==f'{count} videos · Newest first'
+   page.evaluate('window.activePlayer.finish()');verify(entries[0]['id'])
    choose(2)
    page.evaluate('window.activePlayer.time=17;window.dispatchEvent(new Event("pagehide"))')
    saved=page.evaluate('JSON.parse(localStorage.getItem("wfl.watch.v1"))')
