@@ -26,7 +26,7 @@ media are unchanged by this optimization pass.
 Playlist synchronization regressions: run `node tests/playlist.test.cjs` and
 `python tests/playlist-browser.py` (same WFL_TEST_URL option). Six component
 checks and the adversarial YouTube API integration exercise every choice in COI
-and ZeroToAct at 390px/1440px. The API double deliberately starts on a wrong ID;
+and ZeroToAct at 320px/390px/821px/1440px. The API double deliberately starts on a wrong ID;
 only an explicit `loadVideoById({videoId,startSeconds})` can correct it. Tests cover
 late events, rapid choices, duplicate ENDED events, advancing only after completion,
 last-to-first wrapping, next/previous and return-visit restoration. Embed URLs
@@ -42,3 +42,7 @@ UI refinement coverage also checks that all four mobile channel choices fit
 without horizontal swiping, the playlist reports its count/newest-first order,
 and reopening reveals the current row without moving the page. See
 UI_REFINEMENT.md for the visual changes and lab measurements.
+
+Playlist integration also verifies that titles and status labels stay inside
+their buttons with padding, adjacent rows do not overlap, and 20px titles/16px
+status labels wrap correctly. An item taller than the list opens at its top.
