@@ -29,7 +29,7 @@ window.YT={Player:class {
 """
 with sync_playwright() as p:
  browser=p.chromium.launch(executable_path='/usr/bin/chromium',headless=True,args=['--no-sandbox'])
- for width,height in [(390,844),(1440,900)]:
+ for width,height in [(320,740),(390,844),(821,900),(1440,900)]:
   for channel,count in [('Chronicles of Innovation',4),('ZeroToAct',14)]:
    page=browser.new_page(viewport={'width':width,'height':height})
    errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
@@ -49,9 +49,22 @@ with sync_playwright() as p:
     assert source.split('/embed/')[1].split('?')[0]==video_id
     assert 'playlist=' not in source and '?list=' not in source
     assert page.evaluate('window.activePlayer.commands.at(-1).videoId')==video_id
+   def verify_row_bounds():
+    issues=page.locator('[data-playlist-item]').evaluate_all("""rows=>rows.flatMap(row=>{
+     const box=row.getBoundingClientRect(),copy=row.querySelector('[data-playlist-copy]');
+     const text=copy.getBoundingClientRect(),thumb=row.querySelector('img').getBoundingClientRect();
+     const next=row.nextElementSibling?.getBoundingClientRect();
+     const outside=text.top<box.top+7||text.bottom>box.bottom-7||text.left<box.left+7||text.right>box.right-7;
+     const overlap=next&&box.bottom>next.top+1;
+     return outside||overlap||copy.scrollWidth>copy.clientWidth+1||thumb.bottom>box.bottom-7
+      ?[{id:row.dataset.videoId,row:box.toJSON(),text:text.toJSON()}]:[];
+    })""")
+    assert not issues,(channel,width,issues)
+
    def choose(index):
     entry=entries[index%count]
     if not page.locator('[data-playlist-panel]').is_visible():page.locator('[data-playlist-toggle]').click()
+    verify_row_bounds()
     page.evaluate('window.previousPlayer=window.activePlayer')
     page.locator(f'[data-playlist-item][data-video-id="{entry["id"]}"]').click()
     verify(entry['id'])
@@ -78,7 +91,10 @@ with sync_playwright() as p:
     assert page.evaluate('scrollY')==before_scroll
    row=page.locator('[data-playlist-item][aria-current="true"]').bounding_box()
    frame=page.locator('[data-playlist-scroll]').bounding_box()
-   assert row['y']>=frame['y']-1 and row['y']+row['height']<=frame['y']+frame['height']+1,(channel,width,row,frame)
+   if row['height']>frame['height']:
+    assert abs(row['y']-frame['y'])<=1,(channel,width,row,frame)
+   else:
+    assert row['y']>=frame['y']-1 and row['y']+row['height']<=frame['y']+frame['height']+1,(channel,width,row,frame)
    assert page.locator('[data-playing-label]').count()==1
    assert page.locator('[data-playlist-meta]').inner_text()==f'{count} videos · Newest first'
    page.evaluate('window.activePlayer.finish()');verify(entries[0]['id'])
@@ -88,6 +104,10 @@ with sync_playwright() as p:
    assert saved['videoId']==entries[2]['id']
    page.reload(wait_until='networkidle');verify(entries[2]['id'])
    page.wait_for_function('window.activePlayer.time===17')
+   # Larger text must remain within each button, rather than overlap its neighbours.
+   if not page.locator('[data-playlist-panel]').is_visible():page.locator('[data-playlist-toggle]').click()
+   page.add_style_tag(content='[data-playlist-item] [data-playlist-title]{font-size:20px!important}[data-playlist-item] [data-playing-label]{font-size:16px!important}')
+   verify_row_bounds()
    assert not errors,errors
    print(f'PASS {channel} {width}px: every choice, exact API ID, stale events, rapid choices, end-only advancement, next/previous and resume')
    page.close()

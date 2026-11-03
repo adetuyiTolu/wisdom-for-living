@@ -38,3 +38,14 @@ player frames and expanding channel rail. No new dependency, font or media asset
 
 Existing portrait/landscape handling, translucent COI sidebar, native movie
 controls, newest-first playlists and return-visit resume are preserved.
+
+
+## Playlist overflow repair
+
+Playlist buttons now retain their intrinsic content height instead of shrinking
+inside the scrolling flex column. Long titles wrap within the text column; full
+titles and the current-item label are preserved. Oversized current items align
+to the top of the list when revealed. A new browser regression failed on the
+previous layout and checks row padding and non-overlap at 320, 390, 821 and 1440px,
+including enlarged text. Additional geometry checks passed at 768, 844, 1024 and
+1920px.

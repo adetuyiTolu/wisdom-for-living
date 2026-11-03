@@ -70,6 +70,13 @@ in this session. This file preserves context when a new session opens the repo.
   Relevant playback, component, 13-layout, exact-selection and performance
   checks pass. See UI_REFINEMENT.md for evidence and scope.
 
+
+- [x] Fixed COI and ZeroToAct playlist title overflow. Rows no longer shrink
+  below their content, titles wrap inside their buttons, and oversized current
+  items open at their top rather than hiding the beginning. The new geometry
+  regression reproduced the original defect before the fix. Checks cover row
+  padding, neighbouring-row separation, enlarged labels and exact playback.
+
 Automatic execution after session expiry is unavailable: no automation tool is
 exposed. Reopening this repository preserves these instructions but does not
 itself schedule an agent.

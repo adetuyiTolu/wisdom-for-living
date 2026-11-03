@@ -130,12 +130,12 @@
     [data-playlist-panel] { border-right: 1px solid rgba(243,241,232,.09); }
     [data-playlist-meta] { margin: 4px 0 8px; font-size: 11px; color: #abb59e; line-height: 1.4; }
     [data-playlist-scroll] { overscroll-behavior: contain; }
-    [data-playlist-item] { min-height: 64px; padding: 8px !important; border-radius: 9px !important; }
+    [data-playlist-item] { flex: 0 0 auto; width: 100%; box-sizing: border-box; min-height: 64px; padding: 8px !important; border-radius: 9px !important; }
     [data-playlist-item][aria-current="true"] { background: #23301a !important; box-shadow: inset 2px 0 0 var(--wfl-accent,#7fae5c); }
     [data-playlist-item]:hover { background: #20271b !important; }
     [data-playlist-item]>img { width: 64px !important; height: 36px !important; border-radius: 4px !important; }
-    [data-playlist-copy] { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
-    [data-playlist-title] { font-size: 13px; line-height: 1.45; }
+    [data-playlist-copy] { flex: 1; display: flex; flex-direction: column; gap: 5px; min-width: 0; overflow-wrap: anywhere; }
+    [data-playlist-title] { display: block; font-size: 13px; line-height: 1.45; white-space: normal; overflow-wrap: anywhere; }
     [data-playing-label] { font-size: 10px; line-height: 1.2; color: #b5d99b; letter-spacing: .025em; }
     @media (max-width: 360px) {
       [data-screen-label="Header"] > div > span { font-size: 14px !important; }
@@ -511,7 +511,7 @@ class Component extends DCLogic {
     // Scroll only the playlist, leaving the viewer's page position untouched.
     const row = current.getBoundingClientRect();
     const frame = list.getBoundingClientRect();
-    if (row.top < frame.top) list.scrollTop += row.top - frame.top;
+    if (row.height >= frame.height || row.top < frame.top) list.scrollTop += row.top - frame.top;
     else if (row.bottom > frame.bottom) list.scrollTop += row.bottom - frame.bottom;
   }
 
