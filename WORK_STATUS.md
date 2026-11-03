@@ -60,6 +60,16 @@ in this session. This file preserves context when a new session opens the repo.
   verifies all 14 ZeroToAct choices and all four COI choices at 390/1440px with
   the adversarial API double; this does not verify live media playback.
 
+
+- [x] Refined the existing UI: display type and concise introduction; quieter
+  panels and controls; readable channel names; all four mobile choices visible
+  in a two-column menu; clearer current-video status and automatic playlist
+  reveal without page jumps. Enlarged controls on touch tablets and moved the
+  local-film fullscreen button away from opening titles. Same four-channel
+  structure, media, newest-first order, fullscreen and resume behavior.
+  Relevant playback, component, 13-layout, exact-selection and performance
+  checks pass. See UI_REFINEMENT.md for evidence and scope.
+
 Automatic execution after session expiry is unavailable: no automation tool is
 exposed. Reopening this repository preserves these instructions but does not
 itself schedule an agent.

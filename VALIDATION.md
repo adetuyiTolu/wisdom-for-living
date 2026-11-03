@@ -37,3 +37,8 @@ The responsive suite also checks COI's desktop sidebar versus mobile overlay,
 unchanged panel transparency, preserving the player while toggling, and keeping
 the desktop sidebar open after selecting a video. Browser checks use an API double,
 not live hosted YouTube playback or a title-metadata assertion.
+
+UI refinement coverage also checks that all four mobile channel choices fit
+without horizontal swiping, the playlist reports its count/newest-first order,
+and reopening reveals the current row without moving the page. See
+UI_REFINEMENT.md for the visual changes and lab measurements.

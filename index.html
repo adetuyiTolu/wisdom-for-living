@@ -63,7 +63,8 @@
     button { font: inherit; }
     [data-playlist-item] { border: 0; text-align: left; color: inherit; }
     button:focus-visible, a:focus-visible, [role="button"]:focus-visible { outline: 2px solid #b1d58c; outline-offset: 3px; }
-    [data-mobile-nav], [data-channel-name] { display: none; }
+    [data-mobile-nav], [data-channel-abbr] { display: none; }
+    [data-channel-name] { display: inline; }
     [data-player-area] { box-sizing: border-box; padding: 0; }
     [data-video-controls] { bottom: 8px !important; }
     /* Keep the YouTube picture large; its own controls provide volume. */
@@ -95,9 +96,55 @@
     [data-screen-label="Pillars"] [role="button"]:focus-visible { outline-offset: -3px; }
     [data-fullscreen-button], [data-playlist-toggle], [data-playlist-close],
     [aria-label="Previous video"], [aria-label="Next video"] { touch-action: manipulation; }
+    /* Editorial polish: same grid, player sizes and four-channel rail. */
+    [data-screen-label="Header"] a { min-height: 44px; box-sizing: border-box; transition: border-color .18s ease, background .18s ease; }
+    [data-screen-label="Header"] a:hover { background: #1b2316; border-color: #68765b !important; }
+    [data-screen-label="Hero"] { padding-right: 24px; }
+    [data-screen-label="Narration"] { border-radius: 16px !important; box-shadow: 0 0 0 1px rgba(243,241,232,.1); }
+    [data-screen-label="Pillars"] { border-radius: 16px !important; gap: 1px !important; background: #30372a !important; border-color: #30372a !important; }
+    [data-channel-card] { position: relative; background: #141a10 !important; }
+    [data-channel-card][data-active="true"] { background: #1a2315 !important; box-shadow: inset 0 2px 0 var(--wfl-accent,#7fae5c); }
+    [data-channel-card][data-active="false"]:hover { background: #20291a !important; }
+    [data-channel-detail] { gap: 10px !important; }
+    [data-channel-detail]>div:first-child { width: 48px !important; height: 48px !important; border-radius: 12px !important; }
+    [data-channel-title] { font-size: clamp(20px,2.5vh,26px) !important; line-height: 1.2 !important; letter-spacing: -.025em; }
+    [data-channel-description] { color: #b8bdad !important; font-size: 13px !important; line-height: 1.5 !important; max-width: 38ch !important; }
+    [data-channel-detail]>a { display: inline-flex; align-items: center; min-height: 44px; font-size: 11px !important; color: #bcc9af !important; }
+    [data-channel-detail]>a:hover { text-decoration: underline !important; text-underline-offset: 5px; }
+    [data-channel-collapsed] { gap: 14px !important; }
+    [data-channel-collapsed]>div:first-child { width: 26px !important; height: 26px !important; border-radius: 7px !important; }
+    [data-channel-collapsed]>div:last-child { color: #b8bdad !important; font-size: 11px !important; letter-spacing: .025em !important; }
+    [data-screen-label="Pillar list"]>button { min-height: 44px; }
+    [data-screen-label="Pillar list"]>button>span:first-child { font-family: 'Space Grotesk',sans-serif; font-size: clamp(15px,1.8vh,19px) !important; letter-spacing: -.015em; }
+    [data-screen-label="Pillar list"]>button:hover { padding-left: 0 !important; background: rgba(243,241,232,.025) !important; }
+    [data-screen-label="Footer"] { min-height: 48px; padding-block: 0 !important; }
+    [data-screen-label="Footer"]>a { min-height: 44px; display: inline-flex; align-items: center; }
+    [data-screen-label="Footer"]>a:hover { color: #f3f1e8 !important; text-decoration: underline !important; text-underline-offset: 5px; }
+    [data-fullscreen-button], [data-video-controls] { background: rgba(18,23,15,.92) !important; box-shadow: inset 0 0 0 1px rgba(243,241,232,.14); }
+    [data-fullscreen-button] { min-height: 36px; border-radius: 10px !important; font-size: 10px !important; letter-spacing: .04em !important; }
+    [data-video-controls] { border-radius: 12px !important; }
+    [data-video-layout="local"] [data-fullscreen-button] { left: auto !important; right: 10px; }
+    [aria-label="Previous video"], [aria-label="Next video"], [data-playlist-close] { width: 32px !important; height: 32px !important; }
+    [data-playlist-toggle] { height: 32px !important; }
+    [data-fullscreen-button]:hover, [data-playlist-toggle]:hover, [aria-label="Previous video"]:hover, [aria-label="Next video"]:hover { background: #293620 !important; }
+    [data-playlist-panel] { border-right: 1px solid rgba(243,241,232,.09); }
+    [data-playlist-meta] { margin: 4px 0 8px; font-size: 11px; color: #abb59e; line-height: 1.4; }
+    [data-playlist-scroll] { overscroll-behavior: contain; }
+    [data-playlist-item] { min-height: 64px; padding: 8px !important; border-radius: 9px !important; }
+    [data-playlist-item][aria-current="true"] { background: #23301a !important; box-shadow: inset 2px 0 0 var(--wfl-accent,#7fae5c); }
+    [data-playlist-item]:hover { background: #20271b !important; }
+    [data-playlist-item]>img { width: 64px !important; height: 36px !important; border-radius: 4px !important; }
+    [data-playlist-copy] { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+    [data-playlist-title] { font-size: 13px; line-height: 1.45; }
+    [data-playing-label] { font-size: 10px; line-height: 1.2; color: #b5d99b; letter-spacing: .025em; }
     @media (max-width: 360px) {
       [data-screen-label="Header"] > div > span { font-size: 14px !important; }
       [data-screen-label="Header"] a { font-size: 12px !important; padding: 9px 10px !important; }
+    }
+    @media (pointer: coarse) {
+      [data-fullscreen-button] { min-height: 44px; }
+      [aria-label="Previous video"], [aria-label="Next video"], [data-playlist-close] { width: 44px !important; height: 44px !important; }
+      [data-playlist-toggle] { height: 44px !important; }
     }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
@@ -109,14 +156,14 @@
       [data-screen-label="Header"] { gap: 10px !important; flex-wrap: wrap; padding: max(14px, env(safe-area-inset-top)) 16px 14px !important; }
       [data-screen-label="Header"] a { min-height: 44px; box-sizing: border-box; padding: 9px 12px !important; }
       [data-screen-label="Hero"] { gap: 12px !important; }
-      [data-screen-label="Hero"] h1 { font-size: clamp(32px, 9vw, 48px) !important; }
+      [data-screen-label="Hero"] h1 { font-size: clamp(34px, 9.8vw, 48px) !important; }
       [data-screen-label="Hero"] p { font-size: 15px !important; }
       [data-channel-name] { display: inline; }
       [data-channel-abbr] { display: none; }
       [data-screen-label="Pillars"] > div[data-active="false"] [style*="vertical-rl"] { font-family: 'Space Grotesk',sans-serif !important; font-size: 14px !important; color: #c7c9bb !important; letter-spacing: 0 !important; }
-      [data-mobile-nav] { display: flex; gap: 8px; overflow-x: auto; padding: 3px 3px 8px; scrollbar-width: thin; }
-      [data-mobile-nav] button { min-height: 44px; flex-shrink: 0; padding: 10px 14px; border: 1px solid #515744; border-radius: 24px; background: #141610; color: #f3f1e8; cursor: pointer; }
-      [data-mobile-nav] button[aria-pressed="true"] { background: #7fae5c; border-color: #7fae5c; color: #101209; }
+      [data-mobile-nav] { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; padding: 3px; }
+      [data-mobile-nav] button { min-height: 60px; min-width: 0; padding: 10px 12px; border: 1px solid #373e30; border-radius: 10px; background: #141a10; color: #c7c9bb; cursor: pointer; font-family: 'Space Grotesk',sans-serif; font-size: 14px; line-height: 1.3; text-align: left; }
+      [data-mobile-nav] button[aria-pressed="true"] { background: #202d18; border-color: var(--wfl-accent,#7fae5c); color: #f3f1e8; }
       [data-video-layout="youtube-landscape"] [data-screen-label="Narration"] [data-playlist-toggle] { width: 44px; padding: 0 !important; justify-content: center; }
       [data-video-layout="youtube-landscape"] [data-screen-label="Narration"] [data-playlist-toggle] span { display: none; }
       [data-video-layout="youtube-landscape"] [data-screen-label="Narration"] [data-video-controls] { gap: 4px !important; padding: 4px !important; }
@@ -148,6 +195,19 @@
       [data-screen-label="Pillar list"] { display: none !important; }
       [data-screen-label="Footer"] { flex-direction: column !important; align-items: flex-start !important; gap: 8px !important; text-align: left !important; padding: 16px 20px 24px !important; }
 
+      [data-screen-label="Hero"] { padding-right: 0; }
+      [data-channel-card][data-active="true"] { padding: 24px !important; }
+      [data-channel-detail] { align-items: flex-start !important; gap: 12px !important; }
+      [data-channel-title], [data-channel-description] { text-align: left !important; }
+      [data-channel-description] { font-size: 14px !important; max-width: 44ch !important; }
+      [data-channel-detail]>div { text-align: left !important; align-items: flex-start !important; }
+      [data-channel-detail]>span { margin-top: 2px; }
+      [data-channel-card][data-active="false"] { padding: 16px 20px !important; }
+      [data-channel-collapsed] { flex-direction: row !important; align-items: center !important; justify-content: flex-start !important; gap: 12px !important; }
+      [data-channel-collapsed]>div:last-child { font-size: 15px !important; letter-spacing: 0 !important; font-family: 'Space Grotesk',sans-serif !important; }
+      [data-screen-label="Footer"] { gap: 0 !important; padding-block: 16px max(24px, env(safe-area-inset-bottom)) !important; font-size: 12px !important; }
+      [data-playlist-meta] { font-size: 12px; }
+      [data-playlist-item] [data-playing-label] { font-size: 11px !important; }
       /* Video control buttons were sized for a mouse cursor (26px circles with 2px
          gaps) — too small and too close together to reliably hit with a thumb. */
       [data-screen-label="Narration"] [aria-label="Previous video"],
@@ -162,7 +222,7 @@
   </style>
 </helmet>
 
-<div style="background:#101209; color:#f3f1e8; font-family:'Inter',sans-serif; width:100vw; height:100vh; box-sizing:border-box; display:flex; flex-direction:column; overflow:hidden;" data-screen-label="Page">
+<div style="--wfl-accent:{{ accentColor }}; background:#101209; color:#f3f1e8; font-family:'Inter',sans-serif; width:100vw; height:100vh; box-sizing:border-box; display:flex; flex-direction:column; overflow:hidden;" data-screen-label="Page">
 
   <!-- HEADER -->
   <header data-screen-label="Header" style="flex:0 0 auto; display:flex; align-items:center; justify-content:space-between; gap:24px; padding:2vh 3vw; border-bottom:1px solid rgba(243,241,232,0.08);">
@@ -185,14 +245,14 @@
 
     <!-- HEADLINE -->
     <div data-screen-label="Hero" style="grid-column:1; grid-row:1; position:relative; display:flex; flex-direction:column; justify-content:center; gap:1.6vh; min-height:0; min-width:0;">
-      <svg viewBox="-14 -20 28 40" style="position:absolute; right:-6%; top:50%; transform:translateY(-50%); width:52%; opacity:0.05; pointer-events:none;">
+      <svg viewBox="-14 -20 28 40" style="position:absolute; right:-6%; top:50%; transform:translateY(-50%); width:44%; opacity:0.025; pointer-events:none;">
         <path d="M 0 -18 C 9 -16 12 -6 10 4 C 8 14 4 19 0 18.5 C -4 19 -8 13 -9 3 C -10 -7 -8 -16 0 -18 Z" fill="{{ accentColor }}"></path>
       </svg>
-      <h1 style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:clamp(28px,min(5.4vh,4vw),64px); line-height:1.04; letter-spacing:-0.02em; margin:0; position:relative; animation:wfl-rise 0.7s ease-out both;">
+      <h1 style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(32px,min(6.2vh,4.4vw),68px); line-height:1.04; letter-spacing:-0.045em; margin:0; position:relative; animation:wfl-rise 0.7s ease-out both;">
         Insight sees.<br>Wisdom builds.
       </h1>
-      <p style="font-size:clamp(13px,1.7vh,18px); line-height:1.55; color:#c7c9bb; max-width:46ch; margin:0; position:relative; animation:wfl-rise 0.7s ease-out 0.12s both;">
-        We are a seed, sown through media, from documentaries and reality TV to books, gatherings, and curated physical experiences, so that the insight we carry takes root and grows into applied wisdom that builds lives, homes, enterprises, and nations for those who receive it.
+      <p style="font-size:clamp(14px,1.7vh,18px); line-height:1.7; color:#c7c9bb; max-width:46ch; margin:0; position:relative; animation:wfl-rise 0.7s ease-out 0.12s both;">
+        We plant insight through documentaries, reality TV, books, gatherings and shared experiences, helping it grow into practical wisdom for lives, homes, businesses and nations.
       </p>
       <p style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(13px,1.6vh,17px); color:{{ accentColor }}; margin:0; position:relative; animation:wfl-rise 0.7s ease-out 0.24s both;">
         Empowering lives with wisdom.
@@ -210,16 +270,16 @@
       <div style="position:absolute; inset:0; display:flex; flex-direction:row;">
         <div data-playlist-panel role="region" aria-label="{{ videoPillarName }} playlist" style="flex-direction:column; padding:14px 10px 10px 14px; z-index:4;">
           <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:8px; flex-shrink:0;">
-            <span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(13px,1.6vh,16px); color:#f3f1e8;">{{ videoPillarName }} playlist</span>
+            <div><span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(13px,1.6vh,16px); color:#f3f1e8;">{{ videoPillarName }} playlist</span><p data-playlist-meta>{{ playlistCount }} videos · Newest first</p></div>
             <button type="button" data-playlist-close onClick="{{ togglePlaylist }}" style="display:flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:50%; cursor:pointer; border:0; color:#f3f1e8; background:#141610; flex-shrink:0;" style-hover="background:#1c1f16;" aria-label="Close playlist">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"></path></svg>
             </button>
           </div>
-          <div style="flex:1; min-height:0; overflow-y:auto; display:flex; flex-direction:column; gap:4px; scrollbar-width:thin; scrollbar-color:rgba(243,241,232,0.25) transparent;">
+          <div data-playlist-scroll style="flex:1; min-height:0; overflow-y:auto; display:flex; flex-direction:column; gap:4px; scrollbar-width:thin; scrollbar-color:rgba(243,241,232,0.25) transparent;">
             <sc-for list="{{ playlistVideos }}" as="v" hint-placeholder-count="4">
               <button type="button" data-playlist-item data-video-id="{{ v.id }}" aria-current="{{ v.isCurrent }}" onClick="{{ v.onClick }}" style="display:flex; align-items:center; gap:10px; padding:6px; border-radius:8px; cursor:pointer; background:{{ v.rowBg }}; transition:background 0.15s ease;" style-hover="background:#1c1f16;">
                 <img src="{{ v.thumb }}" alt="" style="width:72px; height:40px; object-fit:cover; border-radius:6px; flex-shrink:0; background:#0c0e08;" loading="lazy" decoding="async" width="72" height="40">
-                <span style="font-size:clamp(11px,1.3vh,13px); line-height:1.3; color:{{ v.textColor }};">{{ v.title }}</span>
+                <div data-playlist-copy><span data-playlist-title style="color:{{ v.textColor }};">{{ v.title }}</span><sc-if value="{{ v.isPlaying }}"><span data-playing-label>Now playing</span></sc-if></div>
               </button>
             </sc-for>
           </div>
@@ -257,18 +317,17 @@
     <div data-screen-label="Pillars" onMouseEnter="{{ pauseRotation }}" onMouseLeave="{{ resumeRotation }}" style="grid-column:1; grid-row:2; display:flex; gap:2px; background:rgba(243,241,232,0.08); border:1px solid rgba(243,241,232,0.08); border-radius:12px; overflow:hidden; min-height:0; min-width:0;">
 
       <!-- Tab 0: Chronicles of Innovation -->
-      <div onClick="{{ pillars.0.onClick }}" onKeyDown="{{ channelKeyDown }}" role="{{ pillars.0.cardRole }}" tabIndex="{{ pillars.0.cardTabIndex }}" aria-label="{{ pillars.0.name }}" data-active="{{ pillars.0.isActive }}" style="flex:{{ pillars.0.flexValue }}; background:#141610; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:2vh 1vw; cursor:pointer; transition:flex 0.4s cubic-bezier(0.4,0,0.2,1), background 0.2s ease; gap:1.4vh; min-width:0; overflow:hidden;" style-hover="background:#181b12;">
-        <span style="width:7px; height:7px; border-radius:50%; background:{{ pillars.0.dotBg }}; flex-shrink:0; transition:background 0.3s ease;"></span>
+      <div data-channel-card onClick="{{ pillars.0.onClick }}" onKeyDown="{{ channelKeyDown }}" role="{{ pillars.0.cardRole }}" tabIndex="{{ pillars.0.cardTabIndex }}" aria-label="{{ pillars.0.name }}" data-active="{{ pillars.0.isActive }}" style="flex:{{ pillars.0.flexValue }}; background:#141610; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:2vh 1vw; cursor:pointer; transition:flex 0.4s cubic-bezier(0.4,0,0.2,1), background 0.2s ease; gap:1.4vh; min-width:0; overflow:hidden;" style-hover="background:#181b12;">
         <div style="position:relative; flex:1; min-height:0; min-width:0; width:100%; overflow-x:hidden; overflow-y:{{ pillars.0.scrollY }}; scrollbar-width:thin; scrollbar-color:rgba(243,241,232,0.25) transparent;">
-          <div aria-hidden="{{ pillars.0.isInactive }}" style="position:{{ pillars.0.activePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.0.activeOpacity }}; pointer-events:{{ pillars.0.activePE }}; transform:translateY({{ pillars.0.activeShift }}); transition:{{ pillars.0.activeTransition }};">
+          <div data-channel-detail aria-hidden="{{ pillars.0.isInactive }}" style="position:{{ pillars.0.activePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.0.activeOpacity }}; pointer-events:{{ pillars.0.activePE }}; transform:translateY({{ pillars.0.activeShift }}); transition:{{ pillars.0.activeTransition }};">
             <div style="width:clamp(40px,9vh,64px); height:clamp(40px,9vh,64px); border-radius:14px; overflow:hidden; flex-shrink:0;">
               <img src="./logos/chronicles-of-innovation.png" alt="Chronicles of Innovation" decoding="async" style="width:82%; height:82%; object-fit:contain; margin:9%;">
             </div>
-            <div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(16px,2.6vh,26px); text-align:center; line-height:1.15;">Chronicles of Innovation</div>
-            <div style="font-size:clamp(11px,1.3vh,14px); line-height:1.4; color:#9a9d8d; text-align:center; max-width:100%;">Documentaries drawn from history, so people can learn from it.</div>
+            <div data-channel-title style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(16px,2.6vh,26px); text-align:center; line-height:1.15;">Chronicles of Innovation</div>
+            <div data-channel-description style="font-size:clamp(11px,1.3vh,14px); line-height:1.4; color:#9a9d8d; text-align:center; max-width:100%;">Documentaries drawn from history, so people can learn from it.</div>
             <a tabIndex="{{ pillars.0.cardLinkTabIndex }}" href="https://chroniclesofinnovation.com" target="_blank" rel="noopener" style="font-family:'JetBrains Mono',monospace; font-size:clamp(10px,1.1vh,12px); color:#8a8d7d; text-decoration:none;">chroniclesofinnovation.com <svg aria-hidden="true" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="display:inline-block; vertical-align:middle;"><path d="M4 12 12 4M4 4h8v8"></path></svg></a>
           </div>
-          <div aria-hidden="{{ pillars.0.isActive }}" style="position:{{ pillars.0.inactivePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.0.inactiveOpacity }}; pointer-events:{{ pillars.0.inactivePE }}; transform:translateY({{ pillars.0.inactiveShift }}); transition:{{ pillars.0.inactiveTransition }};">
+          <div data-channel-collapsed aria-hidden="{{ pillars.0.isActive }}" style="position:{{ pillars.0.inactivePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.0.inactiveOpacity }}; pointer-events:{{ pillars.0.inactivePE }}; transform:translateY({{ pillars.0.inactiveShift }}); transition:{{ pillars.0.inactiveTransition }};">
             <div style="width:20px; height:20px; border-radius:6px; overflow:hidden; flex-shrink:0;">
               <img src="./logos/chronicles-of-innovation.png" alt="Chronicles of Innovation" decoding="async" style="width:80%; height:80%; object-fit:contain; margin:10%;">
             </div>
@@ -279,18 +338,17 @@
       </div>
 
       <!-- Tab 1: ZeroToAct -->
-      <div onClick="{{ pillars.1.onClick }}" onKeyDown="{{ channelKeyDown }}" role="{{ pillars.1.cardRole }}" tabIndex="{{ pillars.1.cardTabIndex }}" aria-label="{{ pillars.1.name }}" data-active="{{ pillars.1.isActive }}" style="flex:{{ pillars.1.flexValue }}; background:#141610; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:2vh 1vw; cursor:pointer; transition:flex 0.4s cubic-bezier(0.4,0,0.2,1), background 0.2s ease; gap:1.4vh; min-width:0; overflow:hidden;" style-hover="background:#181b12;">
-        <span style="width:7px; height:7px; border-radius:50%; background:{{ pillars.1.dotBg }}; flex-shrink:0; transition:background 0.3s ease;"></span>
+      <div data-channel-card onClick="{{ pillars.1.onClick }}" onKeyDown="{{ channelKeyDown }}" role="{{ pillars.1.cardRole }}" tabIndex="{{ pillars.1.cardTabIndex }}" aria-label="{{ pillars.1.name }}" data-active="{{ pillars.1.isActive }}" style="flex:{{ pillars.1.flexValue }}; background:#141610; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:2vh 1vw; cursor:pointer; transition:flex 0.4s cubic-bezier(0.4,0,0.2,1), background 0.2s ease; gap:1.4vh; min-width:0; overflow:hidden;" style-hover="background:#181b12;">
         <div style="position:relative; flex:1; min-height:0; min-width:0; width:100%; overflow-x:hidden; overflow-y:{{ pillars.1.scrollY }}; scrollbar-width:thin; scrollbar-color:rgba(243,241,232,0.25) transparent;">
-          <div aria-hidden="{{ pillars.1.isInactive }}" style="position:{{ pillars.1.activePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.1.activeOpacity }}; pointer-events:{{ pillars.1.activePE }}; transform:translateY({{ pillars.1.activeShift }}); transition:{{ pillars.1.activeTransition }};">
+          <div data-channel-detail aria-hidden="{{ pillars.1.isInactive }}" style="position:{{ pillars.1.activePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.1.activeOpacity }}; pointer-events:{{ pillars.1.activePE }}; transform:translateY({{ pillars.1.activeShift }}); transition:{{ pillars.1.activeTransition }};">
             <div style="width:clamp(40px,9vh,64px); height:clamp(40px,9vh,64px); border-radius:14px; background:#f3f1e8; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
               <img src="./logos/zerotoact.png" alt="ZeroToAct" decoding="async" style="width:68%; height:68%; object-fit:contain;">
             </div>
-            <div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(16px,2.6vh,26px); text-align:center; line-height:1.15;">ZeroToAct</div>
-            <div style="font-size:clamp(11px,1.3vh,14px); line-height:1.4; color:#9a9d8d; text-align:center; max-width:100%;">Insights into the global economy through video, text, and more, frameworks to apply them, a community of builders, and an annual gathering for the year's outlook.</div>
+            <div data-channel-title style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(16px,2.6vh,26px); text-align:center; line-height:1.15;">ZeroToAct</div>
+            <div data-channel-description style="font-size:clamp(11px,1.3vh,14px); line-height:1.4; color:#9a9d8d; text-align:center; max-width:100%;">Weekly signals on the global economy, practical frameworks, a community of builders and an annual gathering.</div>
             <a tabIndex="{{ pillars.1.cardLinkTabIndex }}" href="https://zerotoact.com" target="_blank" rel="noopener" style="font-family:'JetBrains Mono',monospace; font-size:clamp(10px,1.1vh,12px); color:#8a8d7d; text-decoration:none;">zerotoact.com <svg aria-hidden="true" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="display:inline-block; vertical-align:middle;"><path d="M4 12 12 4M4 4h8v8"></path></svg></a>
           </div>
-          <div aria-hidden="{{ pillars.1.isActive }}" style="position:{{ pillars.1.inactivePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.1.inactiveOpacity }}; pointer-events:{{ pillars.1.inactivePE }}; transform:translateY({{ pillars.1.inactiveShift }}); transition:{{ pillars.1.inactiveTransition }};">
+          <div data-channel-collapsed aria-hidden="{{ pillars.1.isActive }}" style="position:{{ pillars.1.inactivePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.1.inactiveOpacity }}; pointer-events:{{ pillars.1.inactivePE }}; transform:translateY({{ pillars.1.inactiveShift }}); transition:{{ pillars.1.inactiveTransition }};">
             <div style="width:20px; height:20px; border-radius:6px; background:#f3f1e8; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
               <img src="./logos/zerotoact.png" alt="ZeroToAct" decoding="async" style="width:65%; height:65%; object-fit:contain;">
             </div>
@@ -301,18 +359,17 @@
       </div>
 
       <!-- Tab 2: The Builders -->
-      <div onClick="{{ pillars.2.onClick }}" onKeyDown="{{ channelKeyDown }}" role="{{ pillars.2.cardRole }}" tabIndex="{{ pillars.2.cardTabIndex }}" aria-label="{{ pillars.2.name }}" data-active="{{ pillars.2.isActive }}" style="flex:{{ pillars.2.flexValue }}; background:#141610; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:2vh 1vw; cursor:pointer; transition:flex 0.4s cubic-bezier(0.4,0,0.2,1), background 0.2s ease; gap:1.4vh; min-width:0; overflow:hidden;" style-hover="background:#181b12;">
-        <span style="width:7px; height:7px; border-radius:50%; background:{{ pillars.2.dotBg }}; flex-shrink:0; transition:background 0.3s ease;"></span>
+      <div data-channel-card onClick="{{ pillars.2.onClick }}" onKeyDown="{{ channelKeyDown }}" role="{{ pillars.2.cardRole }}" tabIndex="{{ pillars.2.cardTabIndex }}" aria-label="{{ pillars.2.name }}" data-active="{{ pillars.2.isActive }}" style="flex:{{ pillars.2.flexValue }}; background:#141610; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:2vh 1vw; cursor:pointer; transition:flex 0.4s cubic-bezier(0.4,0,0.2,1), background 0.2s ease; gap:1.4vh; min-width:0; overflow:hidden;" style-hover="background:#181b12;">
         <div style="position:relative; flex:1; min-height:0; min-width:0; width:100%; overflow-x:hidden; overflow-y:{{ pillars.2.scrollY }}; scrollbar-width:thin; scrollbar-color:rgba(243,241,232,0.25) transparent;">
-          <div aria-hidden="{{ pillars.2.isInactive }}" style="position:{{ pillars.2.activePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.2.activeOpacity }}; pointer-events:{{ pillars.2.activePE }}; transform:translateY({{ pillars.2.activeShift }}); transition:{{ pillars.2.activeTransition }};">
+          <div data-channel-detail aria-hidden="{{ pillars.2.isInactive }}" style="position:{{ pillars.2.activePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.2.activeOpacity }}; pointer-events:{{ pillars.2.activePE }}; transform:translateY({{ pillars.2.activeShift }}); transition:{{ pillars.2.activeTransition }};">
             <div style="width:clamp(40px,9vh,64px); height:clamp(40px,9vh,64px); border-radius:14px; background:#1c1f16; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
               <svg width="46%" height="46%" viewBox="0 0 24 24"><rect x="2" y="14" width="5" height="8" fill="{{ accentColor }}"></rect><rect x="9.5" y="9" width="5" height="13" fill="{{ accentColor }}"></rect><rect x="17" y="4" width="5" height="18" fill="{{ accentColor }}"></rect></svg>
             </div>
-            <div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(16px,2.6vh,26px); text-align:center; line-height:1.15;">The Builders</div>
-            <div style="font-size:clamp(11px,1.3vh,14px); line-height:1.4; color:#9a9d8d; text-align:center; max-width:100%;">A flagship reality series challenging entrepreneurs and innovators to solve real economic problems through teamwork, strategy, and execution.</div>
+            <div data-channel-title style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(16px,2.6vh,26px); text-align:center; line-height:1.15;">The Builders</div>
+            <div data-channel-description style="font-size:clamp(11px,1.3vh,14px); line-height:1.4; color:#9a9d8d; text-align:center; max-width:100%;">A reality series where entrepreneurs work together to solve real economic problems.</div>
             <span style="font-family:'JetBrains Mono',monospace; font-size:clamp(9px,1vh,11px); letter-spacing:0.08em; text-transform:uppercase; color:#101209; background:{{ accentColor }}; padding:3px 10px; border-radius:20px;">Coming soon</span>
           </div>
-          <div aria-hidden="{{ pillars.2.isActive }}" style="position:{{ pillars.2.inactivePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.2.inactiveOpacity }}; pointer-events:{{ pillars.2.inactivePE }}; transform:translateY({{ pillars.2.inactiveShift }}); transition:{{ pillars.2.inactiveTransition }};">
+          <div data-channel-collapsed aria-hidden="{{ pillars.2.isActive }}" style="position:{{ pillars.2.inactivePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.2.inactiveOpacity }}; pointer-events:{{ pillars.2.inactivePE }}; transform:translateY({{ pillars.2.inactiveShift }}); transition:{{ pillars.2.inactiveTransition }};">
             <div style="width:20px; height:20px; border-radius:6px; background:#1c1f16; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
               <svg width="46%" height="46%" viewBox="0 0 24 24"><rect x="2" y="14" width="5" height="8" fill="{{ accentColor }}"></rect><rect x="9.5" y="9" width="5" height="13" fill="{{ accentColor }}"></rect><rect x="17" y="4" width="5" height="18" fill="{{ accentColor }}"></rect></svg>
             </div>
@@ -323,14 +380,13 @@
       </div>
 
       <!-- Tab 3: Books -->
-      <div onClick="{{ pillars.3.onClick }}" onKeyDown="{{ channelKeyDown }}" role="{{ pillars.3.cardRole }}" tabIndex="{{ pillars.3.cardTabIndex }}" aria-label="{{ pillars.3.name }}" data-active="{{ pillars.3.isActive }}" style="flex:{{ pillars.3.flexValue }}; background:#141610; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:2vh 1vw; cursor:pointer; transition:flex 0.4s cubic-bezier(0.4,0,0.2,1), background 0.2s ease; gap:1.4vh; min-width:0; overflow:hidden;" style-hover="background:#181b12;">
-        <span style="width:7px; height:7px; border-radius:50%; background:{{ pillars.3.dotBg }}; flex-shrink:0; transition:background 0.3s ease;"></span>
+      <div data-channel-card onClick="{{ pillars.3.onClick }}" onKeyDown="{{ channelKeyDown }}" role="{{ pillars.3.cardRole }}" tabIndex="{{ pillars.3.cardTabIndex }}" aria-label="{{ pillars.3.name }}" data-active="{{ pillars.3.isActive }}" style="flex:{{ pillars.3.flexValue }}; background:#141610; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:2vh 1vw; cursor:pointer; transition:flex 0.4s cubic-bezier(0.4,0,0.2,1), background 0.2s ease; gap:1.4vh; min-width:0; overflow:hidden;" style-hover="background:#181b12;">
         <div style="position:relative; flex:1; min-height:0; min-width:0; width:100%; overflow-x:hidden; overflow-y:{{ pillars.3.scrollY }}; scrollbar-width:thin; scrollbar-color:rgba(243,241,232,0.25) transparent;">
-          <div aria-hidden="{{ pillars.3.isInactive }}" style="position:{{ pillars.3.activePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.3.activeOpacity }}; pointer-events:{{ pillars.3.activePE }}; transform:translateY({{ pillars.3.activeShift }}); transition:{{ pillars.3.activeTransition }};">
+          <div data-channel-detail aria-hidden="{{ pillars.3.isInactive }}" style="position:{{ pillars.3.activePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.3.activeOpacity }}; pointer-events:{{ pillars.3.activePE }}; transform:translateY({{ pillars.3.activeShift }}); transition:{{ pillars.3.activeTransition }};">
             <div style="width:clamp(40px,9vh,64px); height:clamp(40px,9vh,64px); border-radius:14px; background:#1c1f16; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
               <svg width="46%" height="46%" viewBox="0 0 24 24"><path d="M4 5c2-1.3 5-1.3 7 0v13c-2-1.3-5-1.3-7 0V5z" fill="{{ accentColor }}"></path><path d="M20 5c-2-1.3-5-1.3-7 0v13c2-1.3 5-1.3 7 0V5z" fill="{{ accentColor }}"></path></svg>
             </div>
-            <div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(16px,2.6vh,26px); text-align:center; line-height:1.15;">Books</div>
+            <div data-channel-title style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(16px,2.6vh,26px); text-align:center; line-height:1.15;">Books</div>
             <div style="font-family:'JetBrains Mono',monospace; font-size:clamp(9px,1vh,11px); letter-spacing:0.06em; text-transform:uppercase; color:#8a8d7d; text-align:center; max-width:100%;">Published by Wisdom for Living Media</div>
             <div style="display:flex; flex-direction:column; gap:0.6vh; align-items:center; max-width:100%;">
               <div style="font-size:clamp(12px,1.4vh,15px); line-height:1.4; color:#c7c9bb; text-align:center;">The Prosperity Engine</div>
@@ -338,7 +394,7 @@
             </div>
             <span style="font-family:'JetBrains Mono',monospace; font-size:clamp(9px,1vh,11px); letter-spacing:0.08em; text-transform:uppercase; color:#101209; background:{{ accentColor }}; padding:3px 10px; border-radius:20px;">Coming soon</span>
           </div>
-          <div aria-hidden="{{ pillars.3.isActive }}" style="position:{{ pillars.3.inactivePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.3.inactiveOpacity }}; pointer-events:{{ pillars.3.inactivePE }}; transform:translateY({{ pillars.3.inactiveShift }}); transition:{{ pillars.3.inactiveTransition }};">
+          <div data-channel-collapsed aria-hidden="{{ pillars.3.isActive }}" style="position:{{ pillars.3.inactivePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.3.inactiveOpacity }}; pointer-events:{{ pillars.3.inactivePE }}; transform:translateY({{ pillars.3.inactiveShift }}); transition:{{ pillars.3.inactiveTransition }};">
             <div style="width:20px; height:20px; border-radius:6px; background:#1c1f16; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
               <svg width="46%" height="46%" viewBox="0 0 24 24"><path d="M4 5c2-1.3 5-1.3 7 0v13c-2-1.3-5-1.3-7 0V5z" fill="{{ accentColor }}"></path><path d="M20 5c-2-1.3-5-1.3-7 0v13c2-1.3 5-1.3 7 0V5z" fill="{{ accentColor }}"></path></svg>
             </div>
@@ -448,9 +504,21 @@ class Component extends DCLogic {
   playPrevious = () => this.stepVideo(-1);
   playNext = () => this.stepVideo(1);
 
+  revealCurrentVideo() {
+    const list = document.querySelector('[data-playlist-scroll]');
+    const current = list?.querySelector('[aria-current="true"]');
+    if (!list?.clientHeight || !current) return;
+    // Scroll only the playlist, leaving the viewer's page position untouched.
+    const row = current.getBoundingClientRect();
+    const frame = list.getBoundingClientRect();
+    if (row.top < frame.top) list.scrollTop += row.top - frame.top;
+    else if (row.bottom > frame.bottom) list.scrollTop += row.bottom - frame.bottom;
+  }
+
   togglePlaylist = () => {
     this.setState(s => ({ playlistOpen: !s.playlistOpen }), () => {
-      document.querySelector(this.state.playlistOpen ? '[data-playlist-close]' : '[data-playlist-toggle]')?.focus();
+      document.querySelector(this.state.playlistOpen ? '[data-playlist-close]' : '[data-playlist-toggle]')?.focus({ preventScroll: true });
+      if (this.state.playlistOpen) this.revealCurrentVideo();
     });
   };
 
@@ -473,7 +541,7 @@ class Component extends DCLogic {
       { id: 'zbeBT46ymp4', title: "The Miracle Drug That Shouldn't Exist" },
       { id: 'otqgociwb3o', title: 'The Ruthless War That Lit the World' },
     ] },
-    { name: 'ZeroToAct', abbr: 'Z2A', href: 'https://zerotoact.com', domain: 'zerotoact.com', tagline: 'Insights into the global economy through video, text, and more, frameworks to apply them, a community of builders, and an annual gathering for the year\'s outlook.', logo: './logos/zerotoact.png', logoChip: true, dwell: 5200, playlist: 'PLX_mgoh4inS4', portrait: true, videos: [
+    { name: 'ZeroToAct', abbr: 'Z2A', href: 'https://zerotoact.com', domain: 'zerotoact.com', tagline: 'Weekly signals on the global economy, practical frameworks, a community of builders and an annual gathering.', logo: './logos/zerotoact.png', logoChip: true, dwell: 5200, playlist: 'PLX_mgoh4inS4', portrait: true, videos: [
       { id: 'ur2qzPD1Yds', title: 'Nobody Went First' },
       { id: 'BqXH09T_2Og', title: 'Lenders Started Choosing: ZeroToAct Signal' },
       { id: '7zfrfdGIkSo', title: 'One Shock, Four Answers' },
@@ -489,7 +557,7 @@ class Component extends DCLogic {
       { id: 'oT6wE8OkkyA', title: "ZeroToAct Weekly Brief: The Room Where It Isn't Being Written" },
       { id: 'V0gEUW2dQAU', title: 'The $700 Billion Compute Divide' },
     ] },
-    { name: 'The Builders', abbr: 'TB', href: '', domain: '', tagline: 'A flagship reality series challenging entrepreneurs and innovators to solve real economic problems through teamwork, strategy, and execution.', logo: '', comingSoon: true, dwell: 6000, localVideo: './videos/the-builders-intro.mp4', poster: './videos/the-builders-intro-poster.jpg' },
+    { name: 'The Builders', abbr: 'TB', href: '', domain: '', tagline: 'A reality series where entrepreneurs work together to solve real economic problems.', logo: '', comingSoon: true, dwell: 6000, localVideo: './videos/the-builders-intro.mp4', poster: './videos/the-builders-intro-poster.jpg' },
     { name: 'Books', abbr: 'BKS', href: '', domain: '', tagline: 'The Prosperity Engine and The Oversized Mind of a Visionary, two forthcoming titles from Wisdom for Living.', logo: '', comingSoon: true, dwell: 5600, localVideo: './videos/books-coming-soon.mp4', poster: './videos/books-coming-soon-poster.jpg' }
   ];
 
@@ -535,6 +603,7 @@ class Component extends DCLogic {
 
   componentDidUpdate(prevProps) {
     this._playback?.bind(this.playbackContext());
+    this.revealCurrentVideo();
     if (prevProps.autoRotate !== this.props.autoRotate) this.maybeStartRotation();
   }
 
@@ -611,9 +680,11 @@ class Component extends DCLogic {
       playlistOpen: this.state.playlistOpen,
       playlistToggleColor: this.state.playlistOpen ? '#101209' : '#f3f1e8',
       playlistToggleBg: this.state.playlistOpen ? accentColor : 'transparent',
+      playlistCount: videoPillar.videos?.length || 0,
       playlistVideos: (videoPillar.videos || []).map(v => ({
         id: v.id,
         isCurrent: v.id === currentVideoId ? 'true' : 'false',
+        isPlaying: v.id === currentVideoId,
         title: v.title,
         thumb: `https://i.ytimg.com/vi/${v.id}/mqdefault.jpg`,
         rowBg: v.id === currentVideoId ? '#1c1f16' : 'transparent',
@@ -650,7 +721,6 @@ class Component extends DCLogic {
         inactiveTransition: i === active
           ? 'opacity 0.2s ease-in, transform 0.2s ease-in'
           : 'opacity 0.35s cubic-bezier(0.4,0,0.2,1) 0.2s, transform 0.35s cubic-bezier(0.4,0,0.2,1) 0.2s',
-        dotBg: i === active ? accentColor : 'rgba(243,241,232,0.28)',
         flexValue: i === active ? 5 : 1,
         listColor: i === active ? '#f3f1e8' : '#8a8d7d',
         listWeight: i === active ? 600 : 400,
