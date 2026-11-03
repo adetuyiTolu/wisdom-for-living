@@ -62,3 +62,21 @@ test('portrait overlay still closes after selection on narrower desktops',()=>{
  const c=component(true);c.state.playlistOpen=true;c.selectVideo(c.getVideoPillar().videos[1].id);
  assert.equal(c.state.playlistOpen,false);
 });
+
+
+test('a playlist choice requests sound in the initial embed; automatic advance preserves the initial mute policy',()=>{
+ const c=component();
+ assert.equal(new URL(c.renderVals().videoSrc).searchParams.get('mute'),'1');
+ c.stepVideo(1);
+ assert.equal(new URL(c.renderVals().videoSrc).searchParams.get('mute'),'1');
+ c.renderVals().playlistVideos[0].onClick();
+ assert.equal(new URL(c.renderVals().videoSrc).searchParams.get('mute'),'0');
+ c.playNext();
+ assert.equal(new URL(c.renderVals().videoSrc).searchParams.get('mute'),'0');
+});
+
+test('choosing the active channel requests sound without replacing its player',()=>{
+ const c=component();let requests=0;c._playback={enableSound(){requests++;}};
+ const key=c.renderVals().videoPlayerKey;c.setActive(1);
+ assert.equal(requests,1);assert.equal(c.renderVals().videoPlayerKey,key);
+});

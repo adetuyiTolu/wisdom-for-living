@@ -7,8 +7,8 @@ player frames and expanding channel rail. No new dependency, font or media asset
 
 - Larger, more balanced display type and a shorter introduction that retains
   the seed metaphor, media formats and practical-wisdom purpose.
-- Subtle panel contrast, consistent corners and controls, a lighter seed
-  watermark and fewer decorative indicators.
+- Subtle panel contrast, consistent corners and controls, fewer decorative
+  indicators and no decorative hero watermark.
 - Full channel names in the desktop rail. On phones, all four channel choices
   fit in a two-column selector without a horizontal swipe. Collapsed cards
   use readable horizontal labels; active details align to one left edge.
@@ -49,3 +49,22 @@ to the top of the list when revealed. A new browser regression failed on the
 previous layout and checks row padding and non-overlap at 320, 390, 821 and 1440px,
 including enlarged text. Additional geometry checks passed at 768, 844, 1024 and
 1920px.
+
+
+## Player controls and final visual polish
+
+YouTube transport and fullscreen controls now occupy a 52px toolbar below the
+picture. They cannot obscure native volume or seek controls. Mobile players keep
+their portrait/landscape picture dimensions; the toolbar adds height. Local films
+retain their native controls and top-right fullscreen button. Active-channel
+accents are quieter, status labels and controls use simple sentence-case type,
+and the open playlist label keeps readable light text.
+
+Explicit selections request sound through both the embed URL and existing player
+API; browser autoplay restrictions still apply. The API's muted retry remains.
+All 13 responsive layouts and all 18 playlist choices at 320/390/821/1440px pass,
+including no toolbar/picture overlap, title bounds, selected-video sound requests
+and resume. Eleven playback and eight component checks pass. Final UI payload is
+191,307 bytes; local throttled mobile FCP 3.14s, desktop 0.42s, CLS below 0.001.
+Screenshots of all four channels reviewed at 390 and 1440px. These tests use an
+API double because live YouTube media is blocked in this environment.
