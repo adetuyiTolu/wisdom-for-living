@@ -77,6 +77,20 @@ in this session. This file preserves context when a new session opens the repo.
   regression reproduced the original defect before the fix. Checks cover row
   padding, neighbouring-row separation, enlarged labels and exact playback.
 
+- [x] Moved YouTube fullscreen/previous/next/playlist controls into a compact
+  toolbar below the picture so native volume controls stay accessible. Retained
+  full-frame aspect ratios, translucent desktop COI sidebar and local-film controls.
+- [x] Explicit playlist, next/previous and channel choices request audible
+  playback immediately; the API still retries muted if a browser blocks sound.
+  Return visits retain the initial autoplay policy and saved viewing position.
+- [x] Updated the introduction to include “practical wisdom that helps build
+  lives, homes, businesses and nations.” Removed the decorative hero watermark,
+  softened active-channel accents and simplified control/status typography.
+  Eleven playback and eight component checks, all 13 responsive layouts and all
+  18 playlist choices across four widths pass. UI payload is 191,307 bytes;
+  throttled mobile FCP 3.14s, desktop 0.42s, CLS below 0.001. Live YouTube media
+  remains blocked in this environment; playlist/audio assertions use the API double.
+
 Automatic execution after session expiry is unavailable: no automation tool is
 exposed. Reopening this repository preserves these instructions but does not
 itself schedule an agent.

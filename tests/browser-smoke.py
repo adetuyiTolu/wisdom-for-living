@@ -22,8 +22,8 @@ with sync_playwright() as p:
   assert not errors,errors
   assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'),f'overflow {width}'
   assert page.locator('[data-sound-button]').count()==0
-  # COI has no reserved control strip; its 16:9 picture reaches a frame edge.
-  coi_frame=page.locator('[data-screen-label="Narration"]').bounding_box()
+  # COI fills its media stage; transport stays in a separate toolbar.
+  coi_frame=page.locator('[data-video-stage]').bounding_box()
   coi_video=page.locator('iframe').bounding_box()
   assert abs(coi_video['width']/coi_video['height']-16/9)<.01
   assert coi_video['width']>=coi_frame['width']-.5 or coi_video['height']>=coi_frame['height']-.5,(coi_frame,coi_video)
@@ -33,6 +33,8 @@ with sync_playwright() as p:
   fullscreen_box=fullscreen.bounding_box()
   playlist_box=page.locator('[data-video-controls]').bounding_box()
   assert fullscreen_box['x']+fullscreen_box['width']<=playlist_box['x'],(width,fullscreen_box,playlist_box)
+  for control in [fullscreen_box,playlist_box]:
+   assert control['y']>=coi_frame['y']+coi_frame['height']-.5,(width,control,coi_frame)
   # Spy on the browser API to check button wiring without entering headless fullscreen.
   page.locator('iframe').evaluate('(el) => { el.requestFullscreen = () => { window.fullscreenTarget = el.tagName; return Promise.resolve(); }; }')
   fullscreen.click()
@@ -99,7 +101,7 @@ with sync_playwright() as p:
    channels=page.locator('[data-screen-label="Pillars"] > div')
    channels.nth(1).click()
    page.wait_for_timeout(600)
-   panel=page.locator('[data-screen-label="Narration"]').bounding_box()
+   panel=page.locator('[data-video-stage]').bounding_box()
    video=page.locator('iframe').bounding_box()
    assert video['height']>=panel['height']*.90,(width,panel,video)
    assert abs(video['width']/video['height']-9/16)<.01

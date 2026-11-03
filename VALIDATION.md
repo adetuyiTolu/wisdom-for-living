@@ -24,7 +24,7 @@ Video projects have their own checks and render measurements; film source and
 media are unchanged by this optimization pass.
 
 Playlist synchronization regressions: run `node tests/playlist.test.cjs` and
-`python tests/playlist-browser.py` (same WFL_TEST_URL option). Six component
+`python tests/playlist-browser.py` (same WFL_TEST_URL option). Eight component
 checks and the adversarial YouTube API integration exercise every choice in COI
 and ZeroToAct at 320px/390px/821px/1440px. The API double deliberately starts on a wrong ID;
 only an explicit `loadVideoById({videoId,startSeconds})` can correct it. Tests cover
@@ -46,3 +46,10 @@ UI_REFINEMENT.md for the visual changes and lab measurements.
 Playlist integration also verifies that titles and status labels stay inside
 their buttons with padding, adjacent rows do not overlap, and 20px titles/16px
 status labels wrap correctly. An item taller than the list opens at its top.
+
+
+Player toolbar assertions ensure fullscreen and transport controls sit below the
+YouTube picture at every responsive size. Explicit choices must request mute=0
+and call unMute via the API double. Fresh/automatic playback still starts with
+the browser-compatible embed policy. This verifies intent and integration, not
+live browser permission to play sound.

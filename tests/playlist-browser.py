@@ -42,6 +42,9 @@ with sync_playwright() as p:
    page.wait_for_function('(n)=>document.querySelectorAll("[data-playlist-item]").length===n',arg=count)
    entries=page.locator('[data-playlist-item]').evaluate_all('(rows)=>rows.map(r=>({id:r.dataset.videoId,title:r.innerText}))')
    assert len(entries)==count
+   picture=page.locator('iframe').bounding_box()
+   transport=page.locator('[data-player-toolbar]').bounding_box()
+   assert picture['y']+picture['height']<=transport['y']+.5,(channel,width,picture,transport)
    def verify(video_id):
     page.wait_for_function('(id)=>window.activePlayer.getVideoData().video_id===id && document.querySelector(\'[data-playlist-item][aria-current="true"]\')?.dataset.videoId===id',arg=video_id)
     assert page.locator('[data-playlist-item][aria-current="true"]').count()==1
@@ -69,6 +72,8 @@ with sync_playwright() as p:
     page.locator(f'[data-playlist-item][data-video-id="{entry["id"]}"]').click()
     verify(entry['id'])
     assert page.evaluate('window.activePlayer.time')==0
+    assert 'mute=0' in page.locator('iframe').get_attribute('src')
+    assert page.evaluate('!window.activePlayer.muted'), 'Selected videos should request audible playback'
     page.evaluate('window.previousPlayer.emit()')
     verify(entry['id'])
    for index in range(count):choose(index)
