@@ -442,7 +442,7 @@
 
     <!-- PILLAR LIST -->
     <div data-screen-label="Pillar list" onMouseEnter="{{ pauseRotation }}" onMouseLeave="{{ resumeRotation }}" style="grid-column:2; grid-row:2; position:relative; display:flex; flex-direction:column; min-height:0; min-width:0; border-top:1px solid rgba(243,241,232,0.1); padding-left:16px;">
-      <div style="position:absolute; left:0; top:0; width:2px; height:25%; background:{{ accentColor }}; transform:translateY({{ activeIndicatorOffset }}%); transition:transform 0.4s cubic-bezier(0.4,0,0.2,1);"></div>
+      <div style="position:absolute; left:0; top:0; width:2px; height:{{ indicatorHeightPct }}%; background:{{ accentColor }}; transform:translateY({{ activeIndicatorOffset }}%); transition:transform 0.4s cubic-bezier(0.4,0,0.2,1);"></div>
       <sc-for list="{{ pillars }}" as="p" hint-placeholder-count="4">
         <button type="button" onClick="{{ p.onClick }}" style="border:0; background:transparent; text-align:left; padding:0; flex:1; display:flex; align-items:center; gap:8px; border-bottom:1px solid rgba(243,241,232,0.1); cursor:pointer; color:{{ p.listColor }}; transition:color 0.25s ease, padding-left 0.25s ease;" style-hover="color:#f3f1e8; padding-left:6px;">
           <span style="font-size:clamp(13px,1.7vh,17px); font-weight:{{ p.listWeight }};">{{ p.name }}</span>
@@ -596,7 +596,7 @@ class Component extends DCLogic {
       { id: 'iqNrzvKBe34', title: 'ZeroToAct: The Execution Movement, From Insight to Building', date: 'Aug 2026' },
       { id: 'N4GSZjIPma4', title: 'The US Economy dominating the World through Service', date: 'Jul 19, 2026' },
     ] },
-    { name: 'Global Builder Summit', abbr: 'GBS', href: 'https://globalbuildersummit.com', domain: 'globalbuildersummit.com', tagline: 'The annual gathering where builders prepare for the new year with practical insight into their local and global economy.', logo: '', dwell: 5000 },
+    { name: 'Global Builder Summit', abbr: 'GBS', href: 'https://globalbuildersummit.com', domain: 'globalbuildersummit.com', tagline: 'The annual gathering where builders prepare for the new year with practical insight into their local and global economy.', logo: '', dwell: 6000, localVideo: './videos/global-builder-summit.mp4', poster: './videos/global-builder-summit-poster.jpg' },
     { name: 'The Builders', abbr: 'TB', href: '', domain: '', tagline: 'A reality series where entrepreneurs work together to solve real economic problems.', logo: '', comingSoon: true, dwell: 6000, localVideo: './videos/the-builders-intro.mp4', poster: './videos/the-builders-intro-poster.jpg' },
     { name: 'Books', abbr: 'BKS', href: '', domain: '', tagline: 'The Prosperity Engine and The Oversized Mind of a Visionary, two forthcoming titles from Wisdom for Living.', logo: '', comingSoon: true, dwell: 5600, localVideo: './videos/books-coming-soon.mp4', poster: './videos/books-coming-soon-poster.jpg' }
   ];
@@ -700,6 +700,7 @@ class Component extends DCLogic {
       accentColor,
       showNav: this.props.showNav ?? true,
       activeIndicatorOffset: active * 100,
+      indicatorHeightPct: 100 / this.pillarsData.length,
       videoSrc: this.getVideoSrc(videoPillar, this.state.manualVideoId),
       videoPlayerKey: `${this.getVideoSrc(videoPillar, this.state.manualVideoId)}:${this.state.selectionRevision}`,
       videoTitle: `${videoPillar.name} on Wisdom for Living`,
