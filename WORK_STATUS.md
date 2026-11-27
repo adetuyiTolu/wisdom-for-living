@@ -91,6 +91,23 @@ in this session. This file preserves context when a new session opens the repo.
   throttled mobile FCP 3.14s, desktop 0.42s, CLS below 0.001. Live YouTube media
   remains blocked in this environment; playlist/audio assertions use the API double.
 
+- [x] ZeroToAct playlist rows now show each video's publish date under its
+  title (muted label, `[data-playlist-date]`). Dates for 15 of 17 videos are
+  exact, sourced from zerotoact.com's own Signal archive (confirmed via its
+  `/signals/feed.xml` RSS feed, cross-checked against YouTube's own relative
+  "X ago" labels). The two oldest videos ("ZeroToAct Weekly Brief..." and
+  "ZeroToAct: The Execution Movement...") predate the Signal-article format
+  and have no matching archive entry; these show a month-only approximate
+  date ("Sep 2026" / "Aug 2026") rather than a fabricated exact day. Fixed the
+  playlist order itself in the same pass: the two approximate-date videos were
+  sitting out of chronological order. `tests/playlist-browser.py` had a stale
+  hardcoded ZeroToAct count of 14 (from before 3 videos were added in an
+  earlier session); updated to 17. All four test files pass:
+  `browser-smoke.py` (14 layouts), `playback.test.cjs` (11), `playlist.test.cjs`
+  (8), `playlist-browser.py` (8, all 17+4 exact-ID choices across 4 widths),
+  plus `performance-smoke.py` (payload/FCP/CLS budgets). COI was left out of
+  scope (not asked for); it still has no per-video date field.
+
 Automatic execution after session expiry is unavailable: no automation tool is
 exposed. Reopening this repository preserves these instructions but does not
 itself schedule an agent.
@@ -104,4 +121,11 @@ Installed skills available under
 /tmp/wfl-npm/_npx/1eaf384c6202202f/node_modules/hyperframes/dist/skills/.
 The default home is not writable: use writable, task-specific config/cache flags,
 never repurpose HOME or CODEX_HOME. Network calls require additional network access.
-YouTube is blocked in this environment, so live dates/playback cannot be checked.
+YouTube's individual watch pages (youtube.com/watch?v=...) return a bot-check
+wall in this environment, even with pacing between requests, so live playback
+and per-video metadata cannot be scraped that way. YouTube's playlist pages
+(youtube.com/playlist?list=...) work fine and return real titles plus coarse
+relative-time labels ("3mo ago"). zerotoact.com is not blocked at all and is
+the better source for exact ZeroToAct dates going forward; check its
+`/signals/` archive and `/signals/feed.xml` RSS feed before resorting to
+YouTube scraping or approximation.
