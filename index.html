@@ -380,8 +380,7 @@
             </div>
             <div data-channel-title style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(16px,2.6vh,26px); text-align:center; line-height:1.15;">Global Builder Summit</div>
             <div data-channel-description style="font-size:clamp(11px,1.3vh,14px); line-height:1.4; color:#9a9d8d; text-align:center; max-width:100%;">The annual gathering where builders prepare for the new year with practical insight into their local and global economy.</div>
-            <span style="font-family:'JetBrains Mono',monospace; font-size:clamp(9px,1vh,11px); letter-spacing:0.06em; text-transform:uppercase; color:#8a8d7d; text-align:center; max-width:100%;">globalbuildersummit.com</span>
-            <span data-channel-status style="font-family:'JetBrains Mono',monospace; font-size:clamp(9px,1vh,11px); letter-spacing:0.08em; text-transform:uppercase; color:#101209; background:{{ accentColor }}; padding:3px 10px; border-radius:20px;">Coming soon</span>
+            <a tabIndex="{{ pillars.2.cardLinkTabIndex }}" href="https://globalbuildersummit.com" target="_blank" rel="noopener" style="font-family:'JetBrains Mono',monospace; font-size:clamp(10px,1.1vh,12px); color:#8a8d7d; text-decoration:none;">globalbuildersummit.com <svg aria-hidden="true" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="display:inline-block; vertical-align:middle;"><path d="M4 12 12 4M4 4h8v8"></path></svg></a>
           </div>
           <div data-channel-collapsed aria-hidden="{{ pillars.2.isActive }}" style="position:{{ pillars.2.inactivePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.2.inactiveOpacity }}; pointer-events:{{ pillars.2.inactivePE }}; transform:translateY({{ pillars.2.inactiveShift }}); transition:{{ pillars.2.inactiveTransition }};">
             <div style="width:20px; height:20px; border-radius:6px; background:#1c1f16; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
@@ -597,7 +596,7 @@ class Component extends DCLogic {
       { id: 'iqNrzvKBe34', title: 'ZeroToAct: The Execution Movement, From Insight to Building', date: 'Aug 2026' },
       { id: 'N4GSZjIPma4', title: 'The US Economy dominating the World through Service', date: 'Jul 19, 2026' },
     ] },
-    { name: 'Global Builder Summit', abbr: 'GBS', href: '', domain: 'globalbuildersummit.com', tagline: 'The annual gathering where builders prepare for the new year with practical insight into their local and global economy.', logo: '', comingSoon: true, dwell: 5000 },
+    { name: 'Global Builder Summit', abbr: 'GBS', href: 'https://globalbuildersummit.com', domain: 'globalbuildersummit.com', tagline: 'The annual gathering where builders prepare for the new year with practical insight into their local and global economy.', logo: '', dwell: 5000 },
     { name: 'The Builders', abbr: 'TB', href: '', domain: '', tagline: 'A reality series where entrepreneurs work together to solve real economic problems.', logo: '', comingSoon: true, dwell: 6000, localVideo: './videos/the-builders-intro.mp4', poster: './videos/the-builders-intro-poster.jpg' },
     { name: 'Books', abbr: 'BKS', href: '', domain: '', tagline: 'The Prosperity Engine and The Oversized Mind of a Visionary, two forthcoming titles from Wisdom for Living.', logo: '', comingSoon: true, dwell: 5600, localVideo: './videos/books-coming-soon.mp4', poster: './videos/books-coming-soon-poster.jpg' }
   ];

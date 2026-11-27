@@ -131,6 +131,12 @@ in this session. This file preserves context when a new session opens the repo.
   brand colors (#C9A24A / #F4EDE0) rather than the shared `accentColor`, since
   it's a distinct brand mark. All 14 `browser-smoke.py` layout checks re-pass;
   verified via Playwright screenshots at desktop and mobile widths.
+- [x] Global Builder Summit is live at globalbuildersummit.com. Removed the
+  "Coming soon" badge, replaced the plain domain text with a clickable
+  external link (matching the Chronicles of Innovation/ZeroToAct pattern),
+  and removed `comingSoon` from its `pillarsData` entry so the sidebar no
+  longer shows a "Soon" tag for it (The Builders/Books remain coming soon).
+  All 14 `browser-smoke.py` and all 8 `playlist-browser.py` checks pass.
 
 Automatic execution after session expiry is unavailable: no automation tool is
 exposed. Reopening this repository preserves these instructions but does not
