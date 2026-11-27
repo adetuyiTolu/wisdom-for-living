@@ -30,7 +30,7 @@ window.YT={Player:class {
 with sync_playwright() as p:
  browser=p.chromium.launch(executable_path='/usr/bin/chromium',headless=True,args=['--no-sandbox'])
  for width,height in [(320,740),(390,844),(821,900),(1440,900)]:
-  for channel,count in [('Chronicles of Innovation',4),('ZeroToAct',14)]:
+  for channel,count in [('Chronicles of Innovation',4),('ZeroToAct',17)]:
    page=browser.new_page(viewport={'width':width,'height':height})
    errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
    page.add_init_script(MOCK_YOUTUBE)

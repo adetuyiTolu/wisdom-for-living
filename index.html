@@ -138,6 +138,7 @@
     [data-playlist-copy] { flex: 1; display: flex; flex-direction: column; gap: 5px; min-width: 0; overflow-wrap: anywhere; }
     [data-playlist-title] { display: block; font-size: 13px; line-height: 1.45; white-space: normal; overflow-wrap: anywhere; }
     [data-playing-label] { font-size: 10px; line-height: 1.2; color: #b5d99b; letter-spacing: .025em; }
+    [data-playlist-date] { display: block; font-size: 11px; line-height: 1.2; color: #8a8d7d; letter-spacing: .02em; }
     @media (max-width: 440px) {
       [data-player-toolbar] [data-playlist-toggle] { width: 44px; padding: 0 !important; justify-content: center; }
       [data-player-toolbar] [data-playlist-toggle]>span { display: none; }
@@ -281,7 +282,7 @@
             <sc-for list="{{ playlistVideos }}" as="v" hint-placeholder-count="4">
               <button type="button" data-playlist-item data-video-id="{{ v.id }}" aria-current="{{ v.isCurrent }}" onClick="{{ v.onClick }}" style="display:flex; align-items:center; gap:10px; padding:6px; border-radius:8px; cursor:pointer; background:{{ v.rowBg }}; transition:background 0.15s ease;" style-hover="background:#1c1f16;">
                 <img src="{{ v.thumb }}" alt="" style="width:72px; height:40px; object-fit:cover; border-radius:6px; flex-shrink:0; background:#0c0e08;" loading="lazy" decoding="async" width="72" height="40">
-                <div data-playlist-copy><span data-playlist-title style="color:{{ v.textColor }};">{{ v.title }}</span><sc-if value="{{ v.isPlaying }}"><span data-playing-label>Now playing</span></sc-if></div>
+                <div data-playlist-copy><span data-playlist-title style="color:{{ v.textColor }};">{{ v.title }}</span><sc-if value="{{ v.date }}"><span data-playlist-date>{{ v.date }}</span></sc-if><sc-if value="{{ v.isPlaying }}"><span data-playing-label>Now playing</span></sc-if></div>
               </button>
             </sc-for>
           </div>
@@ -556,23 +557,23 @@ class Component extends DCLogic {
       { id: 'otqgociwb3o', title: 'The Ruthless War That Lit the World' },
     ] },
     { name: 'ZeroToAct', abbr: 'Z2A', href: 'https://zerotoact.com', domain: 'zerotoact.com', tagline: 'Weekly signals on the global economy, practical frameworks, a community of builders and an annual gathering.', logo: './logos/zerotoact.png', logoChip: true, dwell: 5200, playlist: 'PLX_mgoh4inS4', portrait: true, videos: [
-      { id: '-Fe7yWFCWWc', title: 'Earnings Were Never the Question' },
-      { id: 'wkZ4J1-JDRw', title: 'The Same Build-Out, Three Sets of Books' },
-      { id: 'HbVEmrXFX_I', title: 'A Cheaper Dollar Is Not Relief' },
-      { id: 'ur2qzPD1Yds', title: 'Nobody Went First' },
-      { id: 'BqXH09T_2Og', title: 'Lenders Started Choosing: ZeroToAct Signal' },
-      { id: '7zfrfdGIkSo', title: 'One Shock, Four Answers' },
-      { id: 'xgojGTzbPRk', title: 'Nobody Is Being Paid to Wait' },
-      { id: 'HY6ZU7uJuYw', title: 'The Exit Was Already Written' },
-      { id: 'MuLn_ohEhx8', title: 'Read the Corridor Across These Two Markets' },
-      { id: 'bKBjmng4fmA', title: 'A Pipeline Was Hit in Saudi Arabia. Nine Days Later, Four Countries Paid' },
-      { id: '6G81Fs-SxoU', title: "Weekly Signal: Nigeria's Policy Rate Is 26.5%" },
-      { id: 'JFDDP8fVo_U', title: 'Signal of the Week: Three Clocks' },
-      { id: 'PzTXiczPFHE', title: 'ZeroToAct: The Demographic Shift' },
-      { id: 'iqNrzvKBe34', title: 'ZeroToAct: The Execution Movement, From Insight to Building' },
-      { id: 'N4GSZjIPma4', title: 'The US Economy dominating the World through Service' },
-      { id: 'oT6wE8OkkyA', title: "ZeroToAct Weekly Brief: The Room Where It Isn't Being Written" },
-      { id: 'V0gEUW2dQAU', title: 'The $700 Billion Compute Divide' },
+      { id: '-Fe7yWFCWWc', title: 'Earnings Were Never the Question', date: 'Nov 21, 2026' },
+      { id: 'wkZ4J1-JDRw', title: 'The Same Build-Out, Three Sets of Books', date: 'Nov 14, 2026' },
+      { id: 'HbVEmrXFX_I', title: 'A Cheaper Dollar Is Not Relief', date: 'Nov 7, 2026' },
+      { id: 'ur2qzPD1Yds', title: 'Nobody Went First', date: 'Nov 1, 2026' },
+      { id: 'BqXH09T_2Og', title: 'Lenders Started Choosing: ZeroToAct Signal', date: 'Oct 24, 2026' },
+      { id: '7zfrfdGIkSo', title: 'One Shock, Four Answers', date: 'Oct 18, 2026' },
+      { id: 'xgojGTzbPRk', title: 'Nobody Is Being Paid to Wait', date: 'Oct 11, 2026' },
+      { id: 'HY6ZU7uJuYw', title: 'The Exit Was Already Written', date: 'Oct 4, 2026' },
+      { id: 'MuLn_ohEhx8', title: 'Read the Corridor Across These Two Markets', date: 'Sep 27, 2026' },
+      { id: 'bKBjmng4fmA', title: 'A Pipeline Was Hit in Saudi Arabia. Nine Days Later, Four Countries Paid', date: 'Sep 20, 2026' },
+      { id: 'oT6wE8OkkyA', title: "ZeroToAct Weekly Brief: The Room Where It Isn't Being Written", date: 'Sep 2026' },
+      { id: '6G81Fs-SxoU', title: "Weekly Signal: Nigeria's Policy Rate Is 26.5%", date: 'Sep 13, 2026' },
+      { id: 'JFDDP8fVo_U', title: 'Signal of the Week: Three Clocks', date: 'Sep 6, 2026' },
+      { id: 'PzTXiczPFHE', title: 'ZeroToAct: The Demographic Shift', date: 'Aug 23, 2026' },
+      { id: 'V0gEUW2dQAU', title: 'The $700 Billion Compute Divide', date: 'Aug 16, 2026' },
+      { id: 'iqNrzvKBe34', title: 'ZeroToAct: The Execution Movement, From Insight to Building', date: 'Aug 2026' },
+      { id: 'N4GSZjIPma4', title: 'The US Economy dominating the World through Service', date: 'Jul 19, 2026' },
     ] },
     { name: 'The Builders', abbr: 'TB', href: '', domain: '', tagline: 'A reality series where entrepreneurs work together to solve real economic problems.', logo: '', comingSoon: true, dwell: 6000, localVideo: './videos/the-builders-intro.mp4', poster: './videos/the-builders-intro-poster.jpg' },
     { name: 'Books', abbr: 'BKS', href: '', domain: '', tagline: 'The Prosperity Engine and The Oversized Mind of a Visionary, two forthcoming titles from Wisdom for Living.', logo: '', comingSoon: true, dwell: 5600, localVideo: './videos/books-coming-soon.mp4', poster: './videos/books-coming-soon-poster.jpg' }
@@ -705,6 +706,7 @@ class Component extends DCLogic {
         isCurrent: v.id === currentVideoId ? 'true' : 'false',
         isPlaying: v.id === currentVideoId,
         title: v.title,
+        date: v.date || '',
         thumb: `https://i.ytimg.com/vi/${v.id}/mqdefault.jpg`,
         rowBg: v.id === currentVideoId ? '#1c1f16' : 'transparent',
         textColor: v.id === currentVideoId ? '#f3f1e8' : '#c7c9bb',
