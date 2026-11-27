@@ -371,10 +371,32 @@
         <span></span>
       </div>
 
-      <!-- Tab 2: The Builders -->
+      <!-- Tab 2: Global Builder Summit -->
       <div data-channel-card onClick="{{ pillars.2.onClick }}" onKeyDown="{{ channelKeyDown }}" role="{{ pillars.2.cardRole }}" tabIndex="{{ pillars.2.cardTabIndex }}" aria-label="{{ pillars.2.name }}" data-active="{{ pillars.2.isActive }}" style="flex:{{ pillars.2.flexValue }}; background:#141610; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:2vh 1vw; cursor:pointer; transition:flex 0.4s cubic-bezier(0.4,0,0.2,1), background 0.2s ease; gap:1.4vh; min-width:0; overflow:hidden;" style-hover="background:#181b12;">
         <div style="position:relative; flex:1; min-height:0; min-width:0; width:100%; overflow-x:hidden; overflow-y:{{ pillars.2.scrollY }}; scrollbar-width:thin; scrollbar-color:rgba(243,241,232,0.25) transparent;">
           <div data-channel-detail aria-hidden="{{ pillars.2.isInactive }}" style="position:{{ pillars.2.activePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.2.activeOpacity }}; pointer-events:{{ pillars.2.activePE }}; transform:translateY({{ pillars.2.activeShift }}); transition:{{ pillars.2.activeTransition }};">
+            <div style="width:clamp(40px,9vh,64px); height:clamp(40px,9vh,64px); border-radius:14px; background:#1c1f16; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
+              <svg width="46%" height="46%" viewBox="0 0 24 24"><path d="M2 20L7 8l4 6 5-8 6 14z" fill="{{ accentColor }}"></path></svg>
+            </div>
+            <div data-channel-title style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(16px,2.6vh,26px); text-align:center; line-height:1.15;">Global Builder Summit</div>
+            <div data-channel-description style="font-size:clamp(11px,1.3vh,14px); line-height:1.4; color:#9a9d8d; text-align:center; max-width:100%;">The annual gathering where builders prepare for the new year with practical insight into their local and global economy.</div>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:clamp(9px,1vh,11px); letter-spacing:0.06em; text-transform:uppercase; color:#8a8d7d; text-align:center; max-width:100%;">globalbuildersummit.com</span>
+            <span data-channel-status style="font-family:'JetBrains Mono',monospace; font-size:clamp(9px,1vh,11px); letter-spacing:0.08em; text-transform:uppercase; color:#101209; background:{{ accentColor }}; padding:3px 10px; border-radius:20px;">Coming soon</span>
+          </div>
+          <div data-channel-collapsed aria-hidden="{{ pillars.2.isActive }}" style="position:{{ pillars.2.inactivePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.2.inactiveOpacity }}; pointer-events:{{ pillars.2.inactivePE }}; transform:translateY({{ pillars.2.inactiveShift }}); transition:{{ pillars.2.inactiveTransition }};">
+            <div style="width:20px; height:20px; border-radius:6px; background:#1c1f16; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
+              <svg width="46%" height="46%" viewBox="0 0 24 24"><path d="M2 20L7 8l4 6 5-8 6 14z" fill="{{ accentColor }}"></path></svg>
+            </div>
+            <div style="font-family:'JetBrains Mono',monospace; font-size:clamp(10px,1.2vh,13px); letter-spacing:0.06em; color:#a0a58e; writing-mode:vertical-rl; text-orientation:mixed;"><span data-channel-abbr>GBS</span><span data-channel-name>Global Builder Summit</span></div>
+          </div>
+        </div>
+        <span></span>
+      </div>
+
+      <!-- Tab 3: The Builders -->
+      <div data-channel-card onClick="{{ pillars.3.onClick }}" onKeyDown="{{ channelKeyDown }}" role="{{ pillars.3.cardRole }}" tabIndex="{{ pillars.3.cardTabIndex }}" aria-label="{{ pillars.3.name }}" data-active="{{ pillars.3.isActive }}" style="flex:{{ pillars.3.flexValue }}; background:#141610; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:2vh 1vw; cursor:pointer; transition:flex 0.4s cubic-bezier(0.4,0,0.2,1), background 0.2s ease; gap:1.4vh; min-width:0; overflow:hidden;" style-hover="background:#181b12;">
+        <div style="position:relative; flex:1; min-height:0; min-width:0; width:100%; overflow-x:hidden; overflow-y:{{ pillars.3.scrollY }}; scrollbar-width:thin; scrollbar-color:rgba(243,241,232,0.25) transparent;">
+          <div data-channel-detail aria-hidden="{{ pillars.3.isInactive }}" style="position:{{ pillars.3.activePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.3.activeOpacity }}; pointer-events:{{ pillars.3.activePE }}; transform:translateY({{ pillars.3.activeShift }}); transition:{{ pillars.3.activeTransition }};">
             <div style="width:clamp(40px,9vh,64px); height:clamp(40px,9vh,64px); border-radius:14px; background:#1c1f16; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
               <svg width="46%" height="46%" viewBox="0 0 24 24"><rect x="2" y="14" width="5" height="8" fill="{{ accentColor }}"></rect><rect x="9.5" y="9" width="5" height="13" fill="{{ accentColor }}"></rect><rect x="17" y="4" width="5" height="18" fill="{{ accentColor }}"></rect></svg>
             </div>
@@ -382,7 +404,7 @@
             <div data-channel-description style="font-size:clamp(11px,1.3vh,14px); line-height:1.4; color:#9a9d8d; text-align:center; max-width:100%;">A reality series where entrepreneurs work together to solve real economic problems.</div>
             <span data-channel-status style="font-family:'JetBrains Mono',monospace; font-size:clamp(9px,1vh,11px); letter-spacing:0.08em; text-transform:uppercase; color:#101209; background:{{ accentColor }}; padding:3px 10px; border-radius:20px;">Coming soon</span>
           </div>
-          <div data-channel-collapsed aria-hidden="{{ pillars.2.isActive }}" style="position:{{ pillars.2.inactivePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.2.inactiveOpacity }}; pointer-events:{{ pillars.2.inactivePE }}; transform:translateY({{ pillars.2.inactiveShift }}); transition:{{ pillars.2.inactiveTransition }};">
+          <div data-channel-collapsed aria-hidden="{{ pillars.3.isActive }}" style="position:{{ pillars.3.inactivePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.3.inactiveOpacity }}; pointer-events:{{ pillars.3.inactivePE }}; transform:translateY({{ pillars.3.inactiveShift }}); transition:{{ pillars.3.inactiveTransition }};">
             <div style="width:20px; height:20px; border-radius:6px; background:#1c1f16; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
               <svg width="46%" height="46%" viewBox="0 0 24 24"><rect x="2" y="14" width="5" height="8" fill="{{ accentColor }}"></rect><rect x="9.5" y="9" width="5" height="13" fill="{{ accentColor }}"></rect><rect x="17" y="4" width="5" height="18" fill="{{ accentColor }}"></rect></svg>
             </div>
@@ -392,10 +414,10 @@
         <span></span>
       </div>
 
-      <!-- Tab 3: Books -->
-      <div data-channel-card onClick="{{ pillars.3.onClick }}" onKeyDown="{{ channelKeyDown }}" role="{{ pillars.3.cardRole }}" tabIndex="{{ pillars.3.cardTabIndex }}" aria-label="{{ pillars.3.name }}" data-active="{{ pillars.3.isActive }}" style="flex:{{ pillars.3.flexValue }}; background:#141610; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:2vh 1vw; cursor:pointer; transition:flex 0.4s cubic-bezier(0.4,0,0.2,1), background 0.2s ease; gap:1.4vh; min-width:0; overflow:hidden;" style-hover="background:#181b12;">
-        <div style="position:relative; flex:1; min-height:0; min-width:0; width:100%; overflow-x:hidden; overflow-y:{{ pillars.3.scrollY }}; scrollbar-width:thin; scrollbar-color:rgba(243,241,232,0.25) transparent;">
-          <div data-channel-detail aria-hidden="{{ pillars.3.isInactive }}" style="position:{{ pillars.3.activePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.3.activeOpacity }}; pointer-events:{{ pillars.3.activePE }}; transform:translateY({{ pillars.3.activeShift }}); transition:{{ pillars.3.activeTransition }};">
+      <!-- Tab 4: Books -->
+      <div data-channel-card onClick="{{ pillars.4.onClick }}" onKeyDown="{{ channelKeyDown }}" role="{{ pillars.4.cardRole }}" tabIndex="{{ pillars.4.cardTabIndex }}" aria-label="{{ pillars.4.name }}" data-active="{{ pillars.4.isActive }}" style="flex:{{ pillars.4.flexValue }}; background:#141610; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:2vh 1vw; cursor:pointer; transition:flex 0.4s cubic-bezier(0.4,0,0.2,1), background 0.2s ease; gap:1.4vh; min-width:0; overflow:hidden;" style-hover="background:#181b12;">
+        <div style="position:relative; flex:1; min-height:0; min-width:0; width:100%; overflow-x:hidden; overflow-y:{{ pillars.4.scrollY }}; scrollbar-width:thin; scrollbar-color:rgba(243,241,232,0.25) transparent;">
+          <div data-channel-detail aria-hidden="{{ pillars.4.isInactive }}" style="position:{{ pillars.4.activePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.4.activeOpacity }}; pointer-events:{{ pillars.4.activePE }}; transform:translateY({{ pillars.4.activeShift }}); transition:{{ pillars.4.activeTransition }};">
             <div style="width:clamp(40px,9vh,64px); height:clamp(40px,9vh,64px); border-radius:14px; background:#1c1f16; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
               <svg width="46%" height="46%" viewBox="0 0 24 24"><path d="M4 5c2-1.3 5-1.3 7 0v13c-2-1.3-5-1.3-7 0V5z" fill="{{ accentColor }}"></path><path d="M20 5c-2-1.3-5-1.3-7 0v13c2-1.3 5-1.3 7 0V5z" fill="{{ accentColor }}"></path></svg>
             </div>
@@ -407,7 +429,7 @@
             </div>
             <span data-channel-status style="font-family:'JetBrains Mono',monospace; font-size:clamp(9px,1vh,11px); letter-spacing:0.08em; text-transform:uppercase; color:#101209; background:{{ accentColor }}; padding:3px 10px; border-radius:20px;">Coming soon</span>
           </div>
-          <div data-channel-collapsed aria-hidden="{{ pillars.3.isActive }}" style="position:{{ pillars.3.inactivePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.3.inactiveOpacity }}; pointer-events:{{ pillars.3.inactivePE }}; transform:translateY({{ pillars.3.inactiveShift }}); transition:{{ pillars.3.inactiveTransition }};">
+          <div data-channel-collapsed aria-hidden="{{ pillars.4.isActive }}" style="position:{{ pillars.4.inactivePosition }}; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vh; opacity:{{ pillars.4.inactiveOpacity }}; pointer-events:{{ pillars.4.inactivePE }}; transform:translateY({{ pillars.4.inactiveShift }}); transition:{{ pillars.4.inactiveTransition }};">
             <div style="width:20px; height:20px; border-radius:6px; background:#1c1f16; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
               <svg width="46%" height="46%" viewBox="0 0 24 24"><path d="M4 5c2-1.3 5-1.3 7 0v13c-2-1.3-5-1.3-7 0V5z" fill="{{ accentColor }}"></path><path d="M20 5c-2-1.3-5-1.3-7 0v13c2-1.3 5-1.3 7 0V5z" fill="{{ accentColor }}"></path></svg>
             </div>
@@ -556,7 +578,7 @@ class Component extends DCLogic {
       { id: 'zbeBT46ymp4', title: "The Miracle Drug That Shouldn't Exist" },
       { id: 'otqgociwb3o', title: 'The Ruthless War That Lit the World' },
     ] },
-    { name: 'ZeroToAct', abbr: 'Z2A', href: 'https://zerotoact.com', domain: 'zerotoact.com', tagline: 'Weekly signals on the global economy, practical frameworks, a community of builders and an annual gathering.', logo: './logos/zerotoact.png', logoChip: true, dwell: 5200, playlist: 'PLX_mgoh4inS4', portrait: true, videos: [
+    { name: 'ZeroToAct', abbr: 'Z2A', href: 'https://zerotoact.com', domain: 'zerotoact.com', tagline: 'Weekly signals on the global economy, practical frameworks and a community of builders.', logo: './logos/zerotoact.png', logoChip: true, dwell: 5200, playlist: 'PLX_mgoh4inS4', portrait: true, videos: [
       { id: '-Fe7yWFCWWc', title: 'Earnings Were Never the Question', date: 'Nov 21, 2026' },
       { id: 'wkZ4J1-JDRw', title: 'The Same Build-Out, Three Sets of Books', date: 'Nov 14, 2026' },
       { id: 'HbVEmrXFX_I', title: 'A Cheaper Dollar Is Not Relief', date: 'Nov 7, 2026' },
@@ -575,6 +597,7 @@ class Component extends DCLogic {
       { id: 'iqNrzvKBe34', title: 'ZeroToAct: The Execution Movement, From Insight to Building', date: 'Aug 2026' },
       { id: 'N4GSZjIPma4', title: 'The US Economy dominating the World through Service', date: 'Jul 19, 2026' },
     ] },
+    { name: 'Global Builder Summit', abbr: 'GBS', href: '', domain: 'globalbuildersummit.com', tagline: 'The annual gathering where builders prepare for the new year with practical insight into their local and global economy.', logo: '', comingSoon: true, dwell: 5000 },
     { name: 'The Builders', abbr: 'TB', href: '', domain: '', tagline: 'A reality series where entrepreneurs work together to solve real economic problems.', logo: '', comingSoon: true, dwell: 6000, localVideo: './videos/the-builders-intro.mp4', poster: './videos/the-builders-intro-poster.jpg' },
     { name: 'Books', abbr: 'BKS', href: '', domain: '', tagline: 'The Prosperity Engine and The Oversized Mind of a Visionary, two forthcoming titles from Wisdom for Living.', logo: '', comingSoon: true, dwell: 5600, localVideo: './videos/books-coming-soon.mp4', poster: './videos/books-coming-soon-poster.jpg' }
   ];

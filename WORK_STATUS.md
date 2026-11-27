@@ -108,6 +108,24 @@ in this session. This file preserves context when a new session opens the repo.
   plus `performance-smoke.py` (payload/FCP/CLS budgets). COI was left out of
   scope (not asked for); it still has no per-video date field.
 
+- [x] Added Global Builder Summit as a new Wisdom for Living initiative/pillar,
+  distinct from "The Builders" reality series: it's the annual gathering where
+  builders prepare for the new year with practical insight into their local and
+  global economy (same premise pitched on zerotoact.com's summit). New tab uses
+  a mountain/summit icon (vs. Builders' bar-chart icon) and copy that names it
+  as a gathering, not a series. Domain `globalbuildersummit.com` is shown as
+  plain, non-clickable text with a "Coming soon" badge since the site doesn't
+  resolve yet. Inserted as the second pillar (after ZeroToAct), which renumbered
+  the hand-authored tab blocks for Builders (2→3) and Books (3→4) — the Pillar
+  list sidebar and mobile nav are `sc-for`-driven and needed no changes. Fixed
+  stale hardcoded indices in `tests/browser-smoke.py` that assumed Builders was
+  at index 2 (channel count 4→5, selection indices, and the reload
+  `activeVideoIndex` assertion). All five test files pass: `browser-smoke.py`
+  (14 layouts), `playback.test.cjs` (11), `playlist.test.cjs` (8),
+  `playlist-browser.py` (8), `performance-smoke.py` (payload/FCP/CLS budgets).
+  No standalone logo asset was made; the inline SVG icon follows the site's
+  existing per-pillar icon pattern.
+
 Automatic execution after session expiry is unavailable: no automation tool is
 exposed. Reopening this repository preserves these instructions but does not
 itself schedule an agent.

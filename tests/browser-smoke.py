@@ -82,8 +82,8 @@ with sync_playwright() as p:
   if width<=820:
    nav=page.locator('[data-mobile-nav]')
    assert nav.is_visible()
-   assert nav.get_by_role('button').count()==4
-   assert nav.evaluate('e=>e.scrollWidth<=e.clientWidth'), 'All four channels should be visible without swiping'
+   assert nav.get_by_role('button').count()==5
+   assert nav.evaluate('e=>e.scrollWidth<=e.clientWidth'), 'All five channels should be visible without swiping'
    for choice in nav.get_by_role('button').all():
     box=choice.bounding_box()
     assert box['x']>=0 and box['x']+box['width']<=width and box['height']>=44,(width,box)
@@ -111,14 +111,14 @@ with sync_playwright() as p:
     assert page.locator('[data-playlist-panel]').is_visible()
     page.locator('[data-playlist-close]').click()
    page.screenshot(path=f'/tmp/wfl-z2a-{width}.png',full_page=True)
-   channels.nth(2).click()
+   channels.nth(3).click()
    page.wait_for_function("document.querySelector('video')?.controls === true")
    assert page.locator('[data-screen-label="Pillar list"]').is_visible()
    assert page.locator('[data-player-area]').evaluate("e=>getComputedStyle(e).paddingTop")=='0px'
   # Local films use the full available frame, including their native controls.
-  for channel_index in [2,3]:
+  for channel_index in [3,4]:
    if width<=820:
-    page.locator('[data-mobile-nav]').get_by_role('button',name=['The Builders','Books'][channel_index-2],exact=True).click()
+    page.locator('[data-mobile-nav]').get_by_role('button',name=['The Builders','Books'][channel_index-3],exact=True).click()
    else:
     channels.nth(channel_index).click()
    page.wait_for_timeout(500)
@@ -128,7 +128,7 @@ with sync_playwright() as p:
    assert movie['width']>=frame['width']-.5 or movie['height']>=frame['height']-.5,(frame,movie)
    page.evaluate('window.existingVideo=document.querySelector("video")')
    if width<=820:
-    page.locator('[data-mobile-nav]').get_by_role('button',name=['The Builders','Books'][channel_index-2],exact=True).click()
+    page.locator('[data-mobile-nav]').get_by_role('button',name=['The Builders','Books'][channel_index-3],exact=True).click()
    else:
     channels.nth(channel_index).click()
    assert page.evaluate('window.existingVideo===document.querySelector("video")'), 'Selecting the active channel should not reload media'
@@ -143,7 +143,7 @@ with sync_playwright() as p:
   if width<=820:
    page.locator('[data-mobile-nav]').get_by_role('button',name='The Builders',exact=True).click()
   else:
-   channels.nth(2).click()
+   channels.nth(3).click()
   page.wait_for_timeout(600)
   page.screenshot(path=f'/tmp/wfl-{width}.png',full_page=True)
   print(f'PASS {width}x{height}: rendering, overflow, mobile navigation and controls')
@@ -153,7 +153,7 @@ with sync_playwright() as p:
    page.evaluate('window.scrollTo(0, 600)')
    page.wait_for_timeout(1200)
    saved=page.evaluate("JSON.parse(localStorage.getItem('wfl.watch.v1'))")
-   assert saved['activeVideoIndex']==2,saved
+   assert saved['activeVideoIndex']==3,saved
    assert saved['positions']['local:./videos/the-builders-intro.mp4']>=11,saved
    page.reload(wait_until='networkidle')
    page.wait_for_function("document.querySelector('video')?.currentTime >= 11")
