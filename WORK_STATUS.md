@@ -125,6 +125,12 @@ in this session. This file preserves context when a new session opens the repo.
   `playlist-browser.py` (8), `performance-smoke.py` (payload/FCP/CLS budgets).
   No standalone logo asset was made; the inline SVG icon follows the site's
   existing per-pillar icon pattern.
+- [x] Replaced the placeholder mountain icon with the user-supplied Global
+  Builder Summit logo mark (gold ascending steps + cream skyline/baseline,
+  120x120 viewBox) in both the expanded and collapsed tab states. Kept its own
+  brand colors (#C9A24A / #F4EDE0) rather than the shared `accentColor`, since
+  it's a distinct brand mark. All 14 `browser-smoke.py` layout checks re-pass;
+  verified via Playwright screenshots at desktop and mobile widths.
 
 Automatic execution after session expiry is unavailable: no automation tool is
 exposed. Reopening this repository preserves these instructions but does not
