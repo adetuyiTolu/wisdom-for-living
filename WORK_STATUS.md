@@ -137,6 +137,22 @@ in this session. This file preserves context when a new session opens the repo.
   and removed `comingSoon` from its `pillarsData` entry so the sidebar no
   longer shows a "Soon" tag for it (The Builders/Books remain coming soon).
   All 14 `browser-smoke.py` and all 8 `playlist-browser.py` checks pass.
+- [x] Added the user-supplied Global Builder Summit video (`videos/global-builder-summit.mp4`,
+  ~60s, 1920x1080, with audio) as its `localVideo`, with a poster frame extracted
+  from the clip (`videos/global-builder-summit-poster.jpg`). Selecting the
+  Summit tab now plays this film, same as The Builders/Books. Extended
+  `tests/browser-smoke.py`'s local-film full-frame loop to cover pillar index 2
+  (Global Builder Summit) alongside 3/4 (Builders/Books).
+- [x] Fixed the active-pillar indicator bar in the right-column Pillar list
+  (under the video player): its height was hardcoded to 25% (correct only for
+  4 pillars), so after Global Builder Summit became the 5th pillar the bar no
+  longer matched each row's height/position, especially for later rows
+  (Builders, Books). Now computed as `100 / pillarsData.length`, so it stays
+  correct regardless of pillar count. Verified via Playwright that the
+  indicator's vertical center falls within each visible row's bounds for all
+  pillars (ZeroToAct intentionally hides this sidebar on desktop, unchanged).
+  All 14 `browser-smoke.py`, all 8 `playlist-browser.py`, 11 `playback.test.cjs`,
+  8 `playlist.test.cjs`, and `performance-smoke.py` budgets pass.
 
 Automatic execution after session expiry is unavailable: no automation tool is
 exposed. Reopening this repository preserves these instructions but does not
